@@ -22,6 +22,84 @@ namespace HotelApp.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("HotelApp.Data.Models.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasComment("Category identifier");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Beds")
+                        .HasColumnType("int")
+                        .HasComment("Category beds count");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)")
+                        .HasComment("Category description");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasMaxLength(2048)
+                        .HasColumnType("nvarchar(2048)")
+                        .HasComment("Category image URL");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false)
+                        .HasComment("Shows if category is deleted");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)")
+                        .HasComment("Category name");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)")
+                        .HasComment("Category price");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Beds = 2,
+                            Description = "Modern and stylish design for you",
+                            ImageUrl = "https://cdn.pixabay.com/photo/2015/11/06/11/45/interior-1026452_960_720.jpg",
+                            IsDeleted = false,
+                            Name = "Double Room",
+                            Price = 500.00m
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Beds = 4,
+                            Description = "Modern design, comfort and convenience",
+                            ImageUrl = "https://cdn.pixabay.com/photo/2017/04/28/22/14/room-2269591_960_720.jpg",
+                            IsDeleted = false,
+                            Name = "Apartment",
+                            Price = 800.00m
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Beds = 4,
+                            Description = "Luxury, elegance and comfort",
+                            ImageUrl = "https://cdn.pixabay.com/photo/2015/01/10/11/39/hotel-595121_960_720.jpg",
+                            IsDeleted = false,
+                            Name = "Apartment Lux",
+                            Price = 1500.00m
+                        });
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")

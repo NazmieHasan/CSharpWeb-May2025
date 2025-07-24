@@ -20,3 +20,4 @@ C:\Users\HP\source\repos\CSharpWeb-May2025\HotelApp.Data.Common\obj\Debug\net8.0
 C:\Users\HP\source\repos\CSharpWeb-May2025\HotelApp.Data.Common\obj\Debug\net8.0\refint\HotelApp.Data.Common.dll
 C:\Users\HP\source\repos\CSharpWeb-May2025\HotelApp.Data.Common\obj\Debug\net8.0\HotelApp.Data.Common.pdb
 C:\Users\HP\source\repos\CSharpWeb-May2025\HotelApp.Data.Common\obj\Debug\net8.0\ref\HotelApp.Data.Common.dll
+C:\Users\HP\source\repos\CSharpWeb-May2025\HotelApp.Data.Common\obj\Debug\net8.0\HotelApp.Data.Common.sourcelink.json

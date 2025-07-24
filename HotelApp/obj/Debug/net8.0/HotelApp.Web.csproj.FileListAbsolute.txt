@@ -487,3 +487,4 @@ C:\Users\HP\source\repos\CSharpWeb-May2025\HotelApp\bin\Debug\net8.0\runtimes\wi
 C:\Users\HP\source\repos\CSharpWeb-May2025\HotelApp\bin\Debug\net8.0\runtimes\win-arm64\native\e_sqlite3.dll
 C:\Users\HP\source\repos\CSharpWeb-May2025\HotelApp\bin\Debug\net8.0\runtimes\win-x64\native\e_sqlite3.dll
 C:\Users\HP\source\repos\CSharpWeb-May2025\HotelApp\bin\Debug\net8.0\runtimes\win-x86\native\e_sqlite3.dll
+C:\Users\HP\source\repos\CSharpWeb-May2025\HotelApp\obj\Debug\net8.0\HotelApp.Web.sourcelink.json
