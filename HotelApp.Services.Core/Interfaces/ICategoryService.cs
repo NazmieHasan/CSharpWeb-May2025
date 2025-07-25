@@ -7,5 +7,7 @@
         Task<IEnumerable<AllCategoriesIndexViewModel>> GetAllCategoriesAsync();
 
         Task AddCategoryAsync(CategoryFormInputModel inputModel);
+
+        Task<CategoryDetailsViewModel?> GetCategoryDetailsByIdAsync(int? id);
     }
 }

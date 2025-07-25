@@ -8,6 +8,7 @@
     using Interfaces;
     using Web.ViewModels.Category;
 
+
     public class CategoryService : ICategoryService
     {
         private readonly HotelAppDbContext dbContext;
@@ -49,5 +50,29 @@
 
             return allCategories;
         }
+
+        public async Task<CategoryDetailsViewModel?> GetCategoryDetailsByIdAsync(int? id)
+        {
+            if (id == null)
+            {
+                return null;
+            }
+
+            return await this.dbContext
+                .Categories
+                .AsNoTracking()
+                .Where(c => c.Id == id.Value) 
+                .Select(c => new CategoryDetailsViewModel
+                {
+                    Id = c.Id,
+                    Description = c.Description,
+                    Name = c.Name,
+                    Price = c.Price,
+                    Beds = c.Beds,
+                    ImageUrl = c.ImageUrl
+                })
+                .SingleOrDefaultAsync(); 
+        }
+
     }
 }

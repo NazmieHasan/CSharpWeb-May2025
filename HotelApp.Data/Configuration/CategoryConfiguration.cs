@@ -31,6 +31,10 @@
                 .Property(c => c.Beds)
                 .IsRequired();
 
+            entity
+                .Property(c => c.Price)
+                .HasColumnType("decimal(18,3)");
+
             // Define constraints for the ImageUrl column
             entity
                 .Property(c => c.ImageUrl)

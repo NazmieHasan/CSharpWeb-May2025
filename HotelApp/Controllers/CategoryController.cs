@@ -54,5 +54,31 @@
                 return this.View(inputModel);
             }
         }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> Details(int? id)
+        {
+            try
+            {
+                CategoryDetailsViewModel? catDetails = await this.categoryService
+                    .GetCategoryDetailsByIdAsync(id);
+                if (catDetails == null)
+                {
+                    // TODO: Custom 404 page
+                    return this.RedirectToAction(nameof(Index));
+                }
+
+                return this.View(catDetails);
+            }
+            catch (Exception e)
+            {
+                // TODO: Implement it with the ILogger
+                // TODO: Add JS bars to indicate such errors
+                Console.WriteLine(e.Message);
+
+                return this.RedirectToAction(nameof(Index));
+            }
+        }
     }
 }
