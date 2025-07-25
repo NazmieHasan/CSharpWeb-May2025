@@ -39,5 +39,18 @@
             /// </summary>
             public const int ImageUrlMaxLength = 2048;
         }
+
+        public static class Room
+        {
+            /// <summary>
+            /// Room Name should be at least 1 characters and up to 5 characters.
+            /// </summary>
+            public const int NameMinLength = 1;
+
+            /// <summary>
+            /// Room Name should be able to store text with length up to 5 characters.
+            /// </summary>
+            public const int NameMaxLength = 5;
+        }
     }
 }

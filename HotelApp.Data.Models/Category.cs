@@ -25,5 +25,8 @@
         // TODO: Extract the property with Id to BaseDeletableModel
         [Comment("Shows if category is deleted")]
         public bool IsDeleted { get; set; }
+
+        public virtual ICollection<Room> Rooms { get; set; }
+            = new HashSet<Room>();
     }
 }
