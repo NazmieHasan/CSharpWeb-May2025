@@ -9,5 +9,9 @@
         Task AddCategoryAsync(CategoryFormInputModel inputModel);
 
         Task<CategoryDetailsViewModel?> GetCategoryDetailsByIdAsync(int? id);
+
+        Task<CategoryFormInputModel?> GetEditableCategoryByIdAsync(int? id);
+
+        Task<bool> EditCategoryAsync(CategoryFormInputModel inputModel);
     }
 }

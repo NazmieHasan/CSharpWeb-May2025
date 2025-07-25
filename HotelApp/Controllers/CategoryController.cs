@@ -80,5 +80,61 @@
                 return this.RedirectToAction(nameof(Index));
             }
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int? id)
+        {
+            try
+            {
+                CategoryFormInputModel? editableCat = await this.categoryService
+                    .GetEditableCategoryByIdAsync(id);
+                if (editableCat == null)
+                {
+                    // TODO: Custom 404 page
+                    return this.RedirectToAction(nameof(Index));
+                }
+
+                return this.View(editableCat);
+            }
+            catch (Exception e)
+            {
+                // TODO: Implement it with the ILogger
+                // TODO: Add JS bars to indicate such errors
+                Console.WriteLine(e.Message);
+
+                return this.RedirectToAction(nameof(Index));
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(CategoryFormInputModel inputModel)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View(inputModel);
+            }
+
+            try
+            {
+                bool editSuccess = await this.categoryService.EditCategoryAsync(inputModel);
+                if (!editSuccess)
+                {
+                    // TODO: Custom 404 page
+                    return this.RedirectToAction(nameof(Index));
+                }
+
+                return this.RedirectToAction(nameof(Details), new { id = inputModel.Id });
+            }
+            catch (Exception e)
+            {
+                // TODO: Implement it with the ILogger
+                // TODO: Add JS bars to indicate such errors
+                Console.WriteLine(e.Message);
+
+                return this.RedirectToAction(nameof(Index));
+            }
+        }
+
+
     }
 }

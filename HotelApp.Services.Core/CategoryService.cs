@@ -33,6 +33,26 @@
             await this.dbContext.SaveChangesAsync();
         }
 
+        public async Task<bool> EditCategoryAsync(CategoryFormInputModel inputModel)
+        {
+            Category? editableCat = await this.FindCategoryById(inputModel.Id);
+
+            if (editableCat == null)
+            {
+                return false;
+            }
+
+            editableCat.Name = inputModel.Name;
+            editableCat.Description = inputModel.Description;
+            editableCat.Price = inputModel.Price;
+            editableCat.Beds = inputModel.Beds;
+            editableCat.ImageUrl = inputModel.ImageUrl;
+
+            await this.dbContext.SaveChangesAsync();
+
+            return true;
+        }
+
         public async Task<IEnumerable<AllCategoriesIndexViewModel>> GetAllCategoriesAsync()
         {
             IEnumerable<AllCategoriesIndexViewModel> allCategories = await this.dbContext
@@ -61,7 +81,7 @@
             return await this.dbContext
                 .Categories
                 .AsNoTracking()
-                .Where(c => c.Id == id.Value) 
+                .Where(c => c.Id == id.Value)
                 .Select(c => new CategoryDetailsViewModel
                 {
                     Id = c.Id,
@@ -71,8 +91,48 @@
                     Beds = c.Beds,
                     ImageUrl = c.ImageUrl
                 })
-                .SingleOrDefaultAsync(); 
+                .SingleOrDefaultAsync();
         }
+
+        public async Task<CategoryFormInputModel?> GetEditableCategoryByIdAsync(int? id)
+        {
+            CategoryFormInputModel? editableCat = null;
+
+            if (id.HasValue)
+            {
+                editableCat = await this.dbContext
+                    .Categories
+                    .AsNoTracking()
+                    .Where(c => c.Id == id.Value)
+                    .Select(c => new CategoryFormInputModel()
+                    {
+                        Description = c.Description,
+                        Name = c.Name,
+                        Price = c.Price,
+                        Beds = c.Beds,
+                        ImageUrl = c.ImageUrl
+                    })
+                    .SingleOrDefaultAsync();
+            }
+
+            return editableCat;
+        }
+
+        // TODO: Implement as generic method in BaseService
+        private async Task<Category?> FindCategoryById(int? id)
+        {
+            Category? category = null;
+
+            if (id.HasValue)
+            {
+                category = await this.dbContext
+                    .Categories
+                    .FindAsync(id.Value);
+            }
+
+            return category;
+        }
+
 
     }
 }
