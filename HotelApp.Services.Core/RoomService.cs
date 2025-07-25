@@ -1,13 +1,14 @@
 ﻿namespace HotelApp.Services.Core
 {
 
-    using Interfaces;
-    using Data;
+    using System.Globalization;
     using Microsoft.EntityFrameworkCore;
 
-    using Web.ViewModels.Room;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
+    using Data;
+    using Data.Models;
+    using Interfaces;
+    using Web.ViewModels.Category;
+    using HotelApp.Web.ViewModels.Room;
 
     public class RoomService : IRoomService
     {
@@ -16,6 +17,31 @@
         public RoomService(HotelAppDbContext dbContext)
         {
             this.dbContext = dbContext;
+        }
+
+        public async Task<bool> AddRoomAsync(AddRoomInputModel inputModel)
+        {
+            bool opRes = false;
+
+            Category? catRef = await this.dbContext
+                .Categories
+                .FindAsync(inputModel.CategoryId);
+
+            if (catRef != null)
+            {
+                Room newRecipe = new Room()
+                {
+                    Name = inputModel.Name,
+                    CategoryId = inputModel.CategoryId
+                };
+
+                await this.dbContext.Rooms.AddAsync(newRecipe);
+                await this.dbContext.SaveChangesAsync();
+
+                opRes = true;
+            }
+
+            return opRes;
         }
 
         public async Task<IEnumerable<AllRoomsIndexViewModel>> GetAllRoomsAsync()

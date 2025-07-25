@@ -1,6 +1,7 @@
 ﻿namespace HotelApp.Services.Core.Interfaces
 {
     using HotelApp.Web.ViewModels.Category;
+    using HotelApp.Web.ViewModels.Room;
 
     public interface ICategoryService
     {
@@ -19,5 +20,7 @@
         Task<bool> DeleteCategoryAsync(int? id);
 
         Task<DeleteCategoryViewModel?> GetCategoryDeleteDetailsByIdAsync(int? id);
+
+        Task<IEnumerable<AddRoomCategoryDropDownModel>> GetCategoriesDropDownDataAsync();
     }
 }

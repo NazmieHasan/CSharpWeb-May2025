@@ -7,7 +7,7 @@
     using Data.Models;
     using Interfaces;
     using Web.ViewModels.Category;
-
+    using HotelApp.Web.ViewModels.Room;
 
     public class CategoryService : ICategoryService
     {
@@ -84,6 +84,21 @@
                 .ToListAsync();
 
             return allCategories;
+        }
+
+        public async Task<IEnumerable<AddRoomCategoryDropDownModel>> GetCategoriesDropDownDataAsync()
+        {
+            IEnumerable<AddRoomCategoryDropDownModel> categoriesAsDropDown = await this.dbContext
+                .Categories
+                .AsNoTracking()
+                .Select(c => new AddRoomCategoryDropDownModel()
+                {
+                    Id = c.Id,
+                    Name = c.Name
+                })
+                .ToArrayAsync();
+
+            return categoriesAsDropDown;
         }
 
         public async Task<DeleteCategoryViewModel?> GetCategoryDeleteDetailsByIdAsync(int? id)

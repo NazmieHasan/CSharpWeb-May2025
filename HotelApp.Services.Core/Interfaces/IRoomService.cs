@@ -5,5 +5,7 @@
     public interface IRoomService
     {
         Task<IEnumerable<AllRoomsIndexViewModel>> GetAllRoomsAsync();
+
+        Task<bool> AddRoomAsync(AddRoomInputModel inputModel);
     }
 }
