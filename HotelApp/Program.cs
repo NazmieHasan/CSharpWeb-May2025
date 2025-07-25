@@ -38,6 +38,7 @@ namespace HotelApp.Web
                 })
                 .AddEntityFrameworkStores<HotelAppDbContext>();
 
+
             builder.Services.AddScoped<ICategoryService, CategoryService>();
 
             builder.Services.AddControllersWithViews();
