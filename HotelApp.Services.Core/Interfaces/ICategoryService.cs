@@ -13,5 +13,11 @@
         Task<CategoryFormInputModel?> GetEditableCategoryByIdAsync(int? id);
 
         Task<bool> EditCategoryAsync(CategoryFormInputModel inputModel);
+
+        Task<bool> SoftDeleteCategoryAsync(int? id);
+
+        Task<bool> DeleteCategoryAsync(int? id);
+
+        Task<DeleteCategoryViewModel?> GetCategoryDeleteDetailsByIdAsync(int? id);
     }
 }

@@ -48,8 +48,8 @@
                 .HasDefaultValue(false);
 
             // Filter out only the active (non-deleted) entries
-            //entity
-            //.HasQueryFilter(c => c.IsDeleted == false);
+            entity
+            .HasQueryFilter(c => c.IsDeleted == false);
 
             // Seed categories data with migration for development
             entity

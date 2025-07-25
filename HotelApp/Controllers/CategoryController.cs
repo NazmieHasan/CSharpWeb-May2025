@@ -135,6 +135,65 @@
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            try
+            {
+                DeleteCategoryViewModel? catToBeDeleted = await this.categoryService
+                    .GetCategoryDeleteDetailsByIdAsync(id);
+                if (catToBeDeleted == null)
+                {
+                    // TODO: Custom 404 page
+                    return this.RedirectToAction(nameof(Index));
+                }
+
+                return this.View(catToBeDeleted);
+            }
+            catch (Exception e)
+            {
+                // TODO: Implement it with the ILogger
+                // TODO: Add JS bars to indicate such errors
+                Console.WriteLine(e.Message);
+
+                return this.RedirectToAction(nameof(Index));
+            }
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(DeleteCategoryViewModel inputModel)
+        {
+            try
+            {
+                if (!this.ModelState.IsValid)
+                {
+                    // TODO: Implement JS notifications
+                    return this.RedirectToAction(nameof(Index));
+                }
+
+                bool deleteResult = await this.categoryService
+                    .SoftDeleteCategoryAsync(inputModel.Id);
+                if (deleteResult == false)
+                {
+                    // TODO: Implement JS notifications
+                    // TODO: Alt_Redirect to Not Found page
+                    return this.RedirectToAction(nameof(Index));
+                }
+
+                // TODO: Success notification
+                return this.RedirectToAction(nameof(Index));
+            }
+            catch (Exception e)
+            {
+                // TODO: Implement it with the ILogger
+                // TODO: Add JS bars to indicate such errors
+                Console.WriteLine(e.Message);
+
+                return this.RedirectToAction(nameof(Index));
+            }
+        }
+
 
     }
 }

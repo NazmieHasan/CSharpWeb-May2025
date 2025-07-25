@@ -33,6 +33,21 @@
             await this.dbContext.SaveChangesAsync();
         }
 
+        public async Task<bool> DeleteCategoryAsync(int? id)
+        {
+            Category? catToDelete = await this.FindCategoryById(id);
+            if (catToDelete == null)
+            {
+                return false;
+            }
+
+            // TODO: To be investigated when relations to Category entity are introduced
+            this.dbContext.Categories.Remove(catToDelete);
+            await this.dbContext.SaveChangesAsync();
+
+            return true;
+        }
+
         public async Task<bool> EditCategoryAsync(CategoryFormInputModel inputModel)
         {
             Category? editableCat = await this.FindCategoryById(inputModel.Id);
@@ -69,6 +84,24 @@
                 .ToListAsync();
 
             return allCategories;
+        }
+
+        public async Task<DeleteCategoryViewModel?> GetCategoryDeleteDetailsByIdAsync(int? id)
+        {
+            DeleteCategoryViewModel? deleteCategoryViewModel = null;
+
+            Category? catToBeDeleted = await this.FindCategoryById(id);
+            if (catToBeDeleted != null)
+            {
+                deleteCategoryViewModel = new DeleteCategoryViewModel()
+                {
+                    Id = catToBeDeleted.Id,
+                    Name = catToBeDeleted.Name,
+                    ImageUrl = catToBeDeleted.ImageUrl,
+                };
+            }
+
+            return deleteCategoryViewModel;
         }
 
         public async Task<CategoryDetailsViewModel?> GetCategoryDetailsByIdAsync(int? id)
@@ -116,6 +149,22 @@
             }
 
             return editableCat;
+        }
+
+        public async Task<bool> SoftDeleteCategoryAsync(int? id)
+        {
+            Category? catToDelete = await this.FindCategoryById(id);
+            if (catToDelete == null)
+            {
+                return false;
+            }
+
+            // Soft Delete <=> Edit of IsDeleted property
+            catToDelete.IsDeleted = true;
+
+            await this.dbContext.SaveChangesAsync();
+
+            return true;
         }
 
         // TODO: Implement as generic method in BaseService
