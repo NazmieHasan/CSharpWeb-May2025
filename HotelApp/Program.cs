@@ -1,7 +1,8 @@
 namespace HotelApp.Web
 {
     using Data;
-
+    using HotelApp.Services.Core;
+    using HotelApp.Services.Core.Interfaces;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
 
@@ -36,6 +37,8 @@ namespace HotelApp.Web
                     options.Password.RequiredUniqueChars = 0;
                 })
                 .AddEntityFrameworkStores<HotelAppDbContext>();
+
+            builder.Services.AddScoped<ICategoryService, CategoryService>();
 
             builder.Services.AddControllersWithViews();
 

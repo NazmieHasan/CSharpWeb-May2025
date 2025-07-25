@@ -34,10 +34,10 @@ C:\Users\HP\source\repos\CSharpWeb-May2025\HotelApp.Data\obj\Debug\net8.0\HotelA
 C:\Users\HP\source\repos\CSharpWeb-May2025\HotelApp.Data\obj\Debug\net8.0\HotelApp.Data.AssemblyInfoInputs.cache
 C:\Users\HP\source\repos\CSharpWeb-May2025\HotelApp.Data\obj\Debug\net8.0\HotelApp.Data.AssemblyInfo.cs
 C:\Users\HP\source\repos\CSharpWeb-May2025\HotelApp.Data\obj\Debug\net8.0\HotelApp.Data.csproj.CoreCompileInputs.cache
+C:\Users\HP\source\repos\CSharpWeb-May2025\HotelApp.Data\obj\Debug\net8.0\HotelApp.Data.sourcelink.json
 C:\Users\HP\source\repos\CSharpWeb-May2025\HotelApp.Data\obj\Debug\net8.0\HotelApp.22F103F8.Up2Date
 C:\Users\HP\source\repos\CSharpWeb-May2025\HotelApp.Data\obj\Debug\net8.0\HotelApp.Data.dll
 C:\Users\HP\source\repos\CSharpWeb-May2025\HotelApp.Data\obj\Debug\net8.0\refint\HotelApp.Data.dll
 C:\Users\HP\source\repos\CSharpWeb-May2025\HotelApp.Data\obj\Debug\net8.0\HotelApp.Data.pdb
 C:\Users\HP\source\repos\CSharpWeb-May2025\HotelApp.Data\obj\Debug\net8.0\HotelApp.Data.genruntimeconfig.cache
 C:\Users\HP\source\repos\CSharpWeb-May2025\HotelApp.Data\obj\Debug\net8.0\ref\HotelApp.Data.dll
-C:\Users\HP\source\repos\CSharpWeb-May2025\HotelApp.Data\obj\Debug\net8.0\HotelApp.Data.sourcelink.json

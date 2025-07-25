@@ -35,9 +35,9 @@ C:\Users\HP\source\repos\CSharpWeb-May2025\HotelApp.Web.ViewModels\obj\Debug\net
 C:\Users\HP\source\repos\CSharpWeb-May2025\HotelApp.Web.ViewModels\obj\Debug\net8.0\HotelApp.Web.ViewModels.AssemblyInfoInputs.cache
 C:\Users\HP\source\repos\CSharpWeb-May2025\HotelApp.Web.ViewModels\obj\Debug\net8.0\HotelApp.Web.ViewModels.AssemblyInfo.cs
 C:\Users\HP\source\repos\CSharpWeb-May2025\HotelApp.Web.ViewModels\obj\Debug\net8.0\HotelApp.Web.ViewModels.csproj.CoreCompileInputs.cache
+C:\Users\HP\source\repos\CSharpWeb-May2025\HotelApp.Web.ViewModels\obj\Debug\net8.0\HotelApp.Web.ViewModels.sourcelink.json
 C:\Users\HP\source\repos\CSharpWeb-May2025\HotelApp.Web.ViewModels\obj\Debug\net8.0\HotelApp.97BDDD20.Up2Date
 C:\Users\HP\source\repos\CSharpWeb-May2025\HotelApp.Web.ViewModels\obj\Debug\net8.0\HotelApp.Web.ViewModels.dll
 C:\Users\HP\source\repos\CSharpWeb-May2025\HotelApp.Web.ViewModels\obj\Debug\net8.0\refint\HotelApp.Web.ViewModels.dll
 C:\Users\HP\source\repos\CSharpWeb-May2025\HotelApp.Web.ViewModels\obj\Debug\net8.0\HotelApp.Web.ViewModels.pdb
 C:\Users\HP\source\repos\CSharpWeb-May2025\HotelApp.Web.ViewModels\obj\Debug\net8.0\ref\HotelApp.Web.ViewModels.dll
-C:\Users\HP\source\repos\CSharpWeb-May2025\HotelApp.Web.ViewModels\obj\Debug\net8.0\HotelApp.Web.ViewModels.sourcelink.json
