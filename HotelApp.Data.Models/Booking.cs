@@ -29,5 +29,8 @@
         public Guid RoomId { get; set; }
 
         public virtual Room Room { get; set; } = null!;
+
+        public virtual ICollection<ApplicationUserBooking> UserBookings { get; set; }
+          = new HashSet<ApplicationUserBooking>();
     }
 }

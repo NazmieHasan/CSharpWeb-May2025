@@ -19,6 +19,8 @@
 
         public virtual DbSet<Booking> Bookings { get; set; } = null!;
 
+        public virtual DbSet<ApplicationUserBooking> ApplicationUserBookings { get; set; } = null!;
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
