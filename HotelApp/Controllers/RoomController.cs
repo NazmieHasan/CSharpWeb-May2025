@@ -162,5 +162,63 @@
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Delete(string? id)
+        {
+            try
+            {
+                DeleteRoomViewModel? roomToBeDeleted = await this.roomService
+                    .GetRoomDeleteDetailsByIdAsync(id);
+                if (roomToBeDeleted == null)
+                {
+                    // TODO: Custom 404 page
+                    return this.RedirectToAction(nameof(Index));
+                }
+
+                return this.View(roomToBeDeleted);
+            }
+            catch (Exception e)
+            {
+                // TODO: Implement it with the ILogger
+                // TODO: Add JS bars to indicate such errors
+                Console.WriteLine(e.Message);
+
+                return this.RedirectToAction(nameof(Index));
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(DeleteRoomViewModel inputModel)
+        {
+            try
+            {
+                if (!this.ModelState.IsValid)
+                {
+                    // TODO: Implement JS notifications
+                    return this.RedirectToAction(nameof(Index));
+                }
+
+                bool deleteResult = await this.roomService
+                    .SoftDeleteRoomAsync(inputModel.Id);
+                if (deleteResult == false)
+                {
+                    // TODO: Implement JS notifications
+                    // TODO: Alt_Redirect to Not Found page
+                    return this.RedirectToAction(nameof(Index));
+                }
+
+                // TODO: Success notification
+                return this.RedirectToAction(nameof(Index));
+            }
+            catch (Exception e)
+            {
+                // TODO: Implement it with the ILogger
+                // TODO: Add JS bars to indicate such errors
+                Console.WriteLine(e.Message);
+
+                return this.RedirectToAction(nameof(Index));
+            }
+        }
+
     }
 }

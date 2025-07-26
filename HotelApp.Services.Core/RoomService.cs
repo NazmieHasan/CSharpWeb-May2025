@@ -8,7 +8,6 @@
     using Data.Models;
     using Interfaces;
     using HotelApp.Web.ViewModels.Room;
-    using Microsoft.AspNetCore.Identity;
 
     public class RoomService : IRoomService
     {
@@ -44,6 +43,21 @@
             return opRes;
         }
 
+        public async Task<bool> DeleteRoomAsync(string? id)
+        {
+            Room? roomToDelete = await this.FindRoomByStringId(id);
+            if (roomToDelete == null)
+            {
+                return false;
+            }
+
+            // TODO: To be investigated when relations to Room entity are introduced
+            this.dbContext.Rooms.Remove(roomToDelete);
+            await this.dbContext.SaveChangesAsync();
+
+            return true;
+        }
+
         public async Task<IEnumerable<AllRoomsIndexViewModel>> GetAllRoomsAsync()
         {
             IEnumerable<AllRoomsIndexViewModel> allRooms = await this.dbContext
@@ -60,6 +74,24 @@
                 .ToArrayAsync();
 
             return allRooms;
+        }
+
+        public async Task<DeleteRoomViewModel?> GetRoomDeleteDetailsByIdAsync(string? id)
+        {
+            DeleteRoomViewModel? deleteRoomViewModel = null;
+
+            Room? roomToBeDeleted = await this.FindRoomByStringId(id);
+            if (roomToBeDeleted != null)
+            {
+                deleteRoomViewModel = new DeleteRoomViewModel()
+                {
+                    Id = roomToBeDeleted.Id.ToString(),
+                    Name = roomToBeDeleted.Name,
+                    CategoryName = roomToBeDeleted.Category.Name
+                };
+            }
+
+            return deleteRoomViewModel;
         }
 
         public async Task<RoomDetailsViewModel?> GetRoomDetailsByIdAsync(string? id)
@@ -128,6 +160,22 @@
             return true;
         }
 
+        public async Task<bool> SoftDeleteRoomAsync(string? id)
+        {
+            Room? roomToDelete = await this.FindRoomByStringId(id);
+            if (roomToDelete == null)
+            {
+                return false;
+            }
+
+            // Soft Delete <=> Edit of IsDeleted property
+            roomToDelete.IsDeleted = true;
+
+            await this.dbContext.SaveChangesAsync();
+
+            return true;
+        }
+
 
         // TODO: Implement as generic method in BaseService
         private async Task<Room?> FindRoomByStringId(string? id)
@@ -141,7 +189,8 @@
                 {
                     room = await this.dbContext
                         .Rooms
-                        .FindAsync(roomGuid);
+                        .Include(r => r.Category)
+                        .FirstOrDefaultAsync(r => r.Id == roomGuid);
                 }
             }
 

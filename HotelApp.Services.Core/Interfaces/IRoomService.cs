@@ -13,5 +13,11 @@
         Task<EditRoomInputModel?> GetRoomForEditAsync(string? id);
 
         Task<bool> PersistUpdatedRoomAsync(EditRoomInputModel inputModel);
+
+        Task<bool> SoftDeleteRoomAsync(string? id);
+
+        Task<bool> DeleteRoomAsync(string? id);
+
+        Task<DeleteRoomViewModel?> GetRoomDeleteDetailsByIdAsync(string? id);
     }
 }
