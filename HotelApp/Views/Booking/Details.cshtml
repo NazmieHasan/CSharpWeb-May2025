@@ -1,0 +1,56 @@
+﻿@using HotelApp.Web.ViewModels.Booking
+@model BookingDetailsViewModel
+
+@{
+    ViewData["Title"] = "Booking Details";
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-5">
+        </div>
+        <div class="col-md-7">
+            <h2 class="fw-bold text-primary mb-3">Booking Details</h2>
+
+            <h6 class="card-title">Booking Id:</h6>
+            <h6 class="card-title">@Model.Id</h6>
+
+            <hr />
+
+            <p>Room: @Model.Room</p>
+            <p>Created On: @Model.CreatedOn.ToString("yyyy-MM-dd HH:mm")</p>
+            <p>Arrival Date: @Model.DateArrival.ToString("yyyy-MM-dd")</p>
+            <p>Departure Date: @Model.DateDeparture.ToString("yyyy-MM-dd")</p>
+            <p>Adults: @Model.AdultsCount</p>
+            <p>Children: @Model.ChildCount</p>
+            <p>Babies: @Model.BabyCount</p>
+
+
+            <div class="mt-4 d-flex gap-2">
+                <a asp-action="Index"
+                   asp-controller="Booking"
+                   class="btn btn-secondary btn-sm rounded-pill px-4 fw-bold">
+                    <i class="bi bi-arrow-left-circle"></i> Back to All Booking
+                </a>
+
+                @if (this.User.Identity?.IsAuthenticated ?? false)
+                {
+                    <a asp-controller="Booking"
+                       asp-action="Edit"
+                       asp-route-id="@Model.Id"
+                       class="btn btn-info btn-sm rounded-pill px-4 fw-bold text-white">
+                        <i class="bi bi-pencil-square"></i> Edit
+                    </a>
+
+                    <a asp-controller="Booking"
+                       asp-action="Delete"
+                       asp-route-id="@Model.Id"
+                       class="btn btn-danger btn-sm rounded-pill px-4 fw-bold text-white">
+                        <i class="bi bi-trash"></i> Delete
+                    </a>
+                }
+            </div>
+
+        </div>
+    </div>
+</div>

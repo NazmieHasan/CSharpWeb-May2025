@@ -55,5 +55,35 @@
 
             return allBookings;
         }
+
+        public async Task<BookingDetailsViewModel?> GetBookingDetailsByIdAsync(string? id)
+        {
+            BookingDetailsViewModel? bookingDetails = null;
+
+            bool isIdValidGuid = Guid.TryParse(id, out Guid bookingId);
+
+            if (isIdValidGuid)
+            {
+                bookingDetails = await this.dbContext
+                    .Bookings
+                    .Include(b => b.Room)
+                    .AsNoTracking()
+                    .Where(b => b.Id == bookingId)
+                    .Select(b => new BookingDetailsViewModel()
+                    {
+                        Id = b.Id.ToString(),
+                        CreatedOn = b.CreatedOn,
+                        DateArrival = b.DateArrival,
+                        DateDeparture = b.DateDeparture,
+                        AdultsCount = b.AdultsCount,
+                        ChildCount = b.ChildCount,
+                        BabyCount = b.BabyCount,
+                        Room = b.Room.Name
+                    })
+                    .SingleOrDefaultAsync();
+            }
+
+            return bookingDetails;
+        }
     }
 }

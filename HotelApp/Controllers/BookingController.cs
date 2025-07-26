@@ -2,6 +2,7 @@
 {
     using HotelApp.Services.Core.Interfaces;
     using HotelApp.Web.ViewModels.Booking;
+    using HotelApp.Web.ViewModels.Room;
     using Microsoft.AspNetCore.Mvc;
 
     using static ViewModels.ValidationMessages.Booking;
@@ -64,6 +65,30 @@
                 this.ModelState.AddModelError(string.Empty, ServiceCreateError);
                 return this.View(inputModel);
             }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Details(string? id)
+        {
+            try
+            {
+                BookingDetailsViewModel? bookingDetails = await this.bookingService
+                    .GetBookingDetailsByIdAsync(id);
+
+                if (bookingDetails == null)
+                {
+                    return this.RedirectToAction(nameof(Index), "Home");
+                }
+
+                return this.View(bookingDetails);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+
+                return this.RedirectToAction(nameof(Index), "Home");
+            }
+
         }
 
     }

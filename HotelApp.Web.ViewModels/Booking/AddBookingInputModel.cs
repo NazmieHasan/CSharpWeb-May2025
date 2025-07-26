@@ -2,7 +2,6 @@
 {
     using System.ComponentModel.DataAnnotations;
 
-    using static HotelApp.Data.Common.EntityConstants.Booking;
     using static HotelApp.Web.ViewModels.ValidationMessages.Booking;
 
     public class AddBookingInputModel
