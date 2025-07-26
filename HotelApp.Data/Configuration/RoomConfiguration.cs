@@ -29,7 +29,7 @@
                 .HasOne(c => c.Category)
                 .WithMany(r => r.Rooms)
                 .HasForeignKey(c => c.CategoryId)
-                .OnDelete(DeleteBehavior.Restrict); ;
+                .OnDelete(DeleteBehavior.Restrict); 
 
             entity
                 .HasData(this.GenerateSeedRoom());

@@ -2,6 +2,7 @@
 {
     using Microsoft.EntityFrameworkCore;
 
+    [Comment("Category in the system")]
     public class Category
     {
         [Comment("Category identifier")]

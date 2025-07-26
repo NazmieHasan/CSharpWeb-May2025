@@ -12,11 +12,14 @@
         public string Name { get; set; } = null!;
 
         // TODO: Extract the property with Id to BaseDeletableModel
-        [Comment("Shows if movie is deleted")]
+        [Comment("Shows if room is deleted")]
         public bool IsDeleted { get; set; }
 
         public int CategoryId { get; set; }
 
         public virtual Category Category { get; set; } = null!;
+
+        public virtual ICollection<Booking> Bookings { get; set; }
+            = new HashSet<Booking>();
     }
 }

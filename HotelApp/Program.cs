@@ -41,6 +41,7 @@ namespace HotelApp.Web
 
             builder.Services.AddScoped<ICategoryService, CategoryService>();
             builder.Services.AddScoped<IRoomService, RoomService>();
+            builder.Services.AddScoped<IBookingService, BookingService>();
 
             builder.Services.AddControllersWithViews();
 

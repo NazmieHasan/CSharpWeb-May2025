@@ -46,15 +46,13 @@
 								Rooms
 							</a>
 						</li>
+						<li class="nav-item">
+							<a class="nav-link text-light" asp-area="" asp-controller="Booking" asp-action="Index">
+								Bookings
+							</a>
+						</li>
 						@if (User?.Identity?.IsAuthenticated ?? false)
 						{
-
-							<li class="nav-item">
-								<a class="nav-link text-light" asp-area="" asp-controller="Booking" asp-action="Index">
-									My Bookings
-								</a>
-							</li>
-
 							<li class="nav-item">
 								<a class="nav-link text-light" asp-area="" asp-controller="Category" asp-action="Add">
 									Add Category
@@ -63,6 +61,11 @@
 							<li class="nav-item">
 								<a class="nav-link text-light" asp-area="" asp-controller="Room" asp-action="Add">
 									Add Room
+								</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link text-light" asp-area="" asp-controller="Booking" asp-action="Add">
+									Add Booking
 								</a>
 							</li>
 						}
