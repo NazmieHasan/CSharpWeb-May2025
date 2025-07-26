@@ -33,6 +33,21 @@
             await this.dbContext.SaveChangesAsync();
         }
 
+        public async Task<bool> DeleteBookingAsync(string? id)
+        {
+            Booking? bookingToDelete = await this.FindBookingByStringId(id);
+            if (bookingToDelete == null)
+            {
+                return false;
+            }
+
+            // TODO: To be investigated when relations to Room entity are introduced
+            this.dbContext.Bookings.Remove(bookingToDelete);
+            await this.dbContext.SaveChangesAsync();
+
+            return true;
+        }
+
         public async Task<IEnumerable<AllBookingsIndexViewModel>> GetAllBookingsAsync()
         {
             IEnumerable<AllBookingsIndexViewModel> allBookings = await this.dbContext
@@ -54,6 +69,29 @@
                 .ToArrayAsync();
 
             return allBookings;
+        }
+
+        public async Task<DeleteBookingViewModel?> GetBookingDeleteDetailsByIdAsync(string? id)
+        {
+            DeleteBookingViewModel? deleteBookingViewModel = null;
+
+            Booking? bookingToBeDeleted = await this.FindBookingByStringId(id);
+            if (bookingToBeDeleted != null)
+            {
+                deleteBookingViewModel = new DeleteBookingViewModel()
+                {
+                    Id = bookingToBeDeleted.Id.ToString(),
+                    CreatedOn = bookingToBeDeleted.CreatedOn,
+                    DateArrival = bookingToBeDeleted.DateArrival,
+                    DateDeparture = bookingToBeDeleted.DateDeparture,
+                    AdultsCount = bookingToBeDeleted.AdultsCount,
+                    ChildCount = bookingToBeDeleted.ChildCount,
+                    BabyCount = bookingToBeDeleted.BabyCount,
+                    RoomName = bookingToBeDeleted.Room.Name,
+                };
+            }
+
+            return deleteBookingViewModel;
         }
 
         public async Task<BookingDetailsViewModel?> GetBookingDetailsByIdAsync(string? id)
@@ -123,6 +161,22 @@
             editableBooking.AdultsCount = inputModel.AdultsCount;
             editableBooking.ChildCount = inputModel.ChildCount;
             editableBooking.BabyCount = inputModel.BabyCount;
+
+            await this.dbContext.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<bool> SoftDeleteBookingAsync(string? id)
+        {
+            Booking? bookingToDelete = await this.FindBookingByStringId(id);
+            if (bookingToDelete == null)
+            {
+                return false;
+            }
+
+            // Soft Delete <=> Edit of IsDeleted property
+            bookingToDelete.IsDeleted = true;
 
             await this.dbContext.SaveChangesAsync();
 

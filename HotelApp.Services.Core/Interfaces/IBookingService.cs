@@ -14,5 +14,11 @@
         Task<EditBookingInputModel?> GetBookingForEditAsync(string? id);
 
         Task<bool> PersistUpdatedBookingAsync(EditBookingInputModel inputModel);
+
+        Task<bool> SoftDeleteBookingAsync(string? id);
+
+        Task<bool> DeleteBookingAsync(string? id);
+
+        Task<DeleteBookingViewModel?> GetBookingDeleteDetailsByIdAsync(string? id);
     }
 }
