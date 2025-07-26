@@ -85,5 +85,68 @@
 
             return bookingDetails;
         }
+
+        public async Task<EditBookingInputModel?> GetBookingForEditAsync(string? id)
+        {
+            EditBookingInputModel? editModel = null;
+
+            bool isIdValidGuid = Guid.TryParse(id, out Guid bookingId);
+
+            if (isIdValidGuid)
+            {
+                editModel = await this.dbContext
+                    .Bookings
+                    .AsNoTracking()
+                    .Where(b => b.Id == bookingId)
+                    .Select(b => new EditBookingInputModel()
+                    {
+                        Id = b.Id.ToString(),
+                        AdultsCount = b.AdultsCount,
+                        ChildCount = b.ChildCount,
+                        BabyCount = b.BabyCount
+                    })
+                    .SingleOrDefaultAsync();
+            }
+
+            return editModel;
+        }
+
+        public async Task<bool> PersistUpdatedBookingAsync(EditBookingInputModel inputModel)
+        {
+            Booking? editableBooking = await this.FindBookingByStringId(inputModel.Id);
+
+            if (editableBooking == null)
+            {
+                return false;
+            }
+
+            editableBooking.AdultsCount = inputModel.AdultsCount;
+            editableBooking.ChildCount = inputModel.ChildCount;
+            editableBooking.BabyCount = inputModel.BabyCount;
+
+            await this.dbContext.SaveChangesAsync();
+
+            return true;
+        }
+
+        // TODO: Implement as generic method in BaseService
+        private async Task<Booking?> FindBookingByStringId(string? id)
+        {
+            Booking? booking = null;
+
+            if (!string.IsNullOrWhiteSpace(id))
+            {
+                bool isGuidValid = Guid.TryParse(id, out Guid bookingGuid);
+                if (isGuidValid)
+                {
+                    booking = await this.dbContext
+                        .Bookings
+                        .Include(b => b.Room)
+                        .FirstOrDefaultAsync(b => b.Id == bookingGuid);
+                }
+            }
+
+            return booking;
+        }
     }
 }

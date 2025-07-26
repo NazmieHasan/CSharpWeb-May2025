@@ -91,5 +91,58 @@
 
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Edit(string? id)
+        {
+            try
+            {
+                EditBookingInputModel? editInputModel = await this.bookingService
+                    .GetBookingForEditAsync(id);
+
+                if (editInputModel == null)
+                {
+                    return this.RedirectToAction(nameof(Index));
+                }
+
+                return this.View(editInputModel);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+
+                return this.RedirectToAction(nameof(Index));
+            }
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(EditBookingInputModel inputModel)
+        {
+            try
+            {
+                if (!this.ModelState.IsValid)
+                {
+                    return this.View(inputModel);
+                }
+
+                bool editResult = await this.bookingService
+                    .PersistUpdatedBookingAsync(inputModel);
+
+                if (editResult == false)
+                {
+                    this.ModelState.AddModelError(string.Empty, "Edit error");
+                    return this.View(inputModel);
+                }
+
+                return this.RedirectToAction(nameof(Details), new { id = inputModel.Id });
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+
+                return this.RedirectToAction(nameof(Index));
+            }
+        }
+
     }
 }
