@@ -61,5 +61,30 @@
 
             return allRooms;
         }
+
+        public async Task<RoomDetailsViewModel?> GetRoomDetailsByIdAsync(string? id)
+        {
+            RoomDetailsViewModel? roomDetails = null;
+
+            bool isIdValidGuid = Guid.TryParse(id, out Guid roomId);
+
+            if (isIdValidGuid)
+            {
+                roomDetails = await this.dbContext
+                    .Rooms
+                    .Include(r => r.Category)
+                    .AsNoTracking()
+                    .Where(r => r.Id == roomId)
+                    .Select(r => new RoomDetailsViewModel()
+                    {
+                        Id = r.Id.ToString(),
+                        Name = r.Name,
+                        Category = r.Category.Name
+                    })
+                    .SingleOrDefaultAsync();
+            }
+
+            return roomDetails;
+        }
     }
 }

@@ -81,7 +81,29 @@
 
                 return this.RedirectToAction(nameof(Index));
             }
+        }
 
+        [HttpGet]
+        public async Task<IActionResult> Details(string? id)
+        {
+            try
+            {
+                RoomDetailsViewModel? roomDetails = await this.roomService
+                    .GetRoomDetailsByIdAsync(id);
+
+                if (roomDetails == null)
+                {
+                    return this.RedirectToAction(nameof(Index), "Home");
+                }
+
+                return this.View(roomDetails);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+
+                return this.RedirectToAction(nameof(Index), "Home");
+            }
 
         }
 

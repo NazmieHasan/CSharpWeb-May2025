@@ -7,5 +7,7 @@
         Task<IEnumerable<AllRoomsIndexViewModel>> GetAllRoomsAsync();
 
         Task<bool> AddRoomAsync(AddRoomInputModel inputModel);
+
+        Task<RoomDetailsViewModel?> GetRoomDetailsByIdAsync(string? id);
     }
 }
