@@ -7,8 +7,8 @@
     using Data;
     using Data.Models;
     using Interfaces;
-    using Web.ViewModels.Category;
     using HotelApp.Web.ViewModels.Room;
+    using Microsoft.AspNetCore.Identity;
 
     public class RoomService : IRoomService
     {
@@ -85,6 +85,67 @@
             }
 
             return roomDetails;
+        }
+
+        public async Task<EditRoomInputModel?> GetRoomForEditAsync(string? id)
+        {
+            EditRoomInputModel? editModel = null;
+
+            bool isIdValidGuid = Guid.TryParse(id, out Guid roomId);
+
+            if (isIdValidGuid)
+            {
+                editModel = await this.dbContext
+                    .Rooms
+                    .AsNoTracking()
+                    .Where(r => r.Id == roomId)
+                    .Select(r => new EditRoomInputModel()
+                    {
+                        Id = r.Id.ToString(),
+                        Name = r.Name,
+                        CategoryId = r.CategoryId
+                    })
+                    .SingleOrDefaultAsync();
+            }
+
+            return editModel;
+        }
+
+        public async Task<bool> PersistUpdatedRoomAsync(EditRoomInputModel inputModel)
+        {
+            Room? editableRoom = await this.FindRoomByStringId(inputModel.Id);
+
+            if (editableRoom == null)
+            {
+                return false;
+            }
+
+            editableRoom.Name = inputModel.Name;
+            editableRoom.CategoryId = inputModel.CategoryId;
+
+            await this.dbContext.SaveChangesAsync();
+
+            return true;
+        }
+
+
+        // TODO: Implement as generic method in BaseService
+        private async Task<Room?> FindRoomByStringId(string? id)
+        {
+            Room? room = null;
+
+            if (!string.IsNullOrWhiteSpace(id))
+            {
+                bool isGuidValid = Guid.TryParse(id, out Guid roomGuid);
+                if (isGuidValid)
+                {
+                    room = await this.dbContext
+                        .Rooms
+                        .FindAsync(roomGuid);
+                }
+            }
+
+            return room;
         }
     }
 }

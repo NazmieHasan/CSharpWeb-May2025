@@ -107,5 +107,60 @@
 
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Edit(string? id)
+        {
+            try
+            {
+                EditRoomInputModel? editInputModel = await this.roomService
+                    .GetRoomForEditAsync(id);
+
+                if (editInputModel == null)
+                {
+                    return this.RedirectToAction(nameof(Index));
+                }
+
+                editInputModel.Categories = await this.categoryService.GetCategoriesDropDownDataAsync();
+
+                return this.View(editInputModel);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+
+                return this.RedirectToAction(nameof(Index));
+            }
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(EditRoomInputModel inputModel)
+        {
+            try
+            {
+                if (!this.ModelState.IsValid)
+                {
+                    return this.View(inputModel);
+                }
+
+                bool editResult = await this.roomService
+                    .PersistUpdatedRoomAsync(inputModel);
+
+                if (editResult == false)
+                {
+                    this.ModelState.AddModelError(string.Empty, "Edit error");
+                    return this.View(inputModel);
+                }
+
+                return this.RedirectToAction(nameof(Details), new { id = inputModel.Id });
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+
+                return this.RedirectToAction(nameof(Index));
+            }
+        }
+
     }
 }

@@ -9,5 +9,9 @@
         Task<bool> AddRoomAsync(AddRoomInputModel inputModel);
 
         Task<RoomDetailsViewModel?> GetRoomDetailsByIdAsync(string? id);
+
+        Task<EditRoomInputModel?> GetRoomForEditAsync(string? id);
+
+        Task<bool> PersistUpdatedRoomAsync(EditRoomInputModel inputModel);
     }
 }
