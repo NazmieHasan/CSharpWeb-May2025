@@ -1,0 +1,57 @@
+﻿@using HotelApp.Web.ViewModels.Booking
+@model AddBookingInputModel
+
+@{
+    ViewData["Title"] = "Create Booking";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3" style="margin-top: 20px;">
+    <h2>@ViewData["Title"]</h2>
+</div>
+<hr />
+
+<div class="row">
+    <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
+        <form asp-controller="Booking" asp-action="Add" method="post">
+            <div class="row">
+
+                <div class="mb-3">
+                    <label asp-for="DateArrival" class="form-label"></label>
+                    <input asp-for="DateArrival" class="form-control" type="date" />
+                    <span asp-validation-for="DateArrival" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="DateDeparture" class="form-label"></label>
+                    <input asp-for="DateDeparture" class="form-control" type="date" />
+                    <span asp-validation-for="DateDeparture" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="AdultsCount" class="form-label"></label>
+                    <input asp-for="AdultsCount" class="form-control" type="number" min="1" />
+                    <span asp-validation-for="AdultsCount" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="ChildCount" class="form-label"></label>
+                    <input asp-for="ChildCount" class="form-control" type="number" min="0" />
+                    <span asp-validation-for="ChildCount" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="BabyCount" class="form-label"></label>
+                    <input asp-for="BabyCount" class="form-control" type="number" min="0" />
+                    <span asp-validation-for="BabyCount" class="text-danger"></span>
+                </div>
+                
+            </div>
+
+            <div class="mb-2">
+                <button class="btn btn-warning btn-dark-text w-100 py-2 fw-bold rounded" type="submit">
+                    <i class="fas fa-save"></i> Save
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

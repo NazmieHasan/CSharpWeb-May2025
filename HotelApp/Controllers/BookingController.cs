@@ -4,6 +4,8 @@
     using HotelApp.Web.ViewModels.Booking;
     using Microsoft.AspNetCore.Mvc;
 
+    using static ViewModels.ValidationMessages.Booking;
+
     public class BookingController : Controller
     {
         private readonly IRoomService roomService;
@@ -33,5 +35,36 @@
                 return this.RedirectToAction(nameof(Index), "Home");
             }
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Add()
+        {
+            return this.View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Add(AddBookingInputModel inputModel)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View(inputModel);
+            }
+
+            try
+            {
+                await this.bookingService.AddBookingAsync(inputModel);
+
+                return this.RedirectToAction(nameof(Index));
+            }
+            catch (Exception e)
+            {
+                // TODO: Implement it with the ILogger
+                Console.WriteLine(e.Message);
+
+                this.ModelState.AddModelError(string.Empty, ServiceCreateError);
+                return this.View(inputModel);
+            }
+        }
+
     }
 }

@@ -5,5 +5,7 @@
     public interface IBookingService
     {
         Task<IEnumerable<AllBookingsIndexViewModel>> GetAllBookingsAsync();
+
+        Task AddBookingAsync(AddBookingInputModel inputModel);
     }
 }

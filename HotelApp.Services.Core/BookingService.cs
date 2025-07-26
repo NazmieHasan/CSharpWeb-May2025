@@ -1,12 +1,12 @@
 ﻿namespace HotelApp.Services.Core
 {
-    using HotelApp.Data;
-    using HotelApp.Services.Core.Interfaces;
-    using HotelApp.Web.ViewModels.Booking;
-    using HotelApp.Web.ViewModels.Room;
     using Microsoft.EntityFrameworkCore;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
+
+    using Data;
+    using Data.Models;
+    using Interfaces;
+    using HotelApp.Web.ViewModels.Booking;
+
 
     public class BookingService : IBookingService
     {
@@ -15,6 +15,22 @@
         public BookingService(HotelAppDbContext dbContext)
         {
             this.dbContext = dbContext;
+        }
+
+        public async Task AddBookingAsync(AddBookingInputModel inputModel)
+        {
+            Booking newBooking = new Booking()
+            {
+                DateArrival = inputModel.DateArrival,
+                DateDeparture = inputModel.DateDeparture,
+                AdultsCount = inputModel.AdultsCount,
+                ChildCount = inputModel.ChildCount,
+                BabyCount = inputModel.BabyCount,
+                RoomId = new Guid("AE50A5AB-9642-466F-B528-3CC61071BB4C")
+            };
+
+            await this.dbContext.AddAsync(newBooking);
+            await this.dbContext.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<AllBookingsIndexViewModel>> GetAllBookingsAsync()

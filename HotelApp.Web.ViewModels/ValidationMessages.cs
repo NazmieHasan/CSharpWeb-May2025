@@ -34,5 +34,15 @@
             public const string ServiceCreateError =
                 "Fatal error occurred while adding your category! Please try again later!";
         }
+
+        public static class Booking
+        {
+            // Error messages
+            public const string AdultRequiredMessage = "Adult is required.";
+            public const string AdultsMinCountMessage = "Adult min count is 1";
+
+            public const string ServiceCreateError =
+                "Fatal error occurred while adding your booking! Please try again later!";
+        }
     }
 }
