@@ -7,7 +7,7 @@
 
     using static ViewModels.ValidationMessages.Booking;
 
-    public class BookingController : Controller
+    public class BookingController : BaseController
     {
         private readonly IRoomService roomService;
         private readonly IBookingService bookingService;
@@ -53,7 +53,7 @@
 
             try
             {
-                await this.bookingService.AddBookingAsync(inputModel);
+                await this.bookingService.AddBookingAsync(this.GetUserId()!, inputModel);
 
                 return this.RedirectToAction(nameof(Index));
             }

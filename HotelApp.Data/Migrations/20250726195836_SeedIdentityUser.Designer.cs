@@ -4,6 +4,7 @@ using HotelApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HotelApp.Data.Migrations
 {
     [DbContext(typeof(HotelAppDbContext))]
-    partial class HotelAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250726195836_SeedIdentityUser")]
+    partial class SeedIdentityUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -86,15 +89,9 @@ namespace HotelApp.Data.Migrations
                     b.Property<Guid>("RoomId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("RoomId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Bookings", t =>
                         {
@@ -112,12 +109,11 @@ namespace HotelApp.Data.Migrations
                             AdultsCount = 2,
                             BabyCount = 0,
                             ChildCount = 0,
-                            CreatedOn = new DateTime(2025, 7, 27, 4, 21, 5, 420, DateTimeKind.Utc).AddTicks(9560),
-                            DateArrival = new DateOnly(2025, 7, 28),
-                            DateDeparture = new DateOnly(2025, 7, 30),
+                            CreatedOn = new DateTime(2025, 7, 26, 19, 58, 29, 520, DateTimeKind.Utc).AddTicks(5116),
+                            DateArrival = new DateOnly(2025, 7, 27),
+                            DateDeparture = new DateOnly(2025, 7, 29),
                             IsDeleted = false,
-                            RoomId = new Guid("ae50a5ab-9642-466f-b528-3cc61071bb4c"),
-                            UserId = "df1c3a0f-1234-4cde-bb55-d5f15a6aabcd"
+                            RoomId = new Guid("ae50a5ab-9642-466f-b528-3cc61071bb4c")
                         },
                         new
                         {
@@ -125,12 +121,11 @@ namespace HotelApp.Data.Migrations
                             AdultsCount = 2,
                             BabyCount = 0,
                             ChildCount = 0,
-                            CreatedOn = new DateTime(2025, 7, 27, 4, 21, 5, 420, DateTimeKind.Utc).AddTicks(9612),
-                            DateArrival = new DateOnly(2025, 7, 29),
-                            DateDeparture = new DateOnly(2025, 8, 1),
+                            CreatedOn = new DateTime(2025, 7, 26, 19, 58, 29, 520, DateTimeKind.Utc).AddTicks(5198),
+                            DateArrival = new DateOnly(2025, 7, 28),
+                            DateDeparture = new DateOnly(2025, 7, 31),
                             IsDeleted = false,
-                            RoomId = new Guid("68fb84b9-ef2a-402f-b4fc-595006f5c275"),
-                            UserId = "df1c3a0f-1234-4cde-bb55-d5f15a6aabcd"
+                            RoomId = new Guid("68fb84b9-ef2a-402f-b4fc-595006f5c275")
                         },
                         new
                         {
@@ -138,12 +133,11 @@ namespace HotelApp.Data.Migrations
                             AdultsCount = 1,
                             BabyCount = 0,
                             ChildCount = 0,
-                            CreatedOn = new DateTime(2025, 7, 27, 4, 21, 5, 420, DateTimeKind.Utc).AddTicks(9721),
-                            DateArrival = new DateOnly(2025, 7, 30),
-                            DateDeparture = new DateOnly(2025, 7, 31),
+                            CreatedOn = new DateTime(2025, 7, 26, 19, 58, 29, 520, DateTimeKind.Utc).AddTicks(5213),
+                            DateArrival = new DateOnly(2025, 7, 29),
+                            DateDeparture = new DateOnly(2025, 7, 30),
                             IsDeleted = false,
-                            RoomId = new Guid("777634e2-3bb6-4748-8e91-7a10b70c78ac"),
-                            UserId = "df1c3a0f-1234-4cde-bb55-d5f15a6aabcd"
+                            RoomId = new Guid("777634e2-3bb6-4748-8e91-7a10b70c78ac")
                         });
                 });
 
@@ -404,15 +398,15 @@ namespace HotelApp.Data.Migrations
                         {
                             Id = "df1c3a0f-1234-4cde-bb55-d5f15a6aabcd",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "02cd9c0e-97fa-4935-8d5a-74219935cc8c",
+                            ConcurrencyStamp = "d4bd4192-9b26-43e9-baea-985b56309585",
                             Email = "admin@hotelsystem.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@HOTELSYSTEM.COM",
                             NormalizedUserName = "ADMIN@HOTELSYSTEM.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAECQKs/vh/HdIe6dyPZ0yYbAiyiUJUpZUWCAbjXIdp7S7FzPvwwrkPtOjLzJ6qQrDEg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEHTqhs/EqxWiyamquIXploJKLFD7XTX0sJIX1e+C3tyBm1emPu7qXyb1CcrpfZ7QUg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "f03b39c2-658b-48b9-ae8c-cdaab28c7aa8",
+                            SecurityStamp = "e56c128f-d07e-4c60-b841-5c4bceec5a2c",
                             TwoFactorEnabled = false,
                             UserName = "admin@hotelsystem.com"
                         });
@@ -530,15 +524,7 @@ namespace HotelApp.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.Navigation("Room");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("HotelApp.Data.Models.Room", b =>

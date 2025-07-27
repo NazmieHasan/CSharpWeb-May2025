@@ -7,7 +7,7 @@
     using ViewModels.Category;
     using static ViewModels.ValidationMessages.Category;
 
-    public class CategoryController : Controller
+    public class CategoryController : BaseController
     {
         private readonly ICategoryService categoryService;
 
@@ -17,6 +17,7 @@
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             IEnumerable<AllCategoriesIndexViewModel> allCategories = await this.categoryService

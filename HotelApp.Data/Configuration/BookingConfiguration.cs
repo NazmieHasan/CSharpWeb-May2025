@@ -41,6 +41,16 @@
                 .OnDelete(DeleteBehavior.Restrict);
 
             entity
+                .Property(b => b.UserId)
+                .IsRequired();
+
+            entity
+                .HasOne(b => b.User)
+                .WithMany()
+                .HasForeignKey(b => b.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity
                 .HasQueryFilter(b => b.IsDeleted == false);
 
             entity
@@ -64,6 +74,7 @@
                     ChildCount = 0,
                     BabyCount = 0,
                     IsDeleted = false,
+                    UserId = "df1c3a0f-1234-4cde-bb55-d5f15a6aabcd",
                     RoomId = Guid.Parse("AE50A5AB-9642-466F-B528-3CC61071BB4C")
                 },
                 new Booking
@@ -77,6 +88,7 @@
                     ChildCount = 0,
                     BabyCount = 0,
                     IsDeleted = false,
+                    UserId = "df1c3a0f-1234-4cde-bb55-d5f15a6aabcd",
                     RoomId = Guid.Parse("68FB84B9-EF2A-402F-B4FC-595006F5C275")
                 },
                 new Booking
@@ -90,6 +102,7 @@
                     ChildCount = 0,
                     BabyCount = 0,
                     IsDeleted = false,
+                    UserId = "df1c3a0f-1234-4cde-bb55-d5f15a6aabcd",
                     RoomId = Guid.Parse("777634E2-3BB6-4748-8E91-7A10B70C78AC")
                 }
             };

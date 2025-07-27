@@ -5,7 +5,7 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
-    public class RoomController : Controller
+    public class RoomController : BaseController
     {
         private readonly IRoomService roomService;
         private readonly ICategoryService categoryService;

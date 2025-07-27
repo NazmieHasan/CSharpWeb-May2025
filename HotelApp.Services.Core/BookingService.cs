@@ -1,6 +1,7 @@
 ﻿namespace HotelApp.Services.Core
 {
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.AspNetCore.Identity;
 
     using Data;
     using Data.Models;
@@ -11,26 +12,41 @@
     public class BookingService : IBookingService
     {
         private readonly HotelAppDbContext dbContext;
+        private readonly UserManager<IdentityUser> userManager;
 
-        public BookingService(HotelAppDbContext dbContext)
+        public BookingService(HotelAppDbContext dbContext, 
+            UserManager<IdentityUser> userManager)
         {
             this.dbContext = dbContext;
+            this.userManager = userManager;
         }
 
-        public async Task AddBookingAsync(AddBookingInputModel inputModel)
+        public async Task<bool> AddBookingAsync(string userId, AddBookingInputModel inputModel)
         {
-            Booking newBooking = new Booking()
-            {
-                DateArrival = inputModel.DateArrival,
-                DateDeparture = inputModel.DateDeparture,
-                AdultsCount = inputModel.AdultsCount,
-                ChildCount = inputModel.ChildCount,
-                BabyCount = inputModel.BabyCount,
-                RoomId = new Guid("AE50A5AB-9642-466F-B528-3CC61071BB4C")
-            };
+            bool opRes = false;
 
-            await this.dbContext.AddAsync(newBooking);
-            await this.dbContext.SaveChangesAsync();
+            IdentityUser? user = await this.userManager.FindByIdAsync(userId);
+
+            if (user != null)
+            {
+                Booking newBooking = new Booking()
+                {
+                    DateArrival = inputModel.DateArrival,
+                    DateDeparture = inputModel.DateDeparture,
+                    AdultsCount = inputModel.AdultsCount,
+                    ChildCount = inputModel.ChildCount,
+                    BabyCount = inputModel.BabyCount,
+                    UserId = userId,
+                    RoomId = new Guid("AE50A5AB-9642-466F-B528-3CC61071BB4C")
+                };
+
+                await this.dbContext.Bookings.AddAsync(newBooking);
+                await this.dbContext.SaveChangesAsync();
+
+                opRes = true;
+            }
+
+            return opRes;
         }
 
         public async Task<bool> DeleteBookingAsync(string? id)

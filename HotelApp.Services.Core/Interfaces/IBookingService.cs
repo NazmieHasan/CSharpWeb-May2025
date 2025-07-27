@@ -7,7 +7,7 @@
     {
         Task<IEnumerable<AllBookingsIndexViewModel>> GetAllBookingsAsync();
 
-        Task AddBookingAsync(AddBookingInputModel inputModel);
+        Task<bool> AddBookingAsync(string userId, AddBookingInputModel inputModel);
 
         Task<BookingDetailsViewModel?> GetBookingDetailsByIdAsync(string? id);
 

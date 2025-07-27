@@ -5,7 +5,7 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-    public class ApplicationUserBookingConfuguration : IEntityTypeConfiguration<ApplicationUserBooking>
+    public class ApplicationUserBookingConfiguration : IEntityTypeConfiguration<ApplicationUserBooking>
     {
         public void Configure(EntityTypeBuilder<ApplicationUserBooking> entity)
         {

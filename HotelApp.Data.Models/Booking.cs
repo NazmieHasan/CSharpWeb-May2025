@@ -1,5 +1,6 @@
 ﻿namespace HotelApp.Data.Models
 {
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
 
     [Comment("Booking in the system")]
@@ -25,6 +26,10 @@
         // TODO: Extract the property with Id to BaseDeletableModel
         [Comment("Shows if booking is deleted")]
         public bool IsDeleted { get; set; }
+
+        public string UserId { get; set; } = null!;
+
+        public virtual IdentityUser User { get; set; } = null!;
 
         public Guid RoomId { get; set; }
 

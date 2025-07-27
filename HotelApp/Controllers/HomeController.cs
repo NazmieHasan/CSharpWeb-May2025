@@ -2,8 +2,10 @@ namespace HotelApp.Web.Controllers
 {
     using System.Diagnostics;
     using HotelApp.Web.ViewModels;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    public class HomeController : Controller
+
+    public class HomeController : BaseController
     {
         private readonly ILogger<HomeController> _logger;
 
@@ -12,6 +14,7 @@ namespace HotelApp.Web.Controllers
             _logger = logger;
         }
 
+        [AllowAnonymous]
         public IActionResult Index()
         {
             return View();
