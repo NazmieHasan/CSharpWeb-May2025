@@ -165,6 +165,30 @@
             return editModel;
         }
 
+        public async Task<IEnumerable<MyBookingsViewModel>> GetBookingsByUserIdAsync(string userId)
+        {
+            // Due to the use of the built-in IdentityUser, we do not have direct navigation collection from the user side
+            IEnumerable<MyBookingsViewModel> myBookings = await this.dbContext
+                .Bookings
+                .Include(b => b.Room)
+                .AsNoTracking()
+                .Where(b => b.UserId.ToLower() == userId.ToLower())
+                .Select(b => new MyBookingsViewModel()
+                {
+                    Id = b.Id.ToString(),
+                    CreatedOn = b.CreatedOn,
+                    DateArrival = b.DateArrival,
+                    DateDeparture = b.DateDeparture,
+                    AdultsCount = b.AdultsCount,
+                    ChildCount = b.ChildCount,
+                    BabyCount = b.BabyCount,
+                    Room = b.Room.Name
+                })
+                .ToArrayAsync();
+
+            return myBookings;
+        }
+
         public async Task<bool> PersistUpdatedBookingAsync(EditBookingInputModel inputModel)
         {
             Booking? editableBooking = await this.FindBookingByStringId(inputModel.Id);

@@ -202,5 +202,28 @@
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> My()
+        {
+            try
+            {
+                string? userId = this.GetUserId();
+                if (userId == null)
+                {
+                    return this.Forbid();
+                }
+
+                IEnumerable<MyBookingsViewModel> userBookings = await this.bookingService
+                    .GetBookingsByUserIdAsync(userId);
+                return View(userBookings);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+
+                return this.RedirectToAction(nameof(Index), "Home");
+            }
+        }
+
     }
 }

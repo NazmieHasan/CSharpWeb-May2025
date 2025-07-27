@@ -20,5 +20,7 @@
         Task<bool> DeleteBookingAsync(string? id);
 
         Task<DeleteBookingViewModel?> GetBookingDeleteDetailsByIdAsync(string? id);
+
+        Task<IEnumerable<MyBookingsViewModel>> GetBookingsByUserIdAsync(string userId);
     }
 }
