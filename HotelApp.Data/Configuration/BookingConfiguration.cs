@@ -51,6 +51,12 @@
                 .OnDelete(DeleteBehavior.Restrict);
 
             entity
+                .HasOne(c => c.Manager)
+                .WithMany(m => m.ManagedBookings)
+                .HasForeignKey(c => c.ManagerId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            entity
                 .HasQueryFilter(b => b.IsDeleted == false);
 
             entity
