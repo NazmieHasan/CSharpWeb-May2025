@@ -1,6 +1,8 @@
 namespace HotelApp.Web
 {
     using Data;
+    using Data.Repository;
+    using Data.Repository.Interfaces;
     using HotelApp.Services.Core;
     using HotelApp.Services.Core.Interfaces;
     using Microsoft.AspNetCore.Identity;
@@ -38,6 +40,9 @@ namespace HotelApp.Web
                 })
                 .AddEntityFrameworkStores<HotelAppDbContext>();
 
+            builder.Services.AddScoped<IRoomRepository, RoomRepository>();
+            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+            builder.Services.AddScoped<IBookingRepository, BookingRepository>();
 
             builder.Services.AddScoped<ICategoryService, CategoryService>();
             builder.Services.AddScoped<IRoomService, RoomService>();

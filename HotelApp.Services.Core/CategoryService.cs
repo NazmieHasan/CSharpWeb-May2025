@@ -86,6 +86,11 @@
             return allCategories;
         }
 
+        // not added GetCategoriesDropDownDataAsync() to ICategoryRepository because the method
+        // use a ViewModel, includes a projection
+        // TO DO: Move the projection to the repository as a helper method (but not part of the public interface),
+        // which returns IQueryable<Category> or an anonymous DTO,
+        // and then apply .Select(...) to a ViewModel in the service layer.
         public async Task<IEnumerable<AddRoomCategoryDropDownModel>> GetCategoriesDropDownDataAsync()
         {
             IEnumerable<AddRoomCategoryDropDownModel> categoriesAsDropDown = await this.dbContext
