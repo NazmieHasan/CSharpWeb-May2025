@@ -1,23 +1,25 @@
 ﻿namespace HotelApp.Services.Core
 {
+    using System.Globalization;
+
     using Microsoft.EntityFrameworkCore;
-    using Microsoft.AspNetCore.Identity;
-
-    using Data;
     using Data.Models;
+    using Data.Repository.Interfaces;
     using Interfaces;
-    using HotelApp.Web.ViewModels.Booking;
-
+    using Web.ViewModels.Booking;
+    using static GCommon.ApplicationConstants;
+    using System.Collections.Generic;
+    using Microsoft.AspNetCore.Identity;
 
     public class BookingService : IBookingService
     {
-        private readonly HotelAppDbContext dbContext;
+        private readonly IBookingRepository bookingRepository;
         private readonly UserManager<IdentityUser> userManager;
 
-        public BookingService(HotelAppDbContext dbContext, 
+        public BookingService(IBookingRepository bookingRepository, 
             UserManager<IdentityUser> userManager)
         {
-            this.dbContext = dbContext;
+            this.bookingRepository = bookingRepository;
             this.userManager = userManager;
         }
 
@@ -40,8 +42,7 @@
                     RoomId = new Guid("AE50A5AB-9642-466F-B528-3CC61071BB4C")
                 };
 
-                await this.dbContext.Bookings.AddAsync(newBooking);
-                await this.dbContext.SaveChangesAsync();
+                await this.bookingRepository.AddAsync(newBooking);
 
                 opRes = true;
             }
@@ -58,16 +59,16 @@
             }
 
             // TODO: To be investigated when relations to Room entity are introduced
-            this.dbContext.Bookings.Remove(bookingToDelete);
-            await this.dbContext.SaveChangesAsync();
+            await this.bookingRepository
+                .HardDeleteAsync(bookingToDelete);
 
             return true;
         }
 
         public async Task<IEnumerable<AllBookingsIndexViewModel>> GetAllBookingsAsync()
         {
-            IEnumerable<AllBookingsIndexViewModel> allBookings = await this.dbContext
-                .Bookings
+            IEnumerable<AllBookingsIndexViewModel> allBookings = await this.bookingRepository
+                .GetAllAttached()
                 .Include(b => b.Room)
                 .Where(b => !b.IsDeleted)
                 .Select(b => new AllBookingsIndexViewModel
@@ -118,8 +119,8 @@
 
             if (isIdValidGuid)
             {
-                bookingDetails = await this.dbContext
-                    .Bookings
+                bookingDetails = await this.bookingRepository
+                    .GetAllAttached()
                     .Include(b => b.Room)
                     .AsNoTracking()
                     .Where(b => b.Id == bookingId)
@@ -148,8 +149,8 @@
 
             if (isIdValidGuid)
             {
-                editModel = await this.dbContext
-                    .Bookings
+                editModel = await this.bookingRepository
+                    .GetAllAttached()
                     .AsNoTracking()
                     .Where(b => b.Id == bookingId)
                     .Select(b => new EditBookingInputModel()
@@ -168,8 +169,8 @@
         public async Task<IEnumerable<MyBookingsViewModel>> GetBookingsByUserIdAsync(string userId)
         {
             // Due to the use of the built-in IdentityUser, we do not have direct navigation collection from the user side
-            IEnumerable<MyBookingsViewModel> myBookings = await this.dbContext
-                .Bookings
+            IEnumerable<MyBookingsViewModel> myBookings = await this.bookingRepository
+                .GetAllAttached()
                 .Include(b => b.Room)
                 .AsNoTracking()
                 .Where(b => b.UserId.ToLower() == userId.ToLower())
@@ -202,7 +203,7 @@
             editableBooking.ChildCount = inputModel.ChildCount;
             editableBooking.BabyCount = inputModel.BabyCount;
 
-            await this.dbContext.SaveChangesAsync();
+            await this.bookingRepository.UpdateAsync(editableBooking);
 
             return true;
         }
@@ -216,9 +217,7 @@
             }
 
             // Soft Delete <=> Edit of IsDeleted property
-            bookingToDelete.IsDeleted = true;
-
-            await this.dbContext.SaveChangesAsync();
+            await this.bookingRepository.DeleteAsync(bookingToDelete);
 
             return true;
         }
@@ -233,10 +232,8 @@
                 bool isGuidValid = Guid.TryParse(id, out Guid bookingGuid);
                 if (isGuidValid)
                 {
-                    booking = await this.dbContext
-                        .Bookings
-                        .Include(b => b.Room)
-                        .FirstOrDefaultAsync(b => b.Id == bookingGuid);
+                    booking = await this.bookingRepository
+                    .GetByIdAsync(bookingGuid);
                 }
             }
 
