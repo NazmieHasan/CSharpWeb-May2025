@@ -1,21 +1,23 @@
 ﻿namespace HotelApp.Services.Core
 {
     using System.Globalization;
-    using Microsoft.EntityFrameworkCore;
 
-    using Data;
+    using Microsoft.EntityFrameworkCore;
     using Data.Models;
+    using Data.Repository.Interfaces;
     using Interfaces;
     using Web.ViewModels.Category;
-    using HotelApp.Web.ViewModels.Room;
+    using Web.ViewModels.Room;
+    using static GCommon.ApplicationConstants;
+    using System.Collections.Generic;
 
     public class CategoryService : ICategoryService
     {
-        private readonly HotelAppDbContext dbContext;
+        private readonly ICategoryRepository categoryRepository;
 
-        public CategoryService(HotelAppDbContext dbContext)
+        public CategoryService(ICategoryRepository categoryRepository)
         {
-            this.dbContext = dbContext;
+            this.categoryRepository = categoryRepository;
         }
 
         public async Task AddCategoryAsync(CategoryFormInputModel inputModel)
@@ -29,8 +31,7 @@
                 ImageUrl = inputModel.ImageUrl,
             };
 
-            await this.dbContext.AddAsync(newCat);
-            await this.dbContext.SaveChangesAsync();
+            await this.categoryRepository.AddAsync(newCat);
         }
 
         public async Task<bool> DeleteCategoryAsync(int? id)
@@ -42,14 +43,16 @@
             }
 
             // TODO: To be investigated when relations to Category entity are introduced
-            this.dbContext.Categories.Remove(catToDelete);
-            await this.dbContext.SaveChangesAsync();
+            await this.categoryRepository
+                .HardDeleteAsync(catToDelete);
 
             return true;
         }
 
         public async Task<bool> EditCategoryAsync(CategoryFormInputModel inputModel)
         {
+            bool result = false;
+
             Category? editableCat = await this.FindCategoryById(inputModel.Id);
 
             if (editableCat == null)
@@ -63,15 +66,15 @@
             editableCat.Beds = inputModel.Beds;
             editableCat.ImageUrl = inputModel.ImageUrl;
 
-            await this.dbContext.SaveChangesAsync();
+            result = await this.categoryRepository.UpdateAsync(editableCat);
 
-            return true;
+            return result;
         }
 
         public async Task<IEnumerable<AllCategoriesIndexViewModel>> GetAllCategoriesAsync()
         {
-            IEnumerable<AllCategoriesIndexViewModel> allCategories = await this.dbContext
-                .Categories
+            IEnumerable<AllCategoriesIndexViewModel> allCategories = await this.categoryRepository
+                .GetAllAttached()
                 .AsNoTracking()
                 .Select(c => new AllCategoriesIndexViewModel()
                 {
@@ -93,8 +96,8 @@
         // and then apply .Select(...) to a ViewModel in the service layer.
         public async Task<IEnumerable<AddRoomCategoryDropDownModel>> GetCategoriesDropDownDataAsync()
         {
-            IEnumerable<AddRoomCategoryDropDownModel> categoriesAsDropDown = await this.dbContext
-                .Categories
+            IEnumerable<AddRoomCategoryDropDownModel> categoriesAsDropDown = await this.categoryRepository
+                .GetAllAttached()
                 .AsNoTracking()
                 .Select(c => new AddRoomCategoryDropDownModel()
                 {
@@ -131,8 +134,8 @@
                 return null;
             }
 
-            return await this.dbContext
-                .Categories
+            return await this.categoryRepository
+                .GetAllAttached()
                 .AsNoTracking()
                 .Where(c => c.Id == id.Value)
                 .Select(c => new CategoryDetailsViewModel
@@ -153,8 +156,8 @@
 
             if (id.HasValue)
             {
-                editableCat = await this.dbContext
-                    .Categories
+                editableCat = await this.categoryRepository
+                .GetAllAttached()
                     .AsNoTracking()
                     .Where(c => c.Id == id.Value)
                     .Select(c => new CategoryFormInputModel()
@@ -173,6 +176,8 @@
 
         public async Task<bool> SoftDeleteCategoryAsync(int? id)
         {
+            bool result = false;
+
             Category? catToDelete = await this.FindCategoryById(id);
             if (catToDelete == null)
             {
@@ -180,11 +185,9 @@
             }
 
             // Soft Delete <=> Edit of IsDeleted property
-            catToDelete.IsDeleted = true;
+            result = await this.categoryRepository.DeleteAsync(catToDelete);
 
-            await this.dbContext.SaveChangesAsync();
-
-            return true;
+            return result;
         }
 
         // TODO: Implement as generic method in BaseService
@@ -194,9 +197,8 @@
 
             if (id.HasValue)
             {
-                category = await this.dbContext
-                    .Categories
-                    .FindAsync(id.Value);
+                category = await this.categoryRepository
+                    .GetByIdAsync(id.Value);
             }
 
             return category;
