@@ -3,6 +3,7 @@ namespace HotelApp.Web
     using Data;
     using Data.Repository;
     using Data.Repository.Interfaces;
+    using HotelApp.Web.Infrastructure.Extensions;
     using HotelApp.Services.Core;
     using HotelApp.Services.Core.Interfaces;
     using Microsoft.AspNetCore.Identity;
@@ -43,14 +44,16 @@ namespace HotelApp.Web
             builder.Services.AddScoped<IRoomRepository, RoomRepository>();
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
             builder.Services.AddScoped<IBookingRepository, BookingRepository>();
+            builder.Services.AddScoped<IManagerRepository, ManagerRepository>();
 
-            builder.Services.AddScoped<ICategoryService, CategoryService>();
-            builder.Services.AddScoped<IRoomService, RoomService>();
-            builder.Services.AddScoped<IBookingService, BookingService>();
+            builder.Services.AddUserDefinedServices(typeof(ICategoryService).Assembly);
+            builder.Services.AddUserDefinedServices(typeof(IRoomService).Assembly);
+            builder.Services.AddUserDefinedServices(typeof(IBookingService).Assembly);
+            builder.Services.AddUserDefinedServices(typeof(IManagerService).Assembly);
 
             builder.Services.AddControllersWithViews();
 
-            var app = builder.Build();
+            WebApplication app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -71,6 +74,7 @@ namespace HotelApp.Web
 
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseManagerAccessRestriction();
 
             app.MapControllerRoute(
                 name: "default",

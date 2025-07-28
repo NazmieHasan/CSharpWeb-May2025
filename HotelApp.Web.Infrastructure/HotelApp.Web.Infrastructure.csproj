@@ -8,6 +8,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HotelApp.GCommon\HotelApp.GCommon.csproj" />
+    <ProjectReference Include="..\HotelApp.Services.Core\HotelApp.Services.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
   </ItemGroup>
 
 </Project>

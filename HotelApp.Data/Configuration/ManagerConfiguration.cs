@@ -9,6 +9,9 @@
     {
         public void Configure(EntityTypeBuilder<Manager> entity)
         {
+            // rename table, beacause in database name is Manager 
+            entity.ToTable("Managers");
+
             entity
                 .HasKey(m => m.Id);
 

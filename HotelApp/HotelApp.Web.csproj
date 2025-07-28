@@ -21,6 +21,7 @@
     <ProjectReference Include="..\HotelApp.Data\HotelApp.Data.csproj" />
     <ProjectReference Include="..\HotelApp.GCommon\HotelApp.GCommon.csproj" />
     <ProjectReference Include="..\HotelApp.Services.Core\HotelApp.Services.Core.csproj" />
+    <ProjectReference Include="..\HotelApp.Web.Infrastructure\HotelApp.Web.Infrastructure.csproj" />
     <ProjectReference Include="..\HotelApp.Web.ViewModels\HotelApp.Web.ViewModels.csproj" />
   </ItemGroup>
 
