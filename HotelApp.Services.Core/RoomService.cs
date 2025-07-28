@@ -2,40 +2,45 @@
 {
 
     using System.Globalization;
-    using Microsoft.EntityFrameworkCore;
 
-    using Data;
+    using Microsoft.EntityFrameworkCore;
     using Data.Models;
+    using Data.Repository.Interfaces;
     using Interfaces;
-    using HotelApp.Web.ViewModels.Room;
+    using Web.ViewModels.Room;
+    using static GCommon.ApplicationConstants;
+    using System.Collections.Generic;
 
     public class RoomService : IRoomService
     {
-        private readonly HotelAppDbContext dbContext;
+        private readonly IRoomRepository roomRepository;
+        private readonly ICategoryRepository categoryRepository;
 
-        public RoomService(HotelAppDbContext dbContext)
+        public RoomService(IRoomRepository roomRepository,
+            ICategoryRepository categoryRepository)
         {
-            this.dbContext = dbContext;
+            this.roomRepository = roomRepository;
+            this.categoryRepository = categoryRepository;
         }
+
 
         public async Task<bool> AddRoomAsync(AddRoomInputModel inputModel)
         {
             bool opRes = false;
 
-            Category? catRef = await this.dbContext
-                .Categories
-                .FindAsync(inputModel.CategoryId);
+            Category? catRef = await this.categoryRepository
+                .GetAllAttached()
+                .FirstOrDefaultAsync(c => c.Id == inputModel.CategoryId);
 
             if (catRef != null)
             {
-                Room newRecipe = new Room()
+                Room newRoom = new Room()
                 {
                     Name = inputModel.Name,
                     CategoryId = inputModel.CategoryId
                 };
 
-                await this.dbContext.Rooms.AddAsync(newRecipe);
-                await this.dbContext.SaveChangesAsync();
+                await this.roomRepository.AddAsync(newRoom);
 
                 opRes = true;
             }
@@ -52,16 +57,16 @@
             }
 
             // TODO: To be investigated when relations to Room entity are introduced
-            this.dbContext.Rooms.Remove(roomToDelete);
-            await this.dbContext.SaveChangesAsync();
+            await this.roomRepository
+                .HardDeleteAsync(roomToDelete);
 
             return true;
         }
 
         public async Task<IEnumerable<AllRoomsIndexViewModel>> GetAllRoomsAsync()
         {
-            IEnumerable<AllRoomsIndexViewModel> allRooms = await this.dbContext
-                .Rooms
+            IEnumerable<AllRoomsIndexViewModel> allRooms = await this.roomRepository
+                .GetAllAttached()
                 .Include(r => r.Category)
                 .Where(r => !r.IsDeleted)
                 .Select(r => new AllRoomsIndexViewModel
@@ -102,8 +107,8 @@
 
             if (isIdValidGuid)
             {
-                roomDetails = await this.dbContext
-                    .Rooms
+                roomDetails = await this.roomRepository
+                    .GetAllAttached()
                     .Include(r => r.Category)
                     .AsNoTracking()
                     .Where(r => r.Id == roomId)
@@ -127,8 +132,8 @@
 
             if (isIdValidGuid)
             {
-                editModel = await this.dbContext
-                    .Rooms
+                editModel = await this.roomRepository
+                    .GetAllAttached()
                     .AsNoTracking()
                     .Where(r => r.Id == roomId)
                     .Select(r => new EditRoomInputModel()
@@ -155,7 +160,7 @@
             editableRoom.Name = inputModel.Name;
             editableRoom.CategoryId = inputModel.CategoryId;
 
-            await this.dbContext.SaveChangesAsync();
+            await this.roomRepository.UpdateAsync(editableRoom);
 
             return true;
         }
@@ -168,10 +173,7 @@
                 return false;
             }
 
-            // Soft Delete <=> Edit of IsDeleted property
-            roomToDelete.IsDeleted = true;
-
-            await this.dbContext.SaveChangesAsync();
+            await this.roomRepository.DeleteAsync(roomToDelete);
 
             return true;
         }
@@ -187,10 +189,8 @@
                 bool isGuidValid = Guid.TryParse(id, out Guid roomGuid);
                 if (isGuidValid)
                 {
-                    room = await this.dbContext
-                        .Rooms
-                        .Include(r => r.Category)
-                        .FirstOrDefaultAsync(r => r.Id == roomGuid);
+                    room = await this.roomRepository
+                    .GetByIdAsync(roomGuid);
                 }
             }
 
