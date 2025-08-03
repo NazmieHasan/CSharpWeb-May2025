@@ -1,11 +1,9 @@
 namespace HotelApp.Web
 {
     using Data;
-    using Data.Repository;
     using Data.Repository.Interfaces;
-    using HotelApp.Web.Infrastructure.Extensions;
-    using HotelApp.Services.Core;
-    using HotelApp.Services.Core.Interfaces;
+    using Infrastructure.Extensions;
+    using Services.Core.Interfaces;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
 
@@ -41,10 +39,10 @@ namespace HotelApp.Web
                 })
                 .AddEntityFrameworkStores<HotelAppDbContext>();
 
-            builder.Services.AddScoped<IRoomRepository, RoomRepository>();
-            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-            builder.Services.AddScoped<IBookingRepository, BookingRepository>();
-            builder.Services.AddScoped<IManagerRepository, ManagerRepository>();
+            builder.Services.AddRepositories(typeof(ICategoryRepository).Assembly);
+            builder.Services.AddRepositories(typeof(IRoomRepository).Assembly);
+            builder.Services.AddRepositories(typeof(IBookingRepository).Assembly);
+            builder.Services.AddRepositories(typeof(IManagerRepository).Assembly);
 
             builder.Services.AddUserDefinedServices(typeof(ICategoryService).Assembly);
             builder.Services.AddUserDefinedServices(typeof(IRoomService).Assembly);
