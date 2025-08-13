@@ -50,6 +50,33 @@
             return opRes;
         }
 
+        public async Task<bool> AddBookingAsync(string userId, string roomId, string arrival, string departure, int adultsCount, int childCount, int babyCount)
+        {
+            bool opRes = false;
+
+            IdentityUser? user = await this.userManager.FindByIdAsync(userId);
+
+            if (user != null)
+            {
+                Booking newBooking = new Booking()
+                {
+                    DateArrival = DateOnly.Parse(arrival),
+                    DateDeparture = DateOnly.Parse(departure),
+                    AdultsCount = adultsCount,
+                    ChildCount = childCount,
+                    BabyCount = babyCount,
+                    UserId = userId,
+                    RoomId = Guid.Parse(roomId)
+                };
+
+                await this.bookingRepository.AddAsync(newBooking);
+
+                opRes = true;
+            }
+
+            return opRes;
+        }
+
         public async Task<bool> DeleteBookingAsync(string? id)
         {
             Booking? bookingToDelete = await this.FindBookingByStringId(id);
@@ -188,6 +215,21 @@
                 .ToArrayAsync();
 
             return myBookings;
+        }
+
+        public async Task<IEnumerable<string>> GetBookingsIdByUserIdAsync(string? userId)
+        {
+            IEnumerable<string> bookingIds = new List<string>();
+            if (!String.IsNullOrWhiteSpace(userId))
+            {
+                bookingIds = await this.bookingRepository
+                    .GetAllAttached()
+                    .Where(b => b.UserId.ToString().ToLower() == userId.ToLower())
+                    .Select(b => b.Id.ToString())
+                    .ToArrayAsync();
+            }
+
+            return bookingIds;
         }
 
         public async Task<bool> PersistUpdatedBookingAsync(EditBookingInputModel inputModel)

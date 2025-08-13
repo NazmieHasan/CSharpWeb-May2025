@@ -205,6 +205,7 @@
         [HttpGet]
         public async Task<IActionResult> My()
         {
+            // TODO: Added bookings in list, if booking created with API
             try
             {
                 string? userId = this.GetUserId();

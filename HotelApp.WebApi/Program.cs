@@ -2,13 +2,14 @@
 namespace HotelApp.WebApi
 {
     using Data;
-    using Data.Models;
     using Data.Repository.Interfaces;
     using Services.Core.Interfaces;
     using Web.Infrastructure.Extensions;
 
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
+
+    using static GCommon.ApplicationConstants;
 
     public class Program
     {
@@ -31,6 +32,18 @@ namespace HotelApp.WebApi
             // Add services to the container.
             builder.Services.AddRepositories(typeof(IBookingRepository).Assembly);
             builder.Services.AddUserDefinedServices(typeof(IBookingService).Assembly);
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy(AllowAllDomainsPolicy, policyBuilder =>
+                {
+                    policyBuilder
+                        .WithOrigins("https://localhost:7180")
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials();
+                });
+            });
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
