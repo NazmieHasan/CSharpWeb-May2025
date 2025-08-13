@@ -9,7 +9,7 @@
 
         Task<bool> AddBookingAsync(string userId, AddBookingInputModel inputModel);
 
-        Task<bool> AddBookingAsync(string userId, string roomId, string arrival, string departure, int adultsCount, int childCount, int babyCount);
+        Task<bool> AddBookingAsync(string userId, string arrival, string departure, int adultsCount, int childCount, int babyCount);
 
         Task<BookingDetailsViewModel?> GetBookingDetailsByIdAsync(string? id);
 

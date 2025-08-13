@@ -61,6 +61,7 @@ namespace HotelApp.WebApi
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapIdentityApi<IdentityUser>();

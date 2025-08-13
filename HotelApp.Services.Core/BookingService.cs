@@ -50,7 +50,7 @@
             return opRes;
         }
 
-        public async Task<bool> AddBookingAsync(string userId, string roomId, string arrival, string departure, int adultsCount, int childCount, int babyCount)
+        public async Task<bool> AddBookingAsync(string userId, string arrival, string departure, int adultsCount, int childCount, int babyCount)
         {
             bool opRes = false;
 
@@ -66,7 +66,7 @@
                     ChildCount = childCount,
                     BabyCount = babyCount,
                     UserId = userId,
-                    RoomId = Guid.Parse(roomId)
+                    RoomId = new Guid("AE50A5AB-9642-466F-B528-3CC61071BB4C")
                 };
 
                 await this.bookingRepository.AddAsync(newBooking);
