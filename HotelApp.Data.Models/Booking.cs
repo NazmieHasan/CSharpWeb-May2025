@@ -29,7 +29,7 @@
 
         public string UserId { get; set; } = null!;
 
-        public virtual IdentityUser User { get; set; } = null!;
+        public virtual ApplicationUser User { get; set; } = null!;
 
         [Comment("Booking's manager")]
         public Guid? ManagerId { get; set; }

@@ -2,11 +2,11 @@
 namespace HotelApp.WebApi
 {
     using Data;
+    using Data.Models;
     using Data.Repository.Interfaces;
     using Services.Core.Interfaces;
     using Web.Infrastructure.Extensions;
 
-    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
 
     using static GCommon.ApplicationConstants;
@@ -26,7 +26,7 @@ namespace HotelApp.WebApi
             });
 
             builder.Services.AddAuthorization();
-            builder.Services.AddIdentityApiEndpoints<IdentityUser>()
+            builder.Services.AddIdentityApiEndpoints<ApplicationUser>()
                 .AddEntityFrameworkStores<HotelAppDbContext>();
 
             // Add services to the container.
@@ -64,7 +64,7 @@ namespace HotelApp.WebApi
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.MapIdentityApi<IdentityUser>();
+            app.MapIdentityApi<ApplicationUser>();
             app.MapControllers();
 
             app.Run();

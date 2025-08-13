@@ -27,7 +27,7 @@
             // The IdentityUser does not contain navigation property, as it is built-in type from the ASP.NET Core Identity
             entity
                 .HasOne(aub => aub.ApplicationUser)
-                .WithMany() // We do not have navigation property from the IdentityUser side
+                .WithMany(u => u.BookingList) 
                 .HasForeignKey(aub => aub.ApplicationUserId)
                 .OnDelete(DeleteBehavior.Restrict);
 

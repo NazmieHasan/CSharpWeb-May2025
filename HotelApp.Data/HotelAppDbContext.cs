@@ -6,7 +6,7 @@
 
     using Models;
     
-    public class HotelAppDbContext : IdentityDbContext
+    public class HotelAppDbContext : IdentityDbContext<ApplicationUser>
     {
         public HotelAppDbContext(DbContextOptions<HotelAppDbContext> options)
             : base(options)
@@ -22,6 +22,8 @@
         public virtual DbSet<ApplicationUserBooking> ApplicationUserBookings { get; set; } = null!;
 
         public virtual DbSet<Manager> Managers { get; set; } = null!;
+
+        public virtual DbSet<ApplicationUser> ApplicationUsers { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

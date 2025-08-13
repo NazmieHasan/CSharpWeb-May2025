@@ -14,10 +14,10 @@
     public class BookingService : IBookingService
     {
         private readonly IBookingRepository bookingRepository;
-        private readonly UserManager<IdentityUser> userManager;
+        private readonly UserManager<ApplicationUser> userManager;
 
         public BookingService(IBookingRepository bookingRepository, 
-            UserManager<IdentityUser> userManager)
+            UserManager<ApplicationUser> userManager)
         {
             this.bookingRepository = bookingRepository;
             this.userManager = userManager;

@@ -46,7 +46,7 @@
 
             entity
                 .HasOne(b => b.User)
-                .WithMany()
+                .WithMany(u => u.Bookings)
                 .HasForeignKey(b => b.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
