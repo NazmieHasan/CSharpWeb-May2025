@@ -7,6 +7,7 @@ namespace HotelApp.WebApi
     using Services.Core.Interfaces;
     using Web.Infrastructure.Extensions;
 
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
 
     using static GCommon.ApplicationConstants;
