@@ -25,6 +25,10 @@
 
         public virtual DbSet<ApplicationUser> ApplicationUsers { get; set; } = null!;
 
+        public virtual DbSet<Guest> Guests { get; set; } = null!;
+
+        public virtual DbSet<Payment> Payments { get; set; } = null!;
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

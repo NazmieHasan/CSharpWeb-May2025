@@ -4,6 +4,7 @@ using HotelApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HotelApp.Data.Migrations
 {
     [DbContext(typeof(HotelAppDbContext))]
-    partial class HotelAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250814031947_AddedPaymentEntity")]
+    partial class AddedPaymentEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -183,7 +186,7 @@ namespace HotelApp.Data.Migrations
                             AdultsCount = 2,
                             BabyCount = 0,
                             ChildCount = 0,
-                            CreatedOn = new DateTime(2025, 8, 14, 3, 43, 44, 916, DateTimeKind.Utc).AddTicks(1624),
+                            CreatedOn = new DateTime(2025, 8, 14, 3, 19, 37, 635, DateTimeKind.Utc).AddTicks(9035),
                             DateArrival = new DateOnly(2025, 8, 15),
                             DateDeparture = new DateOnly(2025, 8, 17),
                             IsDeleted = false,
@@ -196,7 +199,7 @@ namespace HotelApp.Data.Migrations
                             AdultsCount = 2,
                             BabyCount = 0,
                             ChildCount = 0,
-                            CreatedOn = new DateTime(2025, 8, 14, 3, 43, 44, 916, DateTimeKind.Utc).AddTicks(1691),
+                            CreatedOn = new DateTime(2025, 8, 14, 3, 19, 37, 635, DateTimeKind.Utc).AddTicks(9069),
                             DateArrival = new DateOnly(2025, 8, 16),
                             DateDeparture = new DateOnly(2025, 8, 19),
                             IsDeleted = false,
@@ -209,7 +212,7 @@ namespace HotelApp.Data.Migrations
                             AdultsCount = 1,
                             BabyCount = 0,
                             ChildCount = 0,
-                            CreatedOn = new DateTime(2025, 8, 14, 3, 43, 44, 916, DateTimeKind.Utc).AddTicks(1715),
+                            CreatedOn = new DateTime(2025, 8, 14, 3, 19, 37, 635, DateTimeKind.Utc).AddTicks(9084),
                             DateArrival = new DateOnly(2025, 8, 17),
                             DateDeparture = new DateOnly(2025, 8, 18),
                             IsDeleted = false,
@@ -467,51 +470,6 @@ namespace HotelApp.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("HotelApp.Data.Models.Stay", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("BookingId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("GuestId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Stay");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("7b6bdc1f-e561-4fd6-bd03-d9756b60978e"),
-                            BookingId = "033b12ed-6bcc-428e-897e-32db2974bd92",
-                            CreatedOn = new DateTime(2025, 1, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            GuestId = "396a0c6d-1448-4f1f-8047-a0076620ff09"
-                        },
-                        new
-                        {
-                            Id = new Guid("dc801e92-aacc-4151-9448-b3d4200332b1"),
-                            BookingId = "033b12ed-6bcc-428e-897e-32db2974bd92",
-                            CreatedOn = new DateTime(2025, 1, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            GuestId = "1ad1d737-c60d-4d83-995a-3c8e42b2f236"
-                        },
-                        new
-                        {
-                            Id = new Guid("d1940e15-594b-42a0-bc52-0ae788fdc91e"),
-                            BookingId = "b89a76cb-0680-4923-b99a-40c9ce018352",
-                            CreatedOn = new DateTime(2025, 1, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            GuestId = "ef570e9a-b8da-4cbe-af17-60e15cea5ee3"
-                        });
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -620,15 +578,15 @@ namespace HotelApp.Data.Migrations
                         {
                             Id = "df1c3a0f-1234-4cde-bb55-d5f15a6aabcd",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "aa4396e3-7c07-4a1e-ab77-b3e28e53cc6b",
+                            ConcurrencyStamp = "4d1a763e-5c09-43bd-8b85-48e47bd65709",
                             Email = "admin@hotelsystem.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@HOTELSYSTEM.COM",
                             NormalizedUserName = "ADMIN@HOTELSYSTEM.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEN2VjsYKuo3JPVLZEIIxiNkHH7zD+DI8ZRw3rzYqG3dGAy+bnB86lozQmudkaWdKTA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEDIELJsbf8Fkd6dW5lsARqtBbendPcpAo83nlZfWWvcF6GyCpw5rMgAfkqOD5pLSCw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "3aed23f4-3f51-4482-9883-20d422f1da53",
+                            SecurityStamp = "c302d37c-30a6-4a50-bf95-be1b481c6180",
                             TwoFactorEnabled = false,
                             UserName = "admin@hotelsystem.com"
                         });

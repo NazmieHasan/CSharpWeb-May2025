@@ -11,6 +11,7 @@ namespace HotelApp.Web
     using Data.Seeding.Interfaces;
     using Infrastructure.Extensions;
     using Services.Core.Interfaces;
+    using Services.Core.Admin.Interfaces;
 
     public class Program
     {
