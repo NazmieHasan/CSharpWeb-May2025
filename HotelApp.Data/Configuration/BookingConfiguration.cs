@@ -73,42 +73,42 @@
                 {
                     //Id = Guid.NewGuid(),
                     Id = Guid.Parse("7da78485-b70d-4770-84f8-152ed4d9ccee"),
-                    CreatedOn = DateTime.UtcNow,
-                    DateArrival = today.AddDays(1),
-                    DateDeparture = today.AddDays(3),
+                    CreatedOn = new DateTime(2025, 8, 30, 13, 13, 54, DateTimeKind.Utc),
+                    DateArrival = DateOnly.Parse("2025-08-30"),
+                    DateDeparture = DateOnly.Parse("2025-08-31"),
                     AdultsCount = 2,
                     ChildCount = 0,
                     BabyCount = 0,
                     IsDeleted = false,
-                    UserId = "df1c3a0f-1234-4cde-bb55-d5f15a6aabcd",
+                    UserId = "1b00f3f5-43ed-41f6-bdf2-ad5266370038",
                     RoomId = Guid.Parse("AE50A5AB-9642-466F-B528-3CC61071BB4C")
                 },
                 new Booking
                 {
                     //Id = Guid.NewGuid(),
                     Id = Guid.Parse("2a523913-dd8e-44d1-a95e-d343ab4d4080"),
-                    CreatedOn = DateTime.UtcNow,
-                    DateArrival = today.AddDays(2),
-                    DateDeparture = today.AddDays(5),
+                    CreatedOn = new DateTime(2025, 8, 30, 13, 14, 54, DateTimeKind.Utc),
+                    DateArrival = DateOnly.Parse("2025-08-30"),
+                    DateDeparture = DateOnly.Parse("2025-08-31"),
                     AdultsCount = 2,
                     ChildCount = 0,
                     BabyCount = 0,
                     IsDeleted = false,
-                    UserId = "df1c3a0f-1234-4cde-bb55-d5f15a6aabcd",
+                    UserId = "1b00f3f5-43ed-41f6-bdf2-ad5266370038",
                     RoomId = Guid.Parse("68FB84B9-EF2A-402F-B4FC-595006F5C275")
                 },
                 new Booking
                 {
                     //Id = Guid.NewGuid(),
                     Id = Guid.Parse("eb003919-0478-4b33-a168-170c78a8750b"),
-                    CreatedOn = DateTime.UtcNow,
-                    DateArrival = today.AddDays(3),
-                    DateDeparture = today.AddDays(4),
+                    CreatedOn = new DateTime(2025, 8, 30, 13, 15, 54, DateTimeKind.Utc),
+                    DateArrival = DateOnly.Parse("2025-08-30"),
+                    DateDeparture = DateOnly.Parse("2025-08-31"),
                     AdultsCount = 1,
                     ChildCount = 0,
                     BabyCount = 0,
                     IsDeleted = false,
-                    UserId = "df1c3a0f-1234-4cde-bb55-d5f15a6aabcd",
+                    UserId = "9c74337f-64e2-40ad-8bde-09b2631d17cb",
                     RoomId = Guid.Parse("777634E2-3BB6-4748-8E91-7A10B70C78AC")
                 }
             };
