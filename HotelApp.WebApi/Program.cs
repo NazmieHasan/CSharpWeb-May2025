@@ -1,4 +1,3 @@
-
 namespace HotelApp.WebApi
 {
     using Data;

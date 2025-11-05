@@ -98,6 +98,7 @@
                 .GetAllAttached()
                 .Include(b => b.Room)
                 .Where(b => !b.IsDeleted)
+                .OrderByDescending(b => b.CreatedOn)
                 .Select(b => new AllBookingsIndexViewModel
                 {
                     Id = b.Id.ToString(),
@@ -201,6 +202,7 @@
                 .Include(b => b.Room)
                 .AsNoTracking()
                 .Where(b => b.UserId.ToLower() == userId.ToLower())
+                .OrderByDescending(b => b.CreatedOn)
                 .Select(b => new MyBookingsViewModel()
                 {
                     Id = b.Id.ToString(),
@@ -225,6 +227,7 @@
                 bookingIds = await this.bookingRepository
                     .GetAllAttached()
                     .Where(b => b.UserId.ToString().ToLower() == userId.ToLower())
+                    .OrderByDescending(b => b.CreatedOn)
                     .Select(b => b.Id.ToString())
                     .ToArrayAsync();
             }
