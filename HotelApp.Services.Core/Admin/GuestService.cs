@@ -1,5 +1,5 @@
 ﻿namespace HotelApp.Services.Core.Admin
-{
+{ 
     using HotelApp.Data.Repository.Interfaces;
     using HotelApp.Services.Core.Admin.Interfaces;
     using HotelApp.Web.ViewModels.Admin.GuestManagement;
@@ -31,5 +31,5 @@
                 .ToListAsync()
                 ?? Enumerable.Empty<GuestManagementIndexViewModel>();
         }
-    }
+    } 
 }

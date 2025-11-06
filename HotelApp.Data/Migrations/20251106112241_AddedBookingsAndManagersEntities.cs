@@ -3,12 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
-
 namespace HotelApp.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class AddBookingEntity : Migration
+    public partial class AddedBookingsAndManagersEntities : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -30,6 +28,26 @@ namespace HotelApp.Data.Migrations
                 oldComment: "Shows if movie is deleted");
 
             migrationBuilder.CreateTable(
+                name: "Managers",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, comment: "Manager identifier"),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false, comment: "Manager's user entity")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Managers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Managers_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                },
+                comment: "Manager in the system");
+
+            migrationBuilder.CreateTable(
                 name: "Bookings",
                 columns: table => new
                 {
@@ -41,6 +59,8 @@ namespace HotelApp.Data.Migrations
                     ChildCount = table.Column<int>(type: "int", nullable: false, comment: "Child age is between 4 and 17"),
                     BabyCount = table.Column<int>(type: "int", nullable: false, comment: "Baby age is between 0 and 3"),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false, comment: "Shows if booking is deleted"),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ManagerId = table.Column<Guid>(type: "uniqueidentifier", nullable: true, comment: "Booking's manager"),
                     RoomId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
@@ -48,6 +68,18 @@ namespace HotelApp.Data.Migrations
                     table.PrimaryKey("PK_Bookings", x => x.Id);
                     table.CheckConstraint("CK_Booking_DateArrival_NotPast", "[DateArrival] >= CONVERT(date, GETUTCDATE())");
                     table.CheckConstraint("CK_Booking_DepartureAfterArrival", "[DateDeparture] > [DateArrival]");
+                    table.ForeignKey(
+                        name: "FK_Bookings_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Bookings_Managers_ManagerId",
+                        column: x => x.ManagerId,
+                        principalTable: "Managers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
                         name: "FK_Bookings_Rooms_RoomId",
                         column: x => x.RoomId,
@@ -57,20 +89,26 @@ namespace HotelApp.Data.Migrations
                 },
                 comment: "Booking in the system");
 
-            migrationBuilder.InsertData(
+            migrationBuilder.CreateIndex(
+                name: "IX_Bookings_ManagerId",
                 table: "Bookings",
-                columns: new[] { "Id", "AdultsCount", "BabyCount", "ChildCount", "CreatedOn", "DateArrival", "DateDeparture", "RoomId" },
-                values: new object[,]
-                {
-                    { new Guid("2a523913-dd8e-44d1-a95e-d343ab4d4080"), 2, 0, 0, new DateTime(2025, 7, 26, 11, 39, 55, 606, DateTimeKind.Utc).AddTicks(132), new DateOnly(2025, 7, 28), new DateOnly(2025, 7, 31), new Guid("68fb84b9-ef2a-402f-b4fc-595006f5c275") },
-                    { new Guid("7da78485-b70d-4770-84f8-152ed4d9ccee"), 2, 0, 0, new DateTime(2025, 7, 26, 11, 39, 55, 606, DateTimeKind.Utc).AddTicks(70), new DateOnly(2025, 7, 27), new DateOnly(2025, 7, 29), new Guid("ae50a5ab-9642-466f-b528-3cc61071bb4c") },
-                    { new Guid("eb003919-0478-4b33-a168-170c78a8750b"), 1, 0, 0, new DateTime(2025, 7, 26, 11, 39, 55, 606, DateTimeKind.Utc).AddTicks(151), new DateOnly(2025, 7, 29), new DateOnly(2025, 7, 30), new Guid("777634e2-3bb6-4748-8e91-7a10b70c78ac") }
-                });
+                column: "ManagerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Bookings_RoomId",
                 table: "Bookings",
                 column: "RoomId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bookings_UserId",
+                table: "Bookings",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Managers_UserId",
+                table: "Managers",
+                column: "UserId",
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -78,6 +116,9 @@ namespace HotelApp.Data.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Bookings");
+
+            migrationBuilder.DropTable(
+                name: "Managers");
 
             migrationBuilder.AlterTable(
                 name: "Categories",

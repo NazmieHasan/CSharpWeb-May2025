@@ -87,32 +87,6 @@ namespace HotelApp.Data.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("HotelApp.Data.Models.ApplicationUserBooking", b =>
-                {
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)")
-                        .HasComment("Foreign key to the referenced AspNetUser. Part of the entity composite PK.");
-
-                    b.Property<Guid>("BookingId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasComment("Foreign key to the referenced Booking. Part of the entity composite PK.");
-
-                    b.Property<bool>("IsDeleted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false)
-                        .HasComment("Shows if ApplicationUserBooking entry is deleted");
-
-                    b.HasKey("ApplicationUserId", "BookingId");
-
-                    b.HasIndex("BookingId");
-
-                    b.ToTable("ApplicationUserBookings", t =>
-                        {
-                            t.HasComment("User Booking entry in the system.");
-                        });
-                });
-
             modelBuilder.Entity("HotelApp.Data.Models.Booking", b =>
                 {
                     b.Property<Guid>("Id")
@@ -174,47 +148,6 @@ namespace HotelApp.Data.Migrations
                             t.HasCheckConstraint("CK_Booking_DateArrival_NotPast", "[DateArrival] >= CONVERT(date, GETUTCDATE())");
 
                             t.HasCheckConstraint("CK_Booking_DepartureAfterArrival", "[DateDeparture] > [DateArrival]");
-                        });
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("7da78485-b70d-4770-84f8-152ed4d9ccee"),
-                            AdultsCount = 2,
-                            BabyCount = 0,
-                            ChildCount = 0,
-                            CreatedOn = new DateTime(2025, 8, 30, 13, 13, 54, 0, DateTimeKind.Utc),
-                            DateArrival = new DateOnly(2025, 8, 30),
-                            DateDeparture = new DateOnly(2025, 8, 31),
-                            IsDeleted = false,
-                            RoomId = new Guid("ae50a5ab-9642-466f-b528-3cc61071bb4c"),
-                            UserId = "1b00f3f5-43ed-41f6-bdf2-ad5266370038"
-                        },
-                        new
-                        {
-                            Id = new Guid("2a523913-dd8e-44d1-a95e-d343ab4d4080"),
-                            AdultsCount = 2,
-                            BabyCount = 0,
-                            ChildCount = 0,
-                            CreatedOn = new DateTime(2025, 8, 30, 13, 14, 54, 0, DateTimeKind.Utc),
-                            DateArrival = new DateOnly(2025, 8, 30),
-                            DateDeparture = new DateOnly(2025, 8, 31),
-                            IsDeleted = false,
-                            RoomId = new Guid("68fb84b9-ef2a-402f-b4fc-595006f5c275"),
-                            UserId = "1b00f3f5-43ed-41f6-bdf2-ad5266370038"
-                        },
-                        new
-                        {
-                            Id = new Guid("eb003919-0478-4b33-a168-170c78a8750b"),
-                            AdultsCount = 1,
-                            BabyCount = 0,
-                            ChildCount = 0,
-                            CreatedOn = new DateTime(2025, 8, 30, 13, 15, 54, 0, DateTimeKind.Utc),
-                            DateArrival = new DateOnly(2025, 8, 30),
-                            DateDeparture = new DateOnly(2025, 8, 31),
-                            IsDeleted = false,
-                            RoomId = new Guid("777634e2-3bb6-4748-8e91-7a10b70c78ac"),
-                            UserId = "9c74337f-64e2-40ad-8bde-09b2631d17cb"
                         });
                 });
 
@@ -323,24 +256,6 @@ namespace HotelApp.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Guests");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("5d041311-f1b6-44c9-b453-de3c3ad4a7c4"),
-                            CreatedOn = new DateTime(2025, 1, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FamilyName = "Doe",
-                            FirstName = "John",
-                            PhoneNumber = "+111122222"
-                        },
-                        new
-                        {
-                            Id = new Guid("ad35b73a-9686-4df6-a2d6-210b757370ab"),
-                            CreatedOn = new DateTime(2025, 2, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FamilyName = "Smith",
-                            FirstName = "Jane",
-                            PhoneNumber = "+222233333"
-                        });
                 });
 
             modelBuilder.Entity("HotelApp.Data.Models.Manager", b =>
@@ -365,7 +280,7 @@ namespace HotelApp.Data.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Managers", null, t =>
+                    b.ToTable("Managers", t =>
                         {
                             t.HasComment("Manager in the system");
                         });
@@ -399,17 +314,6 @@ namespace HotelApp.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Payments");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("7b6bdc1f-e561-4fd6-bd03-d9756b60978e"),
-                            Amount = "500",
-                            BookingId = "2a42e8c7-ba40-46e9-a6c0-7dca4751f087",
-                            CreatedOn = new DateTime(2025, 1, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PaymentUserFullName = "Alex Doe",
-                            PaymentUserPhoneNumber = "Doe"
-                        });
                 });
 
             modelBuilder.Entity("HotelApp.Data.Models.Room", b =>
@@ -486,30 +390,7 @@ namespace HotelApp.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Stay");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("7b6bdc1f-e561-4fd6-bd03-d9756b60978e"),
-                            BookingId = "033b12ed-6bcc-428e-897e-32db2974bd92",
-                            CreatedOn = new DateTime(2025, 1, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            GuestId = "396a0c6d-1448-4f1f-8047-a0076620ff09"
-                        },
-                        new
-                        {
-                            Id = new Guid("dc801e92-aacc-4151-9448-b3d4200332b1"),
-                            BookingId = "033b12ed-6bcc-428e-897e-32db2974bd92",
-                            CreatedOn = new DateTime(2025, 1, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            GuestId = "1ad1d737-c60d-4d83-995a-3c8e42b2f236"
-                        },
-                        new
-                        {
-                            Id = new Guid("d1940e15-594b-42a0-bc52-0ae788fdc91e"),
-                            BookingId = "b89a76cb-0680-4923-b99a-40c9ce018352",
-                            CreatedOn = new DateTime(2025, 1, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            GuestId = "ef570e9a-b8da-4cbe-af17-60e15cea5ee3"
-                        });
+                    b.ToTable("Stays");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -592,10 +473,12 @@ namespace HotelApp.Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -632,10 +515,12 @@ namespace HotelApp.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
@@ -643,25 +528,6 @@ namespace HotelApp.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("HotelApp.Data.Models.ApplicationUserBooking", b =>
-                {
-                    b.HasOne("HotelApp.Data.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany("BookingList")
-                        .HasForeignKey("ApplicationUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("HotelApp.Data.Models.Booking", "Booking")
-                        .WithMany("UserBookings")
-                        .HasForeignKey("BookingId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("ApplicationUser");
-
-                    b.Navigation("Booking");
                 });
 
             modelBuilder.Entity("HotelApp.Data.Models.Booking", b =>
@@ -765,16 +631,9 @@ namespace HotelApp.Data.Migrations
 
             modelBuilder.Entity("HotelApp.Data.Models.ApplicationUser", b =>
                 {
-                    b.Navigation("BookingList");
-
                     b.Navigation("Bookings");
 
                     b.Navigation("Manager");
-                });
-
-            modelBuilder.Entity("HotelApp.Data.Models.Booking", b =>
-                {
-                    b.Navigation("UserBookings");
                 });
 
             modelBuilder.Entity("HotelApp.Data.Models.Category", b =>

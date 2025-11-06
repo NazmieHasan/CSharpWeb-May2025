@@ -1,5 +1,5 @@
 ﻿namespace HotelApp.Data.Repository
-{
+{ 
     using HotelApp.Data.Models;
     using HotelApp.Data.Repository.Interfaces;
 
@@ -10,5 +10,5 @@
         {
 
         }
-    }
+    } 
 }

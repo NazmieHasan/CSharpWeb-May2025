@@ -19,15 +19,15 @@
 
         public virtual DbSet<Booking> Bookings { get; set; } = null!;
 
-        public virtual DbSet<ApplicationUserBooking> ApplicationUserBookings { get; set; } = null!;
-
         public virtual DbSet<Manager> Managers { get; set; } = null!;
 
         public virtual DbSet<ApplicationUser> ApplicationUsers { get; set; } = null!;
 
+        public virtual DbSet<Payment> Payments { get; set; } = null!;
+
         public virtual DbSet<Guest> Guests { get; set; } = null!;
 
-        public virtual DbSet<Payment> Payments { get; set; } = null!;
+        public virtual DbSet<Stay> Stays { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

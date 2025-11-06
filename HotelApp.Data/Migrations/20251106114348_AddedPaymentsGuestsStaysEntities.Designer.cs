@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HotelApp.Data.Migrations
 {
     [DbContext(typeof(HotelAppDbContext))]
-    [Migration("20250813184254_AddCustomApplicationUser")]
-    partial class AddCustomApplicationUser
+    [Migration("20251106114348_AddedPaymentsGuestsStaysEntities")]
+    partial class AddedPaymentsGuestsStaysEntities
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -90,32 +90,6 @@ namespace HotelApp.Data.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("HotelApp.Data.Models.ApplicationUserBooking", b =>
-                {
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)")
-                        .HasComment("Foreign key to the referenced AspNetUser. Part of the entity composite PK.");
-
-                    b.Property<Guid>("BookingId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasComment("Foreign key to the referenced Booking. Part of the entity composite PK.");
-
-                    b.Property<bool>("IsDeleted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false)
-                        .HasComment("Shows if ApplicationUserBooking entry is deleted");
-
-                    b.HasKey("ApplicationUserId", "BookingId");
-
-                    b.HasIndex("BookingId");
-
-                    b.ToTable("ApplicationUserBookings", t =>
-                        {
-                            t.HasComment("User Booking entry in the system.");
-                        });
-                });
-
             modelBuilder.Entity("HotelApp.Data.Models.Booking", b =>
                 {
                     b.Property<Guid>("Id")
@@ -177,47 +151,6 @@ namespace HotelApp.Data.Migrations
                             t.HasCheckConstraint("CK_Booking_DateArrival_NotPast", "[DateArrival] >= CONVERT(date, GETUTCDATE())");
 
                             t.HasCheckConstraint("CK_Booking_DepartureAfterArrival", "[DateDeparture] > [DateArrival]");
-                        });
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("7da78485-b70d-4770-84f8-152ed4d9ccee"),
-                            AdultsCount = 2,
-                            BabyCount = 0,
-                            ChildCount = 0,
-                            CreatedOn = new DateTime(2025, 8, 13, 18, 42, 44, 653, DateTimeKind.Utc).AddTicks(6521),
-                            DateArrival = new DateOnly(2025, 8, 14),
-                            DateDeparture = new DateOnly(2025, 8, 16),
-                            IsDeleted = false,
-                            RoomId = new Guid("ae50a5ab-9642-466f-b528-3cc61071bb4c"),
-                            UserId = "df1c3a0f-1234-4cde-bb55-d5f15a6aabcd"
-                        },
-                        new
-                        {
-                            Id = new Guid("2a523913-dd8e-44d1-a95e-d343ab4d4080"),
-                            AdultsCount = 2,
-                            BabyCount = 0,
-                            ChildCount = 0,
-                            CreatedOn = new DateTime(2025, 8, 13, 18, 42, 44, 653, DateTimeKind.Utc).AddTicks(6573),
-                            DateArrival = new DateOnly(2025, 8, 15),
-                            DateDeparture = new DateOnly(2025, 8, 18),
-                            IsDeleted = false,
-                            RoomId = new Guid("68fb84b9-ef2a-402f-b4fc-595006f5c275"),
-                            UserId = "df1c3a0f-1234-4cde-bb55-d5f15a6aabcd"
-                        },
-                        new
-                        {
-                            Id = new Guid("eb003919-0478-4b33-a168-170c78a8750b"),
-                            AdultsCount = 1,
-                            BabyCount = 0,
-                            ChildCount = 0,
-                            CreatedOn = new DateTime(2025, 8, 13, 18, 42, 44, 653, DateTimeKind.Utc).AddTicks(6681),
-                            DateArrival = new DateOnly(2025, 8, 16),
-                            DateDeparture = new DateOnly(2025, 8, 17),
-                            IsDeleted = false,
-                            RoomId = new Guid("777634e2-3bb6-4748-8e91-7a10b70c78ac"),
-                            UserId = "df1c3a0f-1234-4cde-bb55-d5f15a6aabcd"
                         });
                 });
 
@@ -302,6 +235,32 @@ namespace HotelApp.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("HotelApp.Data.Models.Guest", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FamilyName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Guests");
+                });
+
             modelBuilder.Entity("HotelApp.Data.Models.Manager", b =>
                 {
                     b.Property<Guid>("Id")
@@ -324,10 +283,40 @@ namespace HotelApp.Data.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Managers", null, t =>
+                    b.ToTable("Managers", t =>
                         {
                             t.HasComment("Manager in the system");
                         });
+                });
+
+            modelBuilder.Entity("HotelApp.Data.Models.Payment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Amount")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BookingId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PaymentUserFullName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PaymentUserPhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Payments");
                 });
 
             modelBuilder.Entity("HotelApp.Data.Models.Room", b =>
@@ -385,6 +374,28 @@ namespace HotelApp.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("HotelApp.Data.Models.Stay", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("BookingId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("GuestId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Stays");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -437,76 +448,6 @@ namespace HotelApp.Data.Migrations
                     b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("IdentityUser");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "df1c3a0f-1234-4cde-bb55-d5f15a6aabcd",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "01f7e1a5-8f49-439b-963d-8657898308b3",
-                            Email = "admin@hotelsystem.com",
-                            EmailConfirmed = true,
-                            LockoutEnabled = false,
-                            NormalizedEmail = "ADMIN@HOTELSYSTEM.COM",
-                            NormalizedUserName = "ADMIN@HOTELSYSTEM.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEPeV9wasg+Y9fFyWJ0z6GP/58qe4hh0YRgz16mpIoBWFpeK3JjfsiJv76zXa2xKk5w==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "3b1482ec-c205-4a2e-8f2f-151a95c11b8d",
-                            TwoFactorEnabled = false,
-                            UserName = "admin@hotelsystem.com"
-                        });
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
                     b.Property<int>("Id")
@@ -535,10 +476,12 @@ namespace HotelApp.Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -575,10 +518,12 @@ namespace HotelApp.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
@@ -586,25 +531,6 @@ namespace HotelApp.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("HotelApp.Data.Models.ApplicationUserBooking", b =>
-                {
-                    b.HasOne("HotelApp.Data.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany("BookingList")
-                        .HasForeignKey("ApplicationUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("HotelApp.Data.Models.Booking", "Booking")
-                        .WithMany("UserBookings")
-                        .HasForeignKey("BookingId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("ApplicationUser");
-
-                    b.Navigation("Booking");
                 });
 
             modelBuilder.Entity("HotelApp.Data.Models.Booking", b =>
@@ -708,16 +634,9 @@ namespace HotelApp.Data.Migrations
 
             modelBuilder.Entity("HotelApp.Data.Models.ApplicationUser", b =>
                 {
-                    b.Navigation("BookingList");
-
                     b.Navigation("Bookings");
 
                     b.Navigation("Manager");
-                });
-
-            modelBuilder.Entity("HotelApp.Data.Models.Booking", b =>
-                {
-                    b.Navigation("UserBookings");
                 });
 
             modelBuilder.Entity("HotelApp.Data.Models.Category", b =>

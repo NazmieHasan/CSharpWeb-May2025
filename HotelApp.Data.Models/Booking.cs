@@ -1,6 +1,5 @@
 ﻿namespace HotelApp.Data.Models
 {
-    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
 
     [Comment("Booking in the system")]
@@ -39,8 +38,5 @@
         public Guid RoomId { get; set; }
 
         public virtual Room Room { get; set; } = null!;
-
-        public virtual ICollection<ApplicationUserBooking> UserBookings { get; set; }
-          = new HashSet<ApplicationUserBooking>();
     }
 }

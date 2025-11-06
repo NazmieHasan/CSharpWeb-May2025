@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HotelApp.Data.Migrations
 {
     [DbContext(typeof(HotelAppDbContext))]
-    [Migration("20250727042113_AddUserIdForeignKeyInBookingEntity")]
-    partial class AddUserIdForeignKeyInBookingEntity
+    [Migration("20251106112241_AddedBookingsAndManagersEntities")]
+    partial class AddedBookingsAndManagersEntities
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,30 +25,69 @@ namespace HotelApp.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("HotelApp.Data.Models.ApplicationUserBooking", b =>
+            modelBuilder.Entity("HotelApp.Data.Models.ApplicationUser", b =>
                 {
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)")
-                        .HasComment("Foreign key to the referenced AspNetUser. Part of the entity composite PK.");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<Guid>("BookingId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasComment("Foreign key to the referenced Booking. Part of the entity composite PK.");
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
 
-                    b.Property<bool>("IsDeleted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false)
-                        .HasComment("Shows if ApplicationUserBooking entry is deleted");
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("ApplicationUserId", "BookingId");
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
-                    b.HasIndex("BookingId");
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
 
-                    b.ToTable("ApplicationUserBookings", t =>
-                        {
-                            t.HasComment("User Booking entry in the system.");
-                        });
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.ToTable("AspNetUsers", (string)null);
                 });
 
             modelBuilder.Entity("HotelApp.Data.Models.Booking", b =>
@@ -86,6 +125,10 @@ namespace HotelApp.Data.Migrations
                         .HasDefaultValue(false)
                         .HasComment("Shows if booking is deleted");
 
+                    b.Property<Guid?>("ManagerId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasComment("Booking's manager");
+
                     b.Property<Guid>("RoomId")
                         .HasColumnType("uniqueidentifier");
 
@@ -94,6 +137,8 @@ namespace HotelApp.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ManagerId");
 
                     b.HasIndex("RoomId");
 
@@ -106,47 +151,6 @@ namespace HotelApp.Data.Migrations
                             t.HasCheckConstraint("CK_Booking_DateArrival_NotPast", "[DateArrival] >= CONVERT(date, GETUTCDATE())");
 
                             t.HasCheckConstraint("CK_Booking_DepartureAfterArrival", "[DateDeparture] > [DateArrival]");
-                        });
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("7da78485-b70d-4770-84f8-152ed4d9ccee"),
-                            AdultsCount = 2,
-                            BabyCount = 0,
-                            ChildCount = 0,
-                            CreatedOn = new DateTime(2025, 7, 27, 4, 21, 5, 420, DateTimeKind.Utc).AddTicks(9560),
-                            DateArrival = new DateOnly(2025, 7, 28),
-                            DateDeparture = new DateOnly(2025, 7, 30),
-                            IsDeleted = false,
-                            RoomId = new Guid("ae50a5ab-9642-466f-b528-3cc61071bb4c"),
-                            UserId = "df1c3a0f-1234-4cde-bb55-d5f15a6aabcd"
-                        },
-                        new
-                        {
-                            Id = new Guid("2a523913-dd8e-44d1-a95e-d343ab4d4080"),
-                            AdultsCount = 2,
-                            BabyCount = 0,
-                            ChildCount = 0,
-                            CreatedOn = new DateTime(2025, 7, 27, 4, 21, 5, 420, DateTimeKind.Utc).AddTicks(9612),
-                            DateArrival = new DateOnly(2025, 7, 29),
-                            DateDeparture = new DateOnly(2025, 8, 1),
-                            IsDeleted = false,
-                            RoomId = new Guid("68fb84b9-ef2a-402f-b4fc-595006f5c275"),
-                            UserId = "df1c3a0f-1234-4cde-bb55-d5f15a6aabcd"
-                        },
-                        new
-                        {
-                            Id = new Guid("eb003919-0478-4b33-a168-170c78a8750b"),
-                            AdultsCount = 1,
-                            BabyCount = 0,
-                            ChildCount = 0,
-                            CreatedOn = new DateTime(2025, 7, 27, 4, 21, 5, 420, DateTimeKind.Utc).AddTicks(9721),
-                            DateArrival = new DateOnly(2025, 7, 30),
-                            DateDeparture = new DateOnly(2025, 7, 31),
-                            IsDeleted = false,
-                            RoomId = new Guid("777634e2-3bb6-4748-8e91-7a10b70c78ac"),
-                            UserId = "df1c3a0f-1234-4cde-bb55-d5f15a6aabcd"
                         });
                 });
 
@@ -228,6 +232,34 @@ namespace HotelApp.Data.Migrations
                             IsDeleted = false,
                             Name = "Apartment Lux",
                             Price = 1500.00m
+                        });
+                });
+
+            modelBuilder.Entity("HotelApp.Data.Models.Manager", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasComment("Manager identifier");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)")
+                        .HasComment("Manager's user entity");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Managers", t =>
+                        {
+                            t.HasComment("Manager in the system");
                         });
                 });
 
@@ -338,89 +370,6 @@ namespace HotelApp.Data.Migrations
                     b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("UserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedEmail")
-                        .HasDatabaseName("EmailIndex");
-
-                    b.HasIndex("NormalizedUserName")
-                        .IsUnique()
-                        .HasDatabaseName("UserNameIndex")
-                        .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "df1c3a0f-1234-4cde-bb55-d5f15a6aabcd",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "02cd9c0e-97fa-4935-8d5a-74219935cc8c",
-                            Email = "admin@hotelsystem.com",
-                            EmailConfirmed = true,
-                            LockoutEnabled = false,
-                            NormalizedEmail = "ADMIN@HOTELSYSTEM.COM",
-                            NormalizedUserName = "ADMIN@HOTELSYSTEM.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAECQKs/vh/HdIe6dyPZ0yYbAiyiUJUpZUWCAbjXIdp7S7FzPvwwrkPtOjLzJ6qQrDEg==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "f03b39c2-658b-48b9-ae8c-cdaab28c7aa8",
-                            TwoFactorEnabled = false,
-                            UserName = "admin@hotelsystem.com"
-                        });
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
                     b.Property<int>("Id")
@@ -506,40 +455,39 @@ namespace HotelApp.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("HotelApp.Data.Models.ApplicationUserBooking", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "ApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("ApplicationUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("HotelApp.Data.Models.Booking", "Booking")
-                        .WithMany("UserBookings")
-                        .HasForeignKey("BookingId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("ApplicationUser");
-
-                    b.Navigation("Booking");
-                });
-
             modelBuilder.Entity("HotelApp.Data.Models.Booking", b =>
                 {
+                    b.HasOne("HotelApp.Data.Models.Manager", "Manager")
+                        .WithMany("ManagedBookings")
+                        .HasForeignKey("ManagerId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("HotelApp.Data.Models.Room", "Room")
                         .WithMany("Bookings")
                         .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
-                        .WithMany()
+                    b.HasOne("HotelApp.Data.Models.ApplicationUser", "User")
+                        .WithMany("Bookings")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.Navigation("Manager");
+
                     b.Navigation("Room");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("HotelApp.Data.Models.Manager", b =>
+                {
+                    b.HasOne("HotelApp.Data.Models.ApplicationUser", "User")
+                        .WithOne("Manager")
+                        .HasForeignKey("HotelApp.Data.Models.Manager", "UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });
@@ -566,7 +514,7 @@ namespace HotelApp.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("HotelApp.Data.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -575,7 +523,7 @@ namespace HotelApp.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("HotelApp.Data.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -590,7 +538,7 @@ namespace HotelApp.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("HotelApp.Data.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -599,21 +547,28 @@ namespace HotelApp.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("HotelApp.Data.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("HotelApp.Data.Models.Booking", b =>
+            modelBuilder.Entity("HotelApp.Data.Models.ApplicationUser", b =>
                 {
-                    b.Navigation("UserBookings");
+                    b.Navigation("Bookings");
+
+                    b.Navigation("Manager");
                 });
 
             modelBuilder.Entity("HotelApp.Data.Models.Category", b =>
                 {
                     b.Navigation("Rooms");
+                });
+
+            modelBuilder.Entity("HotelApp.Data.Models.Manager", b =>
+                {
+                    b.Navigation("ManagedBookings");
                 });
 
             modelBuilder.Entity("HotelApp.Data.Models.Room", b =>
