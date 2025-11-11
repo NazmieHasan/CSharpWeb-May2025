@@ -10,9 +10,9 @@
 
     public class GuestManagementController : BaseAdminController
     {
-        private readonly IGuestService guestService;
+        private readonly IGuestManagementService guestService;
 
-        public GuestManagementController(IGuestService guestService)
+        public GuestManagementController(IGuestManagementService guestService)
         {
             this.guestService = guestService;
         }

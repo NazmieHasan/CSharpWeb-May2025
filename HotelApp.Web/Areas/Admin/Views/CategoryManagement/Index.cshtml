@@ -1,11 +1,11 @@
-﻿@using HotelApp.Web.ViewModels.Admin.GuestManagement
+﻿@using HotelApp.Web.ViewModels.Admin.CategoryManagement
 @using Microsoft.AspNetCore.Identity
-@model IEnumerable<GuestManagementIndexViewModel>
+@model IEnumerable<CategoryManagementIndexViewModel>
 
 @inject RoleManager<IdentityRole> roleManager;
 
 <div class="container mt-5">
-    <h1 class="text-center mb-4 text-warning fw-bold">Guest Management</h1>
+    <h1 class="text-center mb-4 text-warning fw-bold">Category Management</h1>
 
     <div class="d-flex justify-content-between mb-3">
         <a asp-area="Admin" asp-controller="Home" asp-action="Index" class="btn btn-secondary fw-bold">
@@ -19,18 +19,16 @@
                 <tr class="text-warning text-center">
                     <th>#</th>
                     <th>Name</th>
-                    <th>Family</th>
-                    <th>Phone</th>
+                    <th>Beds</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var guest in Model)
+                @foreach (var category in Model)
                 {
                     <tr>
-                        <td class="align-middle">@guest.Id</td>
-                        <td class="align-middle">@guest.FirstName</td>
-                        <td class="align-middle">@guest.FamilyName</td>
-                        <td class="align-middle">@guest.PhoneNumber</td>
+                        <td class="align-middle">@category.Id</td>
+                        <td class="align-middle">@category.Name</td>
+                        <td class="align-middle">@category.Beds</td>
                     </tr>
                 }
             </tbody>

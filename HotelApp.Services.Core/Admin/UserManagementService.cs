@@ -4,14 +4,14 @@
     using Microsoft.EntityFrameworkCore;
 
     using Data.Models;
-    using Interfaces;
+    using Services.Core.Admin.Interfaces;
     using Web.ViewModels.Admin.UserManagement;
 
-    public class UserService : IUserService
+    public class UserManagementService : IUserManagementService
     {
         private readonly UserManager<ApplicationUser> userManager;
 
-        public UserService(UserManager<ApplicationUser> userManager)
+        public UserManagementService(UserManager<ApplicationUser> userManager)
         {
             this.userManager = userManager;
         }

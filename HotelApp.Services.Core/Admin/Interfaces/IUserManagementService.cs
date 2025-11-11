@@ -2,7 +2,7 @@
 {
     using Web.ViewModels.Admin.UserManagement;
 
-    public interface IUserService
+    public interface IUserManagementService
     {
         Task<IEnumerable<UserManagementIndexViewModel>> GetUserManagementBoardDataAsync(string userId);
     }

@@ -10,9 +10,9 @@
 
     public class UserManagementController : BaseAdminController
     {
-        private readonly IUserService userService;
+        private readonly IUserManagementService userService;
 
-        public UserManagementController(IUserService userService)
+        public UserManagementController(IUserManagementService userService)
         {
             this.userService = userService;
         }

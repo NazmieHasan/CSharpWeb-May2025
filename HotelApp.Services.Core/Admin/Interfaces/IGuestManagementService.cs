@@ -2,7 +2,7 @@
 {
     using HotelApp.Web.ViewModels.Admin.GuestManagement;
 
-    public interface IGuestService
+    public interface IGuestManagementService
     {
         Task<IEnumerable<GuestManagementIndexViewModel>> GetGuestManagementBoardDataAsync();
     }

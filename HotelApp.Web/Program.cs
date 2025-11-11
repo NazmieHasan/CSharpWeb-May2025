@@ -11,7 +11,6 @@ namespace HotelApp.Web
     using Data.Seeding.Interfaces;
     using Infrastructure.Extensions;
     using Services.Core.Interfaces;
-    using Services.Core.Admin.Interfaces;
 
     public class Program
     {
@@ -37,16 +36,8 @@ namespace HotelApp.Web
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<HotelAppDbContext>();
 
-            builder.Services.AddRepositories(typeof(ICategoryRepository).Assembly);
-            builder.Services.AddRepositories(typeof(IRoomRepository).Assembly);
             builder.Services.AddRepositories(typeof(IBookingRepository).Assembly);
-            builder.Services.AddRepositories(typeof(IManagerRepository).Assembly);
-
-            builder.Services.AddUserDefinedServices(typeof(ICategoryService).Assembly);
-            builder.Services.AddUserDefinedServices(typeof(IRoomService).Assembly);
             builder.Services.AddUserDefinedServices(typeof(IBookingService).Assembly);
-            builder.Services.AddUserDefinedServices(typeof(IManagerService).Assembly);
-
 
             // TODO: Implement as extension method
             builder.Services.AddTransient<IIdentitySeeder, IdentitySeeder>();

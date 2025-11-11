@@ -1,18 +1,16 @@
 ﻿namespace HotelApp.Services.Core.Admin
-{ 
-    using HotelApp.Data.Repository.Interfaces;
-    using HotelApp.Services.Core.Admin.Interfaces;
-    using HotelApp.Web.ViewModels.Admin.GuestManagement;
-    using HotelApp.Web.ViewModels.Booking;
+{
     using Microsoft.EntityFrameworkCore;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
 
-    public class GuestService : IGuestService
+    using Data.Repository.Interfaces;
+    using Interfaces;
+    using Web.ViewModels.Admin.GuestManagement;
+		
+    public class GuestManagementService : IGuestManagementService
     {
         private readonly IGuestRepository guestRepository;
 
-        public GuestService(IGuestRepository guestRepository)
+        public GuestManagementService(IGuestRepository guestRepository)
         {
             this.guestRepository = guestRepository;
         }
@@ -24,6 +22,7 @@
                 .AsNoTracking()
                 .Select(g => new GuestManagementIndexViewModel
                 {
+                    Id = g.Id,
                     FirstName = g.FirstName,
                     FamilyName = g.FamilyName,
                     PhoneNumber = g.PhoneNumber,
