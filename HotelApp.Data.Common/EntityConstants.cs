@@ -52,5 +52,10 @@
             /// </summary>
             public const int NameMaxLength = 5;
         }
+
+        public static class Manager
+        {
+            public const int EmailMinLength = 5;
+        }
     }
 }

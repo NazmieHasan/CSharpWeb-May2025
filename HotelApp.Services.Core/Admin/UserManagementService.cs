@@ -1,19 +1,22 @@
 ﻿namespace HotelApp.Services.Core.Admin
 {
-    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.AspNetCore.Identity;
 
     using Data.Models;
-    using Services.Core.Admin.Interfaces;
+    using Data.Repository.Interfaces;
+    using Interfaces;
     using Web.ViewModels.Admin.UserManagement;
 
     public class UserManagementService : IUserManagementService
     {
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly IManagerRepository managerRepository;
 
-        public UserManagementService(UserManager<ApplicationUser> userManager)
+        public UserManagementService(UserManager<ApplicationUser> userManager, IManagerRepository managerRepository)
         {
             this.userManager = userManager;
+            this.managerRepository = managerRepository;
         }
 
         public async Task<IEnumerable<UserManagementIndexViewModel>> GetUserManagementBoardDataAsync(string userId)
@@ -32,6 +35,17 @@
                 .ToArrayAsync();
 
             return users;
+        }
+
+        public async Task<IEnumerable<string>> GetManagerEmailsAsync()
+        {
+            IEnumerable<string> managerEmails = await this.managerRepository
+                .GetAllAttached()
+                .Where(m => m.User.UserName != null)
+                .Select(m => (string)m.User.UserName!)
+                .ToArrayAsync();
+
+            return managerEmails;
         }
     }
 }

@@ -141,7 +141,7 @@ namespace HotelApp.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Bookings", t =>
+                    b.ToTable("Bookings", null, t =>
                         {
                             t.HasComment("Booking in the system");
 
@@ -194,7 +194,7 @@ namespace HotelApp.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories", t =>
+                    b.ToTable("Categories", null, t =>
                         {
                             t.HasComment("Category in the system");
                         });
@@ -255,7 +255,7 @@ namespace HotelApp.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Guests");
+                    b.ToTable("Guests", (string)null);
                 });
 
             modelBuilder.Entity("HotelApp.Data.Models.Manager", b =>
@@ -280,7 +280,7 @@ namespace HotelApp.Data.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Managers", t =>
+                    b.ToTable("Managers", null, t =>
                         {
                             t.HasComment("Manager in the system");
                         });
@@ -313,7 +313,7 @@ namespace HotelApp.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Payments");
+                    b.ToTable("Payments", (string)null);
                 });
 
             modelBuilder.Entity("HotelApp.Data.Models.Room", b =>
@@ -342,7 +342,7 @@ namespace HotelApp.Data.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Rooms", t =>
+                    b.ToTable("Rooms", null, t =>
                         {
                             t.HasComment("Room in the system");
                         });
@@ -390,7 +390,7 @@ namespace HotelApp.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Stays");
+                    b.ToTable("Stays", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

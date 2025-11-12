@@ -6,8 +6,6 @@
 
     using Services.Core.Admin.Interfaces;
 
-    using System.Collections.Generic;
-
     public class UserManagementController : BaseAdminController
     {
         private readonly IUserManagementService userService;
@@ -17,6 +15,7 @@
             this.userService = userService;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             IEnumerable<UserManagementIndexViewModel> allUsers = await this.userService
