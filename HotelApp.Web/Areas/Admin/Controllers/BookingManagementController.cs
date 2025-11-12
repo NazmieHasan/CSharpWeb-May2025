@@ -78,5 +78,27 @@
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> ToggleDelete(string? id)
+        {
+            Tuple<bool, bool> opResult = await this.bookingService
+                .DeleteOrRestoreBookingAsync(id);
+            bool success = opResult.Item1;
+            bool isRestored = opResult.Item2;
+
+            if (!success)
+            {
+                TempData[ErrorMessageKey] = "Booking could not be found and updated!";
+            }
+            else
+            {
+                string operation = isRestored ? "restored" : "deleted";
+
+                TempData[SuccessMessageKey] = $"Booking {operation} successfully!";
+            }
+
+            return this.RedirectToAction(nameof(Index));
+        }
+
     }
 }

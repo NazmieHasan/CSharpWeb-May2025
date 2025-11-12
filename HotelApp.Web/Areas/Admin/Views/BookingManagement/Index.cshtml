@@ -43,9 +43,10 @@
                                 <a asp-action="Edit" asp-route-id="@booking.Id" class="btn btn-primary btn-sm fw-bold">
                                     <i class="bi bi-pencil-square"></i> Edit
                                 </a>
-
-                                
-
+                                <a asp-action="ToggleDelete" asp-route-id="@booking.Id" class="btn @(booking.IsDeleted ? "btn-warning" : "btn-danger") btn-sm fw-bold">
+                                    <i class="bi @(booking.IsDeleted ? "bi-arrow-clockwise" : "bi-trash")"></i>
+                                    @(booking.IsDeleted ? "Restore" : "Delete")
+                                </a>
                             </div>
                         </td>
                     </tr>

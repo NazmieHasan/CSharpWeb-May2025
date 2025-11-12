@@ -18,6 +18,6 @@
 
         public string? ManagerName { get; set; }
 
-        public string IsDeleted { get; set; } = null!;
+        public bool IsDeleted { get; set; }
     }
 }

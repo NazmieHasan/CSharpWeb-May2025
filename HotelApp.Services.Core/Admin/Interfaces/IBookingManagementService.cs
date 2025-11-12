@@ -9,5 +9,7 @@
         Task<BookingManagementEditFormModel?> GetBookingForEditAsync(string? id);
 
         Task<bool> PersistUpdatedBookingAsync(BookingManagementEditFormModel inputModel);
+
+        Task<Tuple<bool, bool>> DeleteOrRestoreBookingAsync(string? id);
     }
 }

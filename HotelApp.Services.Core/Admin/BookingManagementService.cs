@@ -68,9 +68,9 @@
                    CreatedOn = b.CreatedOn,
                    DateArrival = b.DateArrival,
                    DateDeparture = b.DateDeparture,
+                   IsDeleted = b.IsDeleted,
                    ManagerName = b.Manager != null ?
                         b.Manager.User.UserName : null,
-                   IsDeleted = b.IsDeleted ? "Yes" : "No"
                })
                .ToListAsync()
                ?? Enumerable.Empty<BookingManagementIndexViewModel>();
@@ -107,6 +107,33 @@
             await this.bookingRepository.UpdateAsync(editableBooking);
 
             return true;
+        }
+
+        public async Task<Tuple<bool, bool>> DeleteOrRestoreBookingAsync(string? id)
+        {
+            bool result = false;
+            bool isRestored = false;
+            if (!String.IsNullOrWhiteSpace(id))
+            {
+                Booking? booking = await this.bookingRepository
+                    .GetAllAttached()
+                    .IgnoreQueryFilters()
+                    .SingleOrDefaultAsync(b => b.Id.ToString().ToLower() == id.ToLower());
+                if (booking != null)
+                {
+                    if (booking.IsDeleted)
+                    {
+                        isRestored = true;
+                    }
+
+                    booking.IsDeleted = !booking.IsDeleted;
+
+                    result = await this.bookingRepository
+                        .UpdateAsync(booking);
+                }
+            }
+
+            return new Tuple<bool, bool>(result, isRestored);
         }
 
         private async Task<Booking?> FindBookingByStringId(string? id)
