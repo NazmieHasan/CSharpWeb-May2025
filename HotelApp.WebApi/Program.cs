@@ -27,6 +27,7 @@ namespace HotelApp.WebApi
 
             builder.Services.AddAuthorization();
             builder.Services.AddIdentityApiEndpoints<ApplicationUser>()
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<HotelAppDbContext>();
 
             // Add services to the container.

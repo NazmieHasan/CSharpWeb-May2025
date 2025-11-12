@@ -1,10 +1,10 @@
 ﻿namespace HotelApp.Web.Areas.Admin.Controllers
 {
     using HotelApp.Web.ViewModels.Admin.UserManagement;
-
     using Microsoft.AspNetCore.Mvc;
-
     using Services.Core.Admin.Interfaces;
+
+    using static GCommon.ApplicationConstants;
 
     public class UserManagementController : BaseAdminController
     {
@@ -22,6 +22,25 @@
                 .GetUserManagementBoardDataAsync(this.GetUserId()!);
 
             return View(allUsers);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AssignRole(RoleSelectionInputModel inputModel)
+        {
+            try
+            {
+                await this.userService
+                    .AssignUserToRoleAsync(inputModel);
+                TempData[SuccessMessageKey] = "User assigned to role successfully!";
+
+                return this.RedirectToAction(nameof(Index));
+            }
+            catch (Exception e)
+            {
+                TempData[ErrorMessageKey] = e.Message;
+
+                return this.RedirectToAction(nameof(Index));
+            }
         }
     }
 }
