@@ -5,5 +5,9 @@
     public interface IBookingManagementService
     {
         Task<IEnumerable<BookingManagementIndexViewModel>> GetBookingManagementBoardDataAsync();
+
+        Task<BookingManagementEditFormModel?> GetBookingForEditAsync(string? id);
+
+        Task<bool> PersistUpdatedBookingAsync(BookingManagementEditFormModel inputModel);
     }
 }

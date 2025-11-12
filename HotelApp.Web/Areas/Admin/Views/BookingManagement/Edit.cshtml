@@ -1,0 +1,71 @@
+﻿@model HotelApp.Web.ViewModels.Admin.BookingManagement.BookingManagementEditFormModel
+
+@{
+    ViewData["Title"] = "Edit Booking";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center text-warning fw-bold">Edit Booking</h2>
+    <hr class="mb-4">
+
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form asp-action="Edit" method="post" class="bg-dark text-light p-4 rounded shadow-lg">
+                <input type="hidden" asp-for="Id" /> 
+
+                <div class="mb-3">
+                    <label asp-for="AdultsCount" class="form-label"></label>
+                    <input asp-for="AdultsCount" class="form-control" type="number" min="1" />
+                    <span asp-validation-for="AdultsCount" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="ChildCount" class="form-label"></label>
+                    <input asp-for="ChildCount" class="form-control" type="number" min="0" />
+                    <span asp-validation-for="ChildCount" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="BabyCount" class="form-label"></label>
+                    <input asp-for="BabyCount" class="form-control" type="number" min="0" />
+                    <span asp-validation-for="BabyCount" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="ManagerEmail" class="form-label fw-bold">Manager</label>
+                    <select asp-for="ManagerEmail" class="form-select">
+                        <option value="" disabled selected>Select Front Office Manager for the booking</option>
+                        @if (Model.AppManagerEmails != null)
+                        {
+                            @foreach (string managerEmail in Model.AppManagerEmails)
+                            {
+                                @if (managerEmail == Model.ManagerEmail)
+                                {
+                                    <option value="@managerEmail" selected="selected">@managerEmail</option>
+                                }
+                                else
+                                {
+                                    <option value="@managerEmail">@managerEmail</option>
+                                }
+                            }
+                        }
+                    </select>
+                    <span asp-validation-for="ManagerEmail" class="text-danger"></span>
+                </div>
+
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary fw-bold px-4">
+                        <i class="bi bi-pencil-square"></i> Update Booking
+                    </button>
+                    <a asp-action="Index" class="btn btn-outline-light ms-2">
+                        <i class="bi bi-arrow-left"></i> Back to List
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

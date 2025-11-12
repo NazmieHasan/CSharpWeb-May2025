@@ -24,6 +24,7 @@
                     <th>Room Number</th>
                     <th>Manager</th>
                     <th>Is Deleted</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -37,6 +38,16 @@
                         <td class="align-middle">@booking.Room</td>
                         <td class="align-middle">@booking.ManagerName</td>
                         <td class="align-middle">@booking.IsDeleted</td>
+                        <td>
+                            <div class="d-flex justify-content-center gap-2">
+                                <a asp-action="Edit" asp-route-id="@booking.Id" class="btn btn-primary btn-sm fw-bold">
+                                    <i class="bi bi-pencil-square"></i> Edit
+                                </a>
+
+                                
+
+                            </div>
+                        </td>
                     </tr>
                 }
             </tbody>
