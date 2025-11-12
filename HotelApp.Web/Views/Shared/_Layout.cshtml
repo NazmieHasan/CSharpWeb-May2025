@@ -1,101 +1,116 @@
 ﻿@{
-	int currentYear = DateTime.UtcNow.Year;
-	string footerNote = (2025 == currentYear) ? $"{currentYear}" : $"{2025} - {currentYear}";
+    int currentYear = DateTime.UtcNow.Year;
+    string footerNote = (2025 == currentYear) ? $"{currentYear}" : $"{2025} - {currentYear}";
 }
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>@ViewData["Title"]</title>
-	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-	<link rel="stylesheet" href="~/HotelApp.Web.styles.css" asp-append-version="true" />
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/HotelApp.Web.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css" integrity="sha512-6S2HWzVFxruDlZxI3sXOZZ4/eJ8AcxkQH1+JjSe/ONCEqR9L4Ysq5JdT5ipqtzU7WHalNwzwBv+iE51gNHJNqQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js" integrity="sha512-lbwH47l/tPXJYG9AcFNoJaTMhGvYWhVM9YI43CT+uteTRRaiLCui8snIgyAN8XWgNjNhCqlAUdzZptso6OCoFQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-	@*TODO: Remove this and introduce it as section Styles in the page*@
-	@if (ViewData["Title"] != null && ViewData["Title"].ToString() == "Explore Rooms")
-	{
-		<link rel="stylesheet" href="~/css/hotel.css" asp-append-version="true" />
-	}
-
-	@await RenderSectionAsync("Styles", false)
-
+    @await RenderSectionAsync("Styles", false)
 </head>
 <body>
-	<header>
-		<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-lg">
-			<div class="container-fluid">
-				<a class="navbar-brand fw-bold text-warning" asp-area="" asp-controller="Home" asp-action="Index">
-					<i class="bi bi-camera-reels-fill"></i> Hotel & SPA
-				</a>
-				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
-						aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-					<span class="navbar-toggler-icon"></span>
-				</button>
-				<div class="navbar-collapse collapse d-lg-inline-flex justify-content-between">
-					<ul class="navbar-nav flex-grow-1">
-						<li class="nav-item">
-							<a class="nav-link text-light" asp-area="" asp-controller="Category" asp-action="Index">
-								Categories
-							</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link text-light" asp-area="" asp-controller="Room" asp-action="Index">
-								Rooms
-							</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link text-light" asp-area="" asp-controller="Booking" asp-action="Index">
-								Bookings
-							</a>
-						</li>
-						@if (User?.Identity?.IsAuthenticated ?? false)
-						{
-							<li class="nav-item">
-								<a class="nav-link text-light" asp-area="" asp-controller="Category" asp-action="Add">
-									Add Category
-								</a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link text-light" asp-area="" asp-controller="Room" asp-action="Add">
-									Add Room
-								</a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link text-light" asp-area="" asp-controller="Booking" asp-action="Add">
-									Add Booking
-								</a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link text-light" asp-area="" asp-controller="Booking" asp-action="My">
-								    My Bookings
-								</a>
-							</li>
-						}
+    <header>
+        <partial name="_NotificationsPartial" />
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-lg">
+            <div class="container-fluid">
+                <a class="navbar-brand fw-bold text-warning" asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="bi bi-camera-reels-fill"></i> CinemaWebApp
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-lg-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="Category" asp-action="Index">
+                                <i class="bi bi-film"></i> Categories
+                            </a>
+                        </li>
 
-					</ul>
-					<partial name="_LoginPartial" />
-				</div>
-			</div>
-		</nav>
-	</header>
-	<div class="container">
-		<main role="main" class="pb-3">
-			@RenderBody()
-		</main>
-	</div>
+                        @if (User?.Identity?.IsAuthenticated ?? false)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="" asp-controller="Booking" asp-action="Add">
+                                    <i class="bi bi-ticket-perforated"></i> Add Booking
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="" asp-controller="Booking" asp-action="My">
+                                    <i class="bi bi-bookmark-star"></i> My Bookings
+                                </a>
+                            </li>
 
-	<footer class="border-top footer text-muted">
-		<div class="container">
-			<p>&copy; @footerNote Hotel & SPA | Rooms and Apartments for you</p>
-		</div>
-	</footer>
-	<script src="~/lib/jquery/dist/jquery.min.js"></script>
-	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-	<script src="~/js/site.js" asp-append-version="true"></script>
-	@await RenderSectionAsync("Scripts", required: false)
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle text-light fw-bold" href="#" id="manageDropdown"
+                                       role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bi bi-tools"></i> Admin
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-dark border-0">
+                                        <li>
+                                            <a class="dropdown-item" asp-area="Admin" asp-controller="BookingManagement" asp-action="Index">
+                                                <i class="bi bi-building"></i> Manage Bookings
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" asp-area="Admin" asp-controller="CategoryManagement" asp-action="Index">
+                                                <i class="bi bi-camera-reels"></i> Manage Categories
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" asp-area="Admin" asp-controller="GuestManagement" asp-action="Index">
+                                                <i class="bi bi-ticket-detailed"></i> Manage Guests
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" asp-area="Admin" asp-controller="RoomManagement" asp-action="Index">
+                                                <i class="bi bi-ticket-detailed"></i> Manage Rooms
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" asp-area="Admin" asp-controller="UserManagement" asp-action="Index">
+                                                <i class="bi bi-ticket-detailed"></i> Manage Users
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            }
+                        }
+                    </ul>
+                    <partial name="_LoginPartial" />
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            <p>&copy; @footerNote HotelWebApp | Rooms And Apartmants For You</p>
+        </div>
+    </footer>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
 

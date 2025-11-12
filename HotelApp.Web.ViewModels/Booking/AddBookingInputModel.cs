@@ -6,12 +6,12 @@
 
     public class AddBookingInputModel
     {
-        [Required]
+        [Required(ErrorMessage = DateArrivalPastMessage)]
         [DataType(DataType.Date)]
         [Display(Name = "Arrival Date")]
         public DateOnly DateArrival { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = DateDepartureBeforeArrivalMessage)]
         [DataType(DataType.Date)]
         [Display(Name = "Departure Date")]
         public DateOnly DateDeparture { get; set; }

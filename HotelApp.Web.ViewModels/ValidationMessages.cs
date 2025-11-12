@@ -41,8 +41,11 @@
             public const string AdultRequiredMessage = "Adult is required.";
             public const string AdultsMinCountMessage = "Adult min count is 1";
 
-            public const string ServiceCreateError =
-                "Fatal error occurred while adding your booking! Please try again later!";
+            public const string DateArrivalPastMessage = "Arrival date cannot be in the past.";
+            public const string DateDepartureBeforeArrivalMessage = "Departure date must be after arrival date.";
+
+            public const string ServiceCreateError = "Error occurred while adding the booking! Please, send valid data!";
+            public const string ServiceCreateExceptionError ="Unexpected error occurred while adding the booking! Please contact developer team!";
         }
     }
 }

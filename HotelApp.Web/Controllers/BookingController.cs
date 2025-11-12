@@ -5,7 +5,10 @@
     using HotelApp.Web.ViewModels.Room;
     using Microsoft.AspNetCore.Mvc;
 
-    using static ViewModels.ValidationMessages.Booking;
+    using static HotelApp.Web.ViewModels.ValidationMessages.Booking;
+
+    using static GCommon.ApplicationConstants;
+    using HotelApp.Web.ViewModels;
 
     public class BookingController : BaseController
     {
@@ -20,24 +23,6 @@
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
-        {
-            try
-            {
-                IEnumerable<AllBookingsIndexViewModel> allBookings = await
-                    this.bookingService.GetAllBookingsAsync();
-
-                return View(allBookings);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-
-                return this.RedirectToAction(nameof(Index), "Home");
-            }
-        }
-
-        [HttpGet]
         public async Task<IActionResult> Add()
         {
             return this.View();
@@ -46,24 +31,42 @@
         [HttpPost]
         public async Task<IActionResult> Add(AddBookingInputModel inputModel)
         {
-            if (!this.ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return this.View(inputModel);
+            }
+            
+            if (inputModel.DateArrival < DateOnly.FromDateTime(DateTime.UtcNow))
+            {
+                ModelState.AddModelError(nameof(inputModel.DateArrival), ValidationMessages.Booking.DateArrivalPastMessage);
+                return View(inputModel);
+            }
+
+            if (inputModel.DateDeparture <= inputModel.DateArrival)
+            {
+                ModelState.AddModelError(nameof(inputModel.DateDeparture), ValidationMessages.Booking.DateDepartureBeforeArrivalMessage);
+                return View(inputModel);
             }
 
             try
             {
-                await this.bookingService.AddBookingAsync(this.GetUserId()!, inputModel);
+                bool success = await this.bookingService.AddBookingAsync(this.GetUserId()!, inputModel);
 
-                return this.RedirectToAction(nameof(Index));
+                if (!success)
+                {
+                    TempData[ErrorMessageKey] = ServiceCreateError;
+                }
+                else
+                {
+                    TempData[SuccessMessageKey] = "Booking created successfully!";
+                }
+
+                return this.RedirectToAction(nameof(My));
             }
             catch (Exception e)
             {
-                // TODO: Implement it with the ILogger
-                Console.WriteLine(e.Message);
-
-                this.ModelState.AddModelError(string.Empty, ServiceCreateError);
-                return this.View(inputModel);
+                TempData[ErrorMessageKey] = ServiceCreateExceptionError;
+                return this.RedirectToAction(nameof(My));
             }
         }
 
@@ -77,7 +80,7 @@
 
                 if (bookingDetails == null)
                 {
-                    return this.RedirectToAction(nameof(Index), "Home");
+                    return this.RedirectToAction(nameof(My));
                 }
 
                 return this.View(bookingDetails);
@@ -86,7 +89,7 @@
             {
                 Console.WriteLine(e.Message);
 
-                return this.RedirectToAction(nameof(Index), "Home");
+                return this.RedirectToAction(nameof(My));
             }
 
         }
@@ -101,7 +104,7 @@
 
                 if (editInputModel == null)
                 {
-                    return this.RedirectToAction(nameof(Index));
+                    return this.RedirectToAction(nameof(My));
                 }
 
                 return this.View(editInputModel);
@@ -110,7 +113,7 @@
             {
                 Console.WriteLine(e.Message);
 
-                return this.RedirectToAction(nameof(Index));
+                return this.RedirectToAction(nameof(My));
             }
         }
 
@@ -140,7 +143,7 @@
             {
                 Console.WriteLine(e.Message);
 
-                return this.RedirectToAction(nameof(Index));
+                return this.RedirectToAction(nameof(My));
             }
         }
 
@@ -154,7 +157,7 @@
                 if (bookingToBeDeleted == null)
                 {
                     // TODO: Custom 404 page
-                    return this.RedirectToAction(nameof(Index));
+                    return this.RedirectToAction(nameof(My));
                 }
 
                 return this.View(bookingToBeDeleted);
@@ -165,7 +168,7 @@
                 // TODO: Add JS bars to indicate such errors
                 Console.WriteLine(e.Message);
 
-                return this.RedirectToAction(nameof(Index));
+                return this.RedirectToAction(nameof(My));
             }
         }
 
@@ -177,7 +180,7 @@
                 if (!this.ModelState.IsValid)
                 {
                     // TODO: Implement JS notifications
-                    return this.RedirectToAction(nameof(Index));
+                    return this.RedirectToAction(nameof(My));
                 }
 
                 bool deleteResult = await this.bookingService
@@ -186,11 +189,11 @@
                 {
                     // TODO: Implement JS notifications
                     // TODO: Alt_Redirect to Not Found page
-                    return this.RedirectToAction(nameof(Index));
+                    return this.RedirectToAction(nameof(My));
                 }
 
                 // TODO: Success notification
-                return this.RedirectToAction(nameof(Index));
+                return this.RedirectToAction(nameof(My));
             }
             catch (Exception e)
             {
@@ -198,7 +201,7 @@
                 // TODO: Add JS bars to indicate such errors
                 Console.WriteLine(e.Message);
 
-                return this.RedirectToAction(nameof(Index));
+                return this.RedirectToAction(nameof(My));
             }
         }
 

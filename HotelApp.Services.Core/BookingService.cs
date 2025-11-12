@@ -27,6 +27,12 @@
         {
             bool opRes = false;
 
+            if (inputModel.DateArrival < DateOnly.FromDateTime(DateTime.UtcNow) ||
+                inputModel.DateDeparture <= inputModel.DateArrival)
+            {
+                return false;
+            }
+
             IdentityUser? user = await this.userManager.FindByIdAsync(userId);
 
             if (user != null)
