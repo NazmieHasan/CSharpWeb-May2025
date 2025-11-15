@@ -57,5 +57,31 @@
         {
             public const int EmailMinLength = 5;
         }
+
+        public static class PaymentMethod
+        {
+            /// <summary>
+            /// Payment Name should be at least 3 characters and up to 30 characters.
+            /// </summary>
+            public const int NameMinLength = 3;
+
+            /// <summary>
+            /// Payment Name should be able to store text with length up to 30 characters.
+            /// </summary>
+            public const int NameMaxLength = 30;
+        }
+
+        public static class Status
+        {
+            /// <summary>
+            /// Status Name should be at least 3 characters and up to 30 characters.
+            /// </summary>
+            public const int NameMinLength = 3;
+
+            /// <summary>
+            /// Status Name should be able to store text with length up to 30 characters.
+            /// </summary>
+            public const int NameMaxLength = 30;
+        }
     }
 }

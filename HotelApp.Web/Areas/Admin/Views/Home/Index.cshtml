@@ -135,6 +135,38 @@
             </div>
         </div>
 
+        <div class="col">
+            <div class="card shadow-lg border-0 bg-dark text-white rounded-3 h-100">
+                <div class="card-body d-flex flex-column align-items-center text-center">
+                    <i class="bi bi-calendar-check-fill text-success display-3 mb-3"></i>
+                    <h5 class="card-title">STAUSES</h5>
+                    <p class="card-text text-muted">Add new status, edit details, or remove them.</p>
+                    <div class="mt-auto w-100">
+                        <a asp-area="Admin" asp-controller="StatusManagement" asp-action="Index"
+                           class="btn btn-success fw-bold shadow-sm w-100 py-2">
+                            <i class="bi bi-play-btn-fill"></i> Go to Statuses
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card shadow-lg border-0 bg-dark text-white rounded-3 h-100">
+                <div class="card-body d-flex flex-column align-items-center text-center">
+                    <i class="bi bi-graph-up-arrow text-info display-3 mb-3"></i>
+                    <h5 class="card-title">PAYMENT METHODS</h5>
+                    <p class="card-text text-muted">Add new payment method, edit details, or remove them.</p>
+                    <div class="mt-auto w-100">
+                        <a asp-area="Admin" asp-controller="PaymentMethodManagement" asp-action="Index"
+                           class="btn btn-info fw-bold shadow-sm w-100 py-2">
+                            <i class="bi bi-bar-chart-line-fill"></i> Go to Payment Methods
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
 </div>

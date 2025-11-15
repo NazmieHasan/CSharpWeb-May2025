@@ -29,6 +29,10 @@
 
         public virtual DbSet<Stay> Stays { get; set; } = null!;
 
+        public virtual DbSet<PaymentMethod> PaymentMethods { get; set; } = null!;
+
+        public virtual DbSet<Status> Statuses { get; set; } = null!;
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
