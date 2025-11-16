@@ -32,10 +32,10 @@
         public async Task<IActionResult> Edit(string? id)
         {
             BookingManagementEditFormModel? editFormModel = await this.bookingService
-                .GetBookingForEditAsync(id);
+                .GetBookingEditFormModelAsync(id);
             if (editFormModel == null)
             {
-                TempData[ErrorMessageKey] = "Selected Cinema does not exist!";
+                TempData[ErrorMessageKey] = "Selected Booking does not exist!";
 
                 return this.RedirectToAction(nameof(Index));
             }
@@ -56,18 +56,24 @@
 
             try
             {
+                if (string.IsNullOrWhiteSpace(inputModel.ManagerEmail))
+                {
+                    TempData[ErrorMessageKey] = "Please select a manager!";
+                    return this.RedirectToAction(nameof(Edit));
+                }
+
                 bool success = await this.bookingService
-                    .PersistUpdatedBookingAsync(inputModel);
+                    .EditBookingAsync(inputModel);
                 if (!success)
                 {
-                    TempData[ErrorMessageKey] = "Error occurred while updating the booking! Ensure to select a valid data!";
+                    TempData[ErrorMessageKey] = "Error occurred while updating the booking! Ensure to select a valid manager!";
+                    return this.RedirectToAction(nameof(Edit));
                 }
                 else
                 {
                     TempData[SuccessMessageKey] = "Booking updated successfully!";
+                    return this.RedirectToAction(nameof(Index));
                 }
-
-                return this.RedirectToAction(nameof(Index));
             }
             catch (Exception e)
             {

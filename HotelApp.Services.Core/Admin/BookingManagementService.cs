@@ -22,36 +22,6 @@
             this.userManager = userManager;
         }
 
-        public async Task<BookingManagementEditFormModel?> GetBookingForEditAsync(string? id)
-        {
-            BookingManagementEditFormModel? editModel = null;
-
-            bool isIdValidGuid = Guid.TryParse(id, out Guid bookingId);
-
-            if (isIdValidGuid)
-            {
-                editModel = await this.bookingRepository
-                    .GetAllAttached()
-                    .AsNoTracking()
-                    .Include(b => b.Manager)
-                    .ThenInclude(m => m.User)
-                    .IgnoreQueryFilters()
-                    .Where(b => b.Id == bookingId)
-                    .Select(b => new BookingManagementEditFormModel()
-                    {
-                        Id = b.Id.ToString(),
-                        AdultsCount = b.AdultsCount,
-                        ChildCount = b.ChildCount,
-                        BabyCount = b.BabyCount,
-                        ManagerEmail = b.Manager != null ?
-                            b.Manager.User.Email ?? string.Empty : string.Empty,
-                    })
-                    .SingleOrDefaultAsync();
-            }
-
-            return editModel;
-        }
-
         public async Task<IEnumerable<BookingManagementIndexViewModel>> GetBookingManagementBoardDataAsync()
         {
             return await bookingRepository
@@ -76,37 +46,63 @@
                ?? Enumerable.Empty<BookingManagementIndexViewModel>();
         }
 
-        public async Task<bool> PersistUpdatedBookingAsync(BookingManagementEditFormModel inputModel)
+        public async Task<BookingManagementEditFormModel?> GetBookingEditFormModelAsync(string? id)
         {
-            Booking? editableBooking = await this.FindBookingByStringId(inputModel.Id);
-
-            if (editableBooking == null)
+            BookingManagementEditFormModel? formModel = null;
+            if (!String.IsNullOrWhiteSpace(id))
             {
-                return false;
-            }
-
-            Manager? manager = null;
-
-            if (!string.IsNullOrWhiteSpace(inputModel.ManagerEmail))
-            {
-                ApplicationUser? managerUser = await this.userManager.FindByNameAsync(inputModel.ManagerEmail);
-
-                if (managerUser != null)
+                Booking? bookingToEdit = await this.bookingRepository
+                    .GetAllAttached()
+                    .Include(b => b.Manager)
+                    .ThenInclude(m => m.User)
+                    .IgnoreQueryFilters()
+                    .SingleOrDefaultAsync(b => b.Id.ToString().ToLower() == id.ToLower());
+                if (bookingToEdit != null)
                 {
-                    manager = await this.managerRepository
-                        .GetAllAttached()
-                        .SingleOrDefaultAsync(m => m.UserId.ToLower() == managerUser.Id.ToLower());
+                    formModel = new BookingManagementEditFormModel()
+                    {
+                        Id = bookingToEdit.Id.ToString(),
+                        AdultsCount = bookingToEdit.AdultsCount,
+                        ChildCount = bookingToEdit.ChildCount,
+                        BabyCount = bookingToEdit.BabyCount,
+                        ManagerEmail = bookingToEdit.Manager != null ?
+                            bookingToEdit.Manager.User.Email ?? string.Empty : string.Empty,
+                    };
                 }
             }
 
-            editableBooking.AdultsCount = inputModel.AdultsCount;
-            editableBooking.ChildCount = inputModel.ChildCount;
-            editableBooking.BabyCount = inputModel.BabyCount;
-            editableBooking.Manager = manager;
+            return formModel;
+        }
 
-            await this.bookingRepository.UpdateAsync(editableBooking);
+        public async Task<bool> EditBookingAsync(BookingManagementEditFormModel? inputModel)
+        {
+            bool result = false;
+            if (inputModel != null)
+            {
+                ApplicationUser? managerUser = await this.userManager
+                    .FindByNameAsync(inputModel.ManagerEmail);
+                if (managerUser != null)
+                {
+                    Manager? manager = await this.managerRepository
+                        .GetAllAttached()
+                        .SingleOrDefaultAsync(m => m.UserId.ToLower() == managerUser.Id.ToLower());
+                    Booking? bookingToEdit = await this.bookingRepository
+                        .SingleOrDefaultAsync(c => c.Id.ToString().ToLower() == inputModel.Id.ToLower());
+                    if (manager != null &&
+                        bookingToEdit != null)
+                    {
+                        bookingToEdit.AdultsCount = inputModel.AdultsCount;
+                        bookingToEdit.ChildCount = inputModel.ChildCount;
+                        bookingToEdit.BabyCount = inputModel.BabyCount;
+                        bookingToEdit.Manager = manager;
 
-            return true;
+                        result = await this.bookingRepository
+                            .UpdateAsync(bookingToEdit);
+                    }
+                }
+            }
+
+            return result;
         }
 
         public async Task<Tuple<bool, bool>> DeleteOrRestoreBookingAsync(string? id)
@@ -134,23 +130,6 @@
             }
 
             return new Tuple<bool, bool>(result, isRestored);
-        }
-
-        private async Task<Booking?> FindBookingByStringId(string? id)
-        {
-            Booking? booking = null;
-
-            if (!string.IsNullOrWhiteSpace(id))
-            {
-                bool isGuidValid = Guid.TryParse(id, out Guid bookingGuid);
-                if (isGuidValid)
-                {
-                    booking = await this.bookingRepository
-                    .GetByIdAsync(bookingGuid);
-                }
-            }
-
-            return booking;
         }
     }
 }

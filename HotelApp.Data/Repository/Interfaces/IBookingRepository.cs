@@ -5,7 +5,6 @@
     public interface IBookingRepository
         : IRepository<Booking, Guid>, IAsyncRepository<Booking, Guid>
     {
-        Task<IEnumerable<Booking>> GetBookingsByUserId(string userId);
     }
 
 }

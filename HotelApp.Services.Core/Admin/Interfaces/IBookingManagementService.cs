@@ -6,9 +6,9 @@
     {
         Task<IEnumerable<BookingManagementIndexViewModel>> GetBookingManagementBoardDataAsync();
 
-        Task<BookingManagementEditFormModel?> GetBookingForEditAsync(string? id);
+        Task<BookingManagementEditFormModel?> GetBookingEditFormModelAsync(string? id);
 
-        Task<bool> PersistUpdatedBookingAsync(BookingManagementEditFormModel inputModel);
+        Task<bool> EditBookingAsync(BookingManagementEditFormModel? inputModel);
 
         Task<Tuple<bool, bool>> DeleteOrRestoreBookingAsync(string? id);
     }
