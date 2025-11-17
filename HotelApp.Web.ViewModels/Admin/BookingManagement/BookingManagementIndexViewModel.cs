@@ -8,15 +8,9 @@
 
         public DateTime CreatedOn { get; set; }
 
-        public DateOnly DateArrival { get; set; }
+        public string UserEmail { get; set; } = null!;
 
-        public DateOnly DateDeparture { get; set; }
-
-        public string RoomId { get; set; } = null!;
-
-        public string Room { get; set; } = null!;
-
-        public string? ManagerName { get; set; }
+        public string? ManagerEmail { get; set; }
 
         public bool IsDeleted { get; set; }
     }

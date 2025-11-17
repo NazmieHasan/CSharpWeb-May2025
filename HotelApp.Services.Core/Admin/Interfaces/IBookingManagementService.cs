@@ -6,6 +6,8 @@
     {
         Task<IEnumerable<BookingManagementIndexViewModel>> GetBookingManagementBoardDataAsync();
 
+        Task<BookingManagementDetailsViewModel?> GetBookingManagementDetailsByIdAsync(string? id);
+
         Task<BookingManagementEditFormModel?> GetBookingEditFormModelAsync(string? id);
 
         Task<bool> EditBookingAsync(BookingManagementEditFormModel? inputModel);

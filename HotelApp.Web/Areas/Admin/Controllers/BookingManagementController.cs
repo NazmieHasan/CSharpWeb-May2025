@@ -1,6 +1,7 @@
 ﻿namespace HotelApp.Web.Areas.Admin.Controllers
 {
     using HotelApp.Web.ViewModels.Admin.BookingManagement;
+    using HotelApp.Web.ViewModels.Booking;
     using Microsoft.AspNetCore.Mvc;
 
     using Services.Core.Admin.Interfaces;
@@ -26,6 +27,30 @@
                 .GetBookingManagementBoardDataAsync();
 
             return View(allBookings);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Details(string? id)
+        {
+            try
+            {
+                BookingManagementDetailsViewModel? bookingDetails = await this.bookingService
+                    .GetBookingManagementDetailsByIdAsync(id);
+
+                if (bookingDetails == null)
+                {
+                    return this.RedirectToAction(nameof(Index));
+                }
+
+                return this.View(bookingDetails);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+
+                return this.RedirectToAction(nameof(Index));
+            }
+
         }
 
         [HttpGet]

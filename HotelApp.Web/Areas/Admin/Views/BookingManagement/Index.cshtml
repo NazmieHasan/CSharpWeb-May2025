@@ -19,9 +19,7 @@
                 <tr class="text-warning text-center">
                     <th>#</th>
                     <th>Created On</th>
-                    <th>Date Arrival</th>
-                    <th>Date Departure</th>
-                    <th>Room Number</th>
+                    <th>User</th>
                     <th>Manager</th>
                     <th>Is Deleted</th>
                     <th>Actions</th>
@@ -32,14 +30,15 @@
                 {
                     <tr>
                         <td class="align-middle">@booking.Id</td>
-                        <td class="align-middle">@booking.CreatedOn.ToString("yyyy-MM-dd HH:mm")</td>
-                        <td class="align-middle">@booking.DateArrival.ToString("yyyy-MM-dd")</td>
-                        <td class="align-middle">@booking.DateDeparture.ToString("yyyy-MM-dd")</td>
-                        <td class="align-middle">@booking.Room</td>
-                        <td class="align-middle">@booking.ManagerName</td>
+                        <td class="align-middle">@booking.CreatedOn.ToString("yyyy-MM-dd")</td>
+                        <td class="align-middle">@booking.UserEmail</td>
+                        <td class="align-middle">@booking.ManagerEmail</td>
                         <td class="align-middle">@booking.IsDeleted</td>
                         <td>
                             <div class="d-flex justify-content-center gap-2">
+                                <a asp-action="Details" asp-route-id="@booking.Id" class="btn btn-success btn-sm fw-bold">
+                                    <i class="bi bi-eye-square me-1"></i>Details
+                                </a>
                                 @if (!booking.IsDeleted)
                                 {
                                     <a asp-action="Edit" asp-route-id="@booking.Id" class="btn btn-primary btn-sm fw-bold">

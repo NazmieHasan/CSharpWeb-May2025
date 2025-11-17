@@ -28,22 +28,56 @@
                .GetAllAttached()
                .IgnoreQueryFilters()
                .AsNoTracking()
-               .Include(b => b.Room)
+               .Include(b => b.User)
                .OrderByDescending(b => b.CreatedOn)
                .Select(b => new BookingManagementIndexViewModel
                {
                    Id = b.Id.ToString(),
-                   Room = b.Room.Name,
-                   RoomId = b.RoomId.ToString(),
                    CreatedOn = b.CreatedOn,
-                   DateArrival = b.DateArrival,
-                   DateDeparture = b.DateDeparture,
-                   IsDeleted = b.IsDeleted,
-                   ManagerName = b.Manager != null ?
+                   UserEmail = b.User.Email,
+                   ManagerEmail = b.Manager != null ?
                         b.Manager.User.UserName : null,
+                   IsDeleted = b.IsDeleted
                })
                .ToListAsync()
                ?? Enumerable.Empty<BookingManagementIndexViewModel>();
+        }
+
+        public async Task<BookingManagementDetailsViewModel?> GetBookingManagementDetailsByIdAsync(string? id)
+        {
+            BookingManagementDetailsViewModel? bookingDetails = null;
+
+            bool isIdValidGuid = Guid.TryParse(id, out Guid bookingId);
+
+            if (isIdValidGuid)
+            {
+                bookingDetails = await this.bookingRepository
+                    .GetAllAttached()
+                    .Include(b => b.User)
+                    .Include(b => b.Room)
+                        .ThenInclude(r => r.Category)
+                    .AsNoTracking()
+                    .Where(b => b.Id == bookingId)
+                    .Select(b => new BookingManagementDetailsViewModel()
+                    {
+                        Id = b.Id.ToString(),
+                        CreatedOn = b.CreatedOn,
+                        DateArrival = b.DateArrival,
+                        DateDeparture = b.DateDeparture,
+                        AdultsCount = b.AdultsCount,
+                        ChildCount = b.ChildCount,
+                        BabyCount = b.BabyCount,
+                        UserEmail = b.User.Email,
+                        ManagerEmail = b.Manager != null ?
+                        b.Manager.User.UserName : null,
+                        Room = b.Room.Name,
+                        RoomCategory = b.Room.Category.Name,
+                        IsDeleted = b.IsDeleted
+                    })
+                    .SingleOrDefaultAsync();
+            }
+
+            return bookingDetails;
         }
 
         public async Task<BookingManagementEditFormModel?> GetBookingEditFormModelAsync(string? id)
