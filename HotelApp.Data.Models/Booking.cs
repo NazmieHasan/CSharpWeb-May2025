@@ -1,12 +1,20 @@
 ﻿namespace HotelApp.Data.Models
 {
     using Microsoft.EntityFrameworkCore;
+    using System.ComponentModel.DataAnnotations.Schema;
 
     [Comment("Booking in the system")]
     public class Booking
     {
+        public Booking()
+        {
+            Id = Guid.NewGuid();
+            CreatedOn = DateTime.UtcNow;
+            StatusId = 1; // Awaiting Payment
+        } 
+
         [Comment("Booking identifier")]
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public Guid Id { get; set; } 
 
         public DateTime CreatedOn { get; set; }
         
@@ -38,5 +46,19 @@
         public Guid RoomId { get; set; }
 
         public virtual Room Room { get; set; } = null!;
+
+        public int StatusId { get; set; }
+
+        public virtual Status Status { get; set; } = null!;
+
+        public ICollection<Stay> Stays { get; set; } = new HashSet<Stay>();
+
+        public ICollection<Payment> Payments { get; set; } = new HashSet<Payment>();
+
+        [NotMapped]
+        public int DaysCount => (DateDeparture.ToDateTime(TimeOnly.MinValue) - DateArrival.ToDateTime(TimeOnly.MinValue)).Days;
+
+        [NotMapped]
+        public decimal TotalAmount => Room?.Category?.Price * DaysCount ?? 0;
     }
 }

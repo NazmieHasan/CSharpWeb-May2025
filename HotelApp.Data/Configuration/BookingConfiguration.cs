@@ -15,6 +15,10 @@
                 .Property(b => b.CreatedOn)
                 .HasDefaultValueSql("GETUTCDATE()");
 
+            entity
+                .Property(b => b.StatusId)
+                .HasDefaultValue(1);
+
             entity.ToTable(tb =>
             {
                 // Ensure DateArrival is not in the past (UTC)
@@ -41,8 +45,10 @@
                 .OnDelete(DeleteBehavior.Restrict);
 
             entity
-                .Property(b => b.UserId)
-                .IsRequired();
+                .HasOne(s => s.Status)
+                .WithMany(b => b.Bookings)
+                .HasForeignKey(s => s.StatusId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             entity
                 .HasOne(b => b.User)
@@ -57,7 +63,12 @@
                 .OnDelete(DeleteBehavior.SetNull);
 
             entity
+               .Property(b => b.StatusId)
+               .HasDefaultValue(1);
+
+            entity
                 .HasQueryFilter(b => b.IsDeleted == false);
+
         }
     }
 }

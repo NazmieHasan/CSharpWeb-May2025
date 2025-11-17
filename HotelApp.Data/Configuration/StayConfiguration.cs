@@ -11,14 +11,31 @@
             entity
                 .HasKey(s => s.Id);
 
-
             entity
-                .Property(s => s.GuestId)
-                .IsRequired();
+               .Property(b => b.CreatedOn)
+               .HasDefaultValueSql("GETUTCDATE()");
 
+            entity.Property(s => s.CheckoutOn)
+                .IsRequired(false);
+
+            // Define constraints for the IsDeleted column
             entity
-                 .Property(s => s.BookingId)
-                 .IsRequired();
+                .Property(p => p.IsDeleted)
+                .HasDefaultValue(false);
+
+            entity.HasOne(s => s.Booking)
+                  .WithMany(b => b.Stays)
+                  .HasForeignKey(s => s.BookingId)
+                  .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(s => s.Guest)
+                  .WithMany(g => g.Stays)
+                  .HasForeignKey(s => s.GuestId)
+                  .OnDelete(DeleteBehavior.Restrict);
+
+            // Filter out only the active (non-deleted) entries
+            entity
+            .HasQueryFilter(p => p.IsDeleted == false);
         }
     }
 }

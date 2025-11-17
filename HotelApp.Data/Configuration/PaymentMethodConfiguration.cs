@@ -17,13 +17,11 @@
             // Define constraints for the Name column
             entity
                 .Property(p => p.Name)
-                .IsRequired()
                 .HasMaxLength(NameMaxLength);
 
             // Define constraints for the IsDeleted column
             entity
                 .Property(p => p.IsDeleted)
-                .IsRequired()
                 .HasDefaultValue(false);
 
             // Filter out only the active (non-deleted) entries

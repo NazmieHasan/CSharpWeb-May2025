@@ -4,6 +4,7 @@ using HotelApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HotelApp.Data.Migrations
 {
     [DbContext(typeof(HotelAppDbContext))]
-    partial class HotelAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251117154254_AddedForeignKeysInStay")]
+    partial class AddedForeignKeysInStay
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -148,7 +151,7 @@ namespace HotelApp.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Bookings", null, t =>
+                    b.ToTable("Bookings", t =>
                         {
                             t.HasComment("Booking in the system");
 
@@ -196,12 +199,12 @@ namespace HotelApp.Data.Migrations
                         .HasComment("Category name");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)")
+                        .HasColumnType("decimal(18,3)")
                         .HasComment("Category price");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories", null, t =>
+                    b.ToTable("Categories", t =>
                         {
                             t.HasComment("Category in the system");
                         });
@@ -273,7 +276,7 @@ namespace HotelApp.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Guests", (string)null);
+                    b.ToTable("Guests");
                 });
 
             modelBuilder.Entity("HotelApp.Data.Models.Manager", b =>
@@ -298,7 +301,7 @@ namespace HotelApp.Data.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Managers", null, t =>
+                    b.ToTable("Managers", t =>
                         {
                             t.HasComment("Manager in the system");
                         });
@@ -310,8 +313,9 @@ namespace HotelApp.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<string>("Amount")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("BookingId")
                         .HasColumnType("uniqueidentifier");
@@ -344,7 +348,7 @@ namespace HotelApp.Data.Migrations
 
                     b.HasIndex("PaymentMethodId");
 
-                    b.ToTable("Payments", (string)null);
+                    b.ToTable("Payments");
                 });
 
             modelBuilder.Entity("HotelApp.Data.Models.PaymentMethod", b =>
@@ -370,7 +374,7 @@ namespace HotelApp.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PaymentMethods", null, t =>
+                    b.ToTable("PaymentMethods", t =>
                         {
                             t.HasComment("Payment method in the system");
                         });
@@ -422,7 +426,7 @@ namespace HotelApp.Data.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Rooms", null, t =>
+                    b.ToTable("Rooms", t =>
                         {
                             t.HasComment("Room in the system");
                         });
@@ -474,7 +478,7 @@ namespace HotelApp.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Statuses", null, t =>
+                    b.ToTable("Statuses", t =>
                         {
                             t.HasComment("Booking status in the system");
                         });
@@ -550,7 +554,7 @@ namespace HotelApp.Data.Migrations
 
                     b.HasIndex("GuestId");
 
-                    b.ToTable("Stays", (string)null);
+                    b.ToTable("Stays");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

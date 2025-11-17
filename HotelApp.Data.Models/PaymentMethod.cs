@@ -14,5 +14,7 @@
         // TODO: Extract the property with Id to BaseDeletableModel
         [Comment("Shows if payment method is deleted")]
         public bool IsDeleted { get; set; }
+
+        public ICollection<Payment> Payments { get; set; } = new HashSet<Payment>();
     }
 }

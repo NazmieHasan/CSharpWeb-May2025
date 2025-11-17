@@ -1,7 +1,6 @@
 ﻿namespace HotelApp.Web.Areas.Admin.Controllers
 {
     using HotelApp.Web.ViewModels.Admin.GuestManagement;
-
     using Microsoft.AspNetCore.Mvc;
 
     using Services.Core.Admin.Interfaces;
@@ -23,6 +22,34 @@
                 .GetGuestManagementBoardDataAsync();
 
             return View(allGuests);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Create()
+        {
+            return this.View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(GuestManagementCreateViewModel inputModel)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View(inputModel);
+            }
+
+            try
+            {
+                await this.guestService.AddGuestManagementAsync(inputModel);
+
+                return this.RedirectToAction(nameof(Index));
+            }
+            catch (Exception e)
+            {
+                // TODO: Implement it with the ILogger
+                Console.WriteLine(e.Message);
+                return this.View(inputModel);
+            }
         }
     }
 }

@@ -53,25 +53,34 @@
             {
                 bookingDetails = await this.bookingRepository
                     .GetAllAttached()
+                    .IgnoreQueryFilters()
+                    .AsNoTracking()
                     .Include(b => b.User)
                     .Include(b => b.Room)
                         .ThenInclude(r => r.Category)
+                    .Include(b => b.Payments)
+                    .Include(b => b.Status)
                     .AsNoTracking()
                     .Where(b => b.Id == bookingId)
                     .Select(b => new BookingManagementDetailsViewModel()
                     {
                         Id = b.Id.ToString(),
                         CreatedOn = b.CreatedOn,
+                        Status = b.Status.Name,
                         DateArrival = b.DateArrival,
                         DateDeparture = b.DateDeparture,
+                        DaysCount = b.DaysCount,
                         AdultsCount = b.AdultsCount,
                         ChildCount = b.ChildCount,
                         BabyCount = b.BabyCount,
                         UserEmail = b.User.Email,
                         ManagerEmail = b.Manager != null ?
-                        b.Manager.User.UserName : null,
+                            b.Manager.User.UserName : null,
                         Room = b.Room.Name,
                         RoomCategory = b.Room.Category.Name,
+                        TotalAmount = b.TotalAmount,
+                        PaidAmount = b.Payments.Sum(p => p.Amount), 
+                        RemainingAmount = b.TotalAmount - b.Payments.Sum(p => p.Amount),
                         IsDeleted = b.IsDeleted
                     })
                     .SingleOrDefaultAsync();

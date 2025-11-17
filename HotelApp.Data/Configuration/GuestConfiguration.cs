@@ -12,6 +12,10 @@
             entity
                 .HasKey(g => g.Id);
 
+            entity
+                .Property(b => b.CreatedOn)
+                .HasDefaultValueSql("GETUTCDATE()");
+
             // Define constraints for the First Name column
             entity
                 .Property(g => g.FirstName)
@@ -26,6 +30,15 @@
             entity
                 .Property(g => g.PhoneNumber)
                 .IsRequired();
+
+            // Define constraints for the Email column
+            entity
+                .Property(g => g.Email)
+                .IsRequired();
+
+            entity
+                .Property(b => b.IsDeleted)
+                .HasDefaultValue(false);
         }
 
     }

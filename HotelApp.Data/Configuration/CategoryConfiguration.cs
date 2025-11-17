@@ -33,7 +33,7 @@
 
             entity
                 .Property(c => c.Price)
-                .HasColumnType("decimal(18,3)");
+                .HasColumnType("decimal(18,2)");
 
             // Define constraints for the ImageUrl column
             entity

@@ -2,6 +2,7 @@
 {
     using Microsoft.EntityFrameworkCore;
 
+    using Data.Models;
     using Data.Repository.Interfaces;
     using Interfaces;
     using Web.ViewModels.Admin.GuestManagement;
@@ -15,11 +16,26 @@
             this.guestRepository = guestRepository;
         }
 
+        public async Task AddGuestManagementAsync(GuestManagementCreateViewModel inputModel)
+        {
+            Guest newGuest = new Guest()
+            {
+                FirstName = inputModel.FirstName,
+                FamilyName = inputModel.FamilyName,
+                PhoneNumber = inputModel.PhoneNumber,
+                Email = inputModel.Email,
+            };
+
+            await this.guestRepository.AddAsync(newGuest);
+        }
+
         public async Task<IEnumerable<GuestManagementIndexViewModel>> GetGuestManagementBoardDataAsync()
         {
             return await guestRepository
                 .GetAllAttached()
+                .IgnoreQueryFilters()
                 .AsNoTracking()
+                .OrderByDescending(g => g.CreatedOn)
                 .Select(g => new GuestManagementIndexViewModel
                 {
                     Id = g.Id,

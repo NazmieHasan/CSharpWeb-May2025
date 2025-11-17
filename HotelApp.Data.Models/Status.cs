@@ -15,5 +15,8 @@
         // TODO: Extract the property with Id to BaseDeletableModel
         [Comment("Shows if status is deleted")]
         public bool IsDeleted { get; set; }
+
+        public virtual ICollection<Booking> Bookings { get; set; }
+            = new HashSet<Booking>();
     }
 }

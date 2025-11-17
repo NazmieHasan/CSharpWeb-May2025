@@ -13,12 +13,17 @@
             <h6 class="card-title">Booking @Model.Id</h6>
             <hr />
             <p>Created On: @Model.CreatedOn.ToString("yyyy-MM-dd HH:mm:ss")</p>
+            <p>Status: @Model.Status</p>
             <p>Created By: @Model.UserEmail</p>
             <p>Manager: @Model.ManagerEmail</p>
             <p>Arrival Date: @Model.DateArrival.ToString("yyyy-MM-dd")</p>
             <p>Departure Date: @Model.DateDeparture.ToString("yyyy-MM-dd")</p>
+            <p>Day(s): @Model.DaysCount</p>
             <p>Room: @Model.Room</p>
             <p>Category: @Model.RoomCategory</p>
+            <p>Total Amount $@Model.TotalAmount.ToString("0.00")</p>
+            <p>Paid Amount $@Model.PaidAmount.ToString("0.00")</p>
+            <p>Remaining Amount $@Model.RemainingAmount.ToString("0.00")</p>
             <p>Adults: @Model.AdultsCount</p>
             <p>Children: @Model.ChildCount</p>
             <p>Babies: @Model.BabyCount</p>

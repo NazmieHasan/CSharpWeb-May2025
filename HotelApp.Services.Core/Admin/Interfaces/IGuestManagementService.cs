@@ -5,5 +5,7 @@
     public interface IGuestManagementService
     {
         Task<IEnumerable<GuestManagementIndexViewModel>> GetGuestManagementBoardDataAsync();
+
+        Task AddGuestManagementAsync(GuestManagementCreateViewModel inputModel);
     }
 }

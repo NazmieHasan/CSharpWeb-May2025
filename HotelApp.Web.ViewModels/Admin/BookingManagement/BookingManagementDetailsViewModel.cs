@@ -14,9 +14,19 @@
 
         public string RoomCategory { get; set; } = null!;
 
+        public decimal TotalAmount { get; set; }
+
+        public decimal PaidAmount { get; set; }
+
+        public decimal RemainingAmount { get; set; }
+
+        public string Status { get; set; } = null!;
+
         public DateOnly DateArrival { get; set; }
 
         public DateOnly DateDeparture { get; set; }
+
+        public int DaysCount { get; set; }
 
         public int AdultsCount { get; set; }
 
