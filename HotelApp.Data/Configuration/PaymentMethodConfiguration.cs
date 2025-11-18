@@ -17,6 +17,7 @@
             // Define constraints for the Name column
             entity
                 .Property(p => p.Name)
+                .IsRequired()
                 .HasMaxLength(NameMaxLength);
 
             // Define constraints for the IsDeleted column

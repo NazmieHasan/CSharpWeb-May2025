@@ -2,18 +2,25 @@
 {
     using Microsoft.EntityFrameworkCore;
 
+    using Data.Models;
     using Data.Repository.Interfaces;
     using Interfaces;
 
     using HotelApp.Web.ViewModels.Admin.PaymentManagement;
+    using static HotelApp.Web.ViewModels.ValidationMessages;
 
     public class PaymentManagementService : IPaymentManagementService
     {
         private readonly IPaymentRepository paymentRepository;
+        private readonly IPaymentMethodRepository paymentMethodRepository;
+        private readonly IBookingRepository bookingRepository;
 
-        public PaymentManagementService(IPaymentRepository paymentRepository)
+        public PaymentManagementService(IPaymentRepository paymentRepository, 
+            IPaymentMethodRepository paymentMethodRepository, IBookingRepository bookingRepository)
         {
             this.paymentRepository = paymentRepository;
+            this.paymentMethodRepository = paymentMethodRepository;
+            this.bookingRepository = bookingRepository;
         }
 
         public async Task<IEnumerable<PaymentManagementIndexViewModel>> GetPaymentManagementBoardDataAsync()
@@ -29,6 +36,53 @@
                 })
                 .ToListAsync()
                 ?? Enumerable.Empty<PaymentManagementIndexViewModel>();
+        }
+
+        public async Task AddPaymentManagementAsync(PaymentManagementCreateViewModel inputModel)
+        {
+
+            PaymentMethod? paymentMethodRef = await this.paymentMethodRepository
+                .GetAllAttached()
+                .FirstOrDefaultAsync(pm => pm.Id == inputModel.PaymentMethodId);
+
+            if (paymentMethodRef == null)
+            {
+                throw new InvalidOperationException("Invalid payment method.");
+            }
+
+            // Add new payment
+            Payment newPayment = new Payment()
+            {
+                PaymentUserFullName = inputModel.FullName,
+                PaymentUserPhoneNumber = inputModel.PhoneNumber,
+                Amount = inputModel.Amount,
+                BookingId = inputModel.BookingId,
+                PaymentMethodId = inputModel.PaymentMethodId, 
+            };
+
+            await this.paymentRepository.AddAsync(newPayment);
+
+            // Load booking after payment is saved
+            var booking = await this.bookingRepository
+                .GetAllAttached()
+                .Include(b => b.Room)
+                    .ThenInclude(r => r.Category)
+                .Include(b => b.Payments)
+                .FirstOrDefaultAsync(b => b.Id == inputModel.BookingId);
+
+            if (booking != null)
+            {
+                decimal totalAmount = booking.TotalAmount;
+                decimal paidAmount = booking.Payments.Sum(p => p.Amount);
+
+                // If fully paid, update status
+                if (paidAmount == totalAmount)
+                {
+                    booking.StatusId = 3;  // For Implementation
+                }
+
+                await this.bookingRepository.SaveChangesAsync();
+            }
         }
     }
 }

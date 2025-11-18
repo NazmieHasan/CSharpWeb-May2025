@@ -13,7 +13,17 @@
             <h6 class="card-title">Booking @Model.Id</h6>
             <hr />
             <p>Created On: @Model.CreatedOn.ToString("yyyy-MM-dd HH:mm:ss")</p>
-            <p>Status: @Model.Status</p>
+            <p>
+                Status: @Model.Status
+                @if (@Model.Status == "Awaiting Payment")
+                {
+                    <a asp-area="Admin" asp-controller="PaymentManagement" asp-action="Create"
+                       asp-route-bookingId="@Model.Id"
+                       class="btn btn-danger fw-bold shadow-sm">
+                       Add Payment
+                    </a>
+                }
+            </p>
             <p>Created By: @Model.UserEmail</p>
             <p>Manager: @Model.ManagerEmail</p>
             <p>Arrival Date: @Model.DateArrival.ToString("yyyy-MM-dd")</p>

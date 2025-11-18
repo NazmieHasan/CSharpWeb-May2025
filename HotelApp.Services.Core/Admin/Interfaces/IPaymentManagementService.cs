@@ -5,5 +5,7 @@
     public interface IPaymentManagementService
     {
         Task<IEnumerable<PaymentManagementIndexViewModel>> GetPaymentManagementBoardDataAsync();
+
+        Task AddPaymentManagementAsync(PaymentManagementCreateViewModel inputModel);
     }
 }

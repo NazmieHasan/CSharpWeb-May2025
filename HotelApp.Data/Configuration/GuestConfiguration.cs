@@ -39,6 +39,10 @@
             entity
                 .Property(b => b.IsDeleted)
                 .HasDefaultValue(false);
+
+            // Filter out only the active (non-deleted) entries
+            entity
+            .HasQueryFilter(g => g.IsDeleted == false);
         }
 
     }

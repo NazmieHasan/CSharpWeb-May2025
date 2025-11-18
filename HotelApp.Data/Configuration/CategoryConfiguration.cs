@@ -44,7 +44,6 @@
             // Define constraints for the IsDeleted column
             entity
                 .Property(c => c.IsDeleted)
-                .IsRequired()
                 .HasDefaultValue(false);
 
             // Filter out only the active (non-deleted) entries
