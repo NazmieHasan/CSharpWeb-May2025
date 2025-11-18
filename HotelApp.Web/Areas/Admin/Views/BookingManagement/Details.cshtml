@@ -17,11 +17,8 @@
                 Status: @Model.Status
                 @if (@Model.Status == "Awaiting Payment")
                 {
-                    <a asp-area="Admin" asp-controller="PaymentManagement" asp-action="Create"
-                       asp-route-bookingId="@Model.Id"
-                       class="btn btn-danger fw-bold shadow-sm">
-                       Add Payment
-                    </a>
+                <button class="btn btn-danger fw-bold shadow-sm" id="Add">Add Payment</button>
+                <div id="add_payment"></div>
                 }
             </p>
             <p>Created By: @Model.UserEmail</p>
@@ -46,3 +43,10 @@
         </div>
     </div>
 </div>
+
+<script>
+    $('#Add').click(function () {
+        $('#add_payment').load('/Admin/PaymentManagement/Create?bookingId=@Model.Id');
+        $('#add_payment').toggle();
+    });
+</script>

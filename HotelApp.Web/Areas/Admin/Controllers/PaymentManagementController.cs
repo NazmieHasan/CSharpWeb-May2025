@@ -36,15 +36,16 @@
                 PaymentMethods = await this.paymentMethodService.GetPaymentMethodsDropDownDataAsync(),
             };
 
-            return View(model);
+            return PartialView("_Create", model);
         }
 
         [HttpPost]
         public async Task<IActionResult> Create(PaymentManagementCreateViewModel inputModel)
         {
-            if (!this.ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                return this.View(inputModel);
+                // TODO: show error message
+                return this.RedirectToAction("Details", "BookingManagement", new { id = inputModel.BookingId });
             }
 
             try
@@ -57,7 +58,7 @@
             {
                 // TODO: Implement it with the ILogger
                 Console.WriteLine(e.Message);
-                return this.View(inputModel);
+                return this.RedirectToAction("Details", "BookingManagement", new { id = inputModel.BookingId });
             }
         }
     }
