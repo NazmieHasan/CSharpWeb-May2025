@@ -85,7 +85,7 @@
                 return PartialView("_Create", inputModel);
             }
 
-            if (inputModel.PaymentMethodId == null || inputModel.PaymentMethodId == 0)
+            if (inputModel.PaymentMethodId == null)
             {
                 ModelState.AddModelError(nameof(inputModel.PaymentMethodId),
                     ValidationMessages.PaymentMessages.PaymentMethodRequiredMessage);

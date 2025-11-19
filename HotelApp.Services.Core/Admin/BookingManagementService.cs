@@ -7,6 +7,8 @@
     using Data.Repository.Interfaces;
     using Interfaces;
     using Web.ViewModels.Admin.BookingManagement;
+    using Web.ViewModels.Admin.StayManagement;
+    using HotelApp.Web.ViewModels.Admin.PaymentManagement;
 
     public class BookingManagementService : IBookingManagementService
     {
@@ -70,8 +72,10 @@
                     .Include(b => b.Room)
                         .ThenInclude(r => r.Category)
                     .Include(b => b.Payments)
+                        .ThenInclude(p => p.PaymentMethod)
                     .Include(b => b.Status)
-                    .AsNoTracking()
+                    .Include(b => b.Stays) 
+                        .ThenInclude(s => s.Guest) 
                     .Where(b => b.Id == bookingId)
                     .Select(b => new BookingManagementDetailsViewModel()
                     {
@@ -89,16 +93,36 @@
                             b.Manager.User.UserName : null,
                         Room = b.Room.Name,
                         RoomCategory = b.Room.Category.Name,
+                        RoomBedsCount = b.Room.Category.Beds,
                         TotalAmount = b.TotalAmount,
-                        PaidAmount = b.Payments.Sum(p => p.Amount), 
+                        PaidAmount = b.Payments.Sum(p => p.Amount),
                         RemainingAmount = b.TotalAmount - b.Payments.Sum(p => p.Amount),
-                        IsDeleted = b.IsDeleted
+                        IsDeleted = b.IsDeleted,
+                        Payments = b.Payments.Select(p => new PaymentManagementDetailsViewModel
+                        {
+                            Id = p.Id,
+                            CreatedOn = p.CreatedOn,
+                            Amount = p.Amount,
+                            PaymentUserFullName = p.PaymentUserFullName,
+                            PaymentUserPhoneNumber = p.PaymentUserPhoneNumber,
+                            IsDeleted = p.IsDeleted,
+                            PaymentMethodName = p.PaymentMethod.Name
+                        }).ToList(),
+                        Stays = b.Stays.Select(s => new StayManagementDetailsViewModel
+                        {
+                            Id = s.Id,
+                            GuestEmail = s.Guest.Email,
+                            CreatedOn = s.CreatedOn,
+                            CheckoutOn = s.CheckoutOn,
+                            IsDeleted = s.IsDeleted
+                        }).ToList()
                     })
                     .SingleOrDefaultAsync();
             }
 
             return bookingDetails;
         }
+
 
         public async Task<BookingManagementEditFormModel?> GetBookingEditFormModelAsync(string? id)
         {

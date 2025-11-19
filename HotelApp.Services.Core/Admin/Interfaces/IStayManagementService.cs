@@ -5,5 +5,7 @@
     public interface IStayManagementService
     {
         Task<IEnumerable<StayManagementIndexViewModel>> GetStayManagementBoardDataAsync();
+
+        Task AddStayManagementAsync(StayManagementCreateViewModel inputModel);
     }
 }

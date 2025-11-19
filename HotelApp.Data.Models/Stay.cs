@@ -4,7 +4,13 @@
 
     public class Stay
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public Stay()
+        {
+            Id = Guid.NewGuid();
+            CreatedOn = DateTime.UtcNow;
+        }
+
+        public Guid Id { get; set; }
 
         public DateTime CreatedOn { get; set; }
 

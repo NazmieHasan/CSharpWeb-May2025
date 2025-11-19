@@ -56,5 +56,12 @@
             public const string AmountBookingRemainingAmountMessage = "Amount cannot exceed remaining amount";
             public const string PaymentMethodRequiredMessage = "Please select a payment method.";
         }
+
+        public static class Stay
+        {
+            public const string GuestEmailRequiredMessage = "Guest email is required.";
+            public const string GuestEmailInvalidMessage = "Please enter a valid email address.";
+            public const string GuestEmailNotFoundMessage = "Guest with this email was not found.";
+        }
     }
 }

@@ -6,21 +6,35 @@
 
 <div class="container mt-5">
     <div class="row">
-        <div class="col-md-5">
+        <div class="col-md-4">
         </div>
-        <div class="col-md-7">
+        <div class="col-md-8">
             <h2 class="fw-bold text-primary mb-3">Booking Details</h2>
             <h6 class="card-title">Booking @Model.Id</h6>
             <hr />
             <p>Created On: @Model.CreatedOn.ToString("yyyy-MM-dd HH:mm:ss")</p>
             <p>
                 Status: @Model.Status
-                @if (@Model.Status == "Awaiting Payment")
+                @if (@Model.Status == "Awaiting Payment" && @Model.IsDeleted == false)
                 {
-                <button class="btn btn-danger fw-bold shadow-sm" id="add">Add Payment</button>
-                <div id="add_payment"></div>
+                    <button class="btn btn-danger fw-bold shadow-sm" id="add">Add Payment</button>
+                    <div id="add_payment"></div>
+                }
+                @if (@Model.Status == "For Implementation" && @Model.IsDeleted == false)
+                {
+                    <button class="btn btn-danger fw-bold shadow-sm" id="create">Add Stay</button>
+                    <div id="add_stay"></div>
+                }
+                @if (Model.Status == "In Progress" && !Model.IsDeleted && Model.RoomBedsCount > (Model.Stays.Count()))
+                {
+                    <button class="btn btn-danger fw-bold shadow-sm" id="create">Add Stay</button>
+                    <div id="add_stay"></div>
                 }
             </p>
+            @if (@Model.IsDeleted == true)
+            {
+                <p class="text-danger fw-bold">Add payment, add stay are not allowed. This booking has been deleted.</p>
+            }
             <p>Created By: @Model.UserEmail</p>
             <p>Manager: @Model.ManagerEmail</p>
             <p>Arrival Date: @Model.DateArrival.ToString("yyyy-MM-dd")</p>
@@ -40,6 +54,79 @@
                     <i class="bi bi-arrow-left"></i> Back to List
                 </a>
             </div>
+
+
+            <h4 class="mt-4 fw-bold text-secondary">Payment History</h4>
+
+            @if (Model.Payments != null && Model.Payments.Any())
+            {
+                <table class="table table-dark table-striped mt-3">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Amount</th>
+                            <th>Paid By</th>
+                            <th>Phone</th>
+                            <th>Payment Method</th>
+                            <th>Is Deleted</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var payment in Model.Payments)
+                        {
+                            <tr>
+                                <td>@payment.CreatedOn.ToString("yyyy-MM-dd HH:mm")</td>
+                                <td>$@payment.Amount.ToString("0.00")</td>
+                                <td>@payment.PaymentUserFullName</td>
+                                <td>@payment.PaymentUserPhoneNumber</td>
+                                <td>@payment.PaymentMethodName</td>
+                                <td>
+                                    @(payment.IsDeleted ? "Yes" : "No")
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p class="text-muted">No payments have been created for this booking yet.</p>
+            }
+
+
+            <h4 class="mt-4 fw-bold text-secondary">Stay History</h4>
+
+            @if (Model.Stays != null && Model.Stays.Any())
+            {
+                <table class="table table-dark table-striped mt-3">
+                    <thead>
+                        <tr>
+                            <th>Guest Email</th>
+                            <th>Created On</th>
+                            <th>Checkout On</th>
+                            <th>Is Deleted</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var stay in Model.Stays)
+                        {
+                            <tr>
+                                <td>@stay.GuestEmail</td>
+                                <td>@stay.CreatedOn.ToString("yyyy-MM-dd HH:mm")</td>
+                                <td>@(stay.CheckoutOn?.ToString("yyyy-MM-dd HH:mm") ?? "N/A")</td>
+                                <td>
+                                    @(stay.IsDeleted ? "Yes" : "No")
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p class="text-muted">No stays have been created for this booking yet.</p>
+            }
+
         </div>
     </div>
 </div>
@@ -73,6 +160,37 @@
             })
             .fail(function () {
                 alert('An error occurred while saving the payment. Please try again.');
+            });
+    });
+
+    $('#create').click(function () {
+        $('#add_stay').load('/Admin/StayManagement/Create?bookingId=@Model.Id', function () {
+            if (typeof ($.validator) !== 'undefined' && typeof ($.validator.unobtrusive) !== 'undefined') {
+                $.validator.unobtrusive.parse($('#add_stay'));
+            }
+            $('#add_stay').toggle();
+        });
+    });
+
+    $(document).on('submit', '#add_stay form', function (e) {
+        e.preventDefault();
+        var $form = $(this);
+
+        $.post($form.attr('action'), $form.serialize())
+            .done(function (result) {
+
+                if (result.success) {
+                    window.location.href = result.redirectUrl;
+                    return;
+                }
+
+                $('#add_stay').html(result);
+                if (typeof ($.validator) !== 'undefined' && typeof ($.validator.unobtrusive) !== 'undefined') {
+                    $.validator.unobtrusive.parse($('#add_stay'));
+                }
+            })
+            .fail(function () {
+                alert('An error occurred while saving the stay. Please try again.');
             });
     });
 </script>

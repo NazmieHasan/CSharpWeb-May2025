@@ -1,5 +1,8 @@
 ﻿namespace HotelApp.Web.ViewModels.Admin.BookingManagement
 {
+    using HotelApp.Web.ViewModels.Admin.StayManagement;
+    using HotelApp.Web.ViewModels.Admin.PaymentManagement;
+
     public class BookingManagementDetailsViewModel
     {
         public string Id { get; set; } = null!;
@@ -35,5 +38,12 @@
         public int BabyCount { get; set; }
 
         public bool IsDeleted { get; set; }
+
+        public int RoomBedsCount { get; set; }
+
+        public IEnumerable<StayManagementDetailsViewModel> Stays { get; set; } = new List<StayManagementDetailsViewModel>();
+
+        public IEnumerable<PaymentManagementDetailsViewModel> Payments { get; set; } = new List<PaymentManagementDetailsViewModel>();
+
     }
 }

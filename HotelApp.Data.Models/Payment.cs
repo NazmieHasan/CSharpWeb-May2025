@@ -4,7 +4,13 @@
 
     public class Payment
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public Payment()
+        {
+            Id = Guid.NewGuid();
+            CreatedOn = DateTime.UtcNow;
+        }
+ 
+        public Guid Id { get; set; } 
 
         public DateTime CreatedOn { get; set; }
 

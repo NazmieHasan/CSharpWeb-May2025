@@ -7,20 +7,23 @@
     using Interfaces;
 
     using HotelApp.Web.ViewModels.Admin.PaymentManagement;
-    using static HotelApp.Web.ViewModels.ValidationMessages;
 
     public class PaymentManagementService : IPaymentManagementService
     {
         private readonly IPaymentRepository paymentRepository;
         private readonly IPaymentMethodRepository paymentMethodRepository;
         private readonly IBookingRepository bookingRepository;
+        private readonly IBookingManagementService bookingService;
 
         public PaymentManagementService(IPaymentRepository paymentRepository, 
-            IPaymentMethodRepository paymentMethodRepository, IBookingRepository bookingRepository)
+            IPaymentMethodRepository paymentMethodRepository, 
+            IBookingRepository bookingRepository,
+            IBookingManagementService bookingService)
         {
             this.paymentRepository = paymentRepository;
             this.paymentMethodRepository = paymentMethodRepository;
             this.bookingRepository = bookingRepository;
+            this.bookingService = bookingService;
         }
 
         public async Task<IEnumerable<PaymentManagementIndexViewModel>> GetPaymentManagementBoardDataAsync()
@@ -70,20 +73,18 @@
 
             await this.paymentRepository.AddAsync(newPayment);
 
-            var booking = await this.bookingRepository
-                .GetAllAttached()
-                .Include(b => b.Room)
-                    .ThenInclude(r => r.Category)
-                .Include(b => b.Payments)
-                .FirstOrDefaultAsync(b => b.Id == inputModel.BookingId);
+            var booking = await this.bookingService.FindBookingByIdAsync(inputModel.BookingId);
 
             if (booking != null)
             {
                 decimal totalAmount = booking.TotalAmount;
                 decimal paidAmount = booking.Payments.Sum(p => p.Amount);
 
-                if (paidAmount >= totalAmount)
-                    booking.StatusId = 3; // Fully paid
+                // If fully paid, update status
+                if (paidAmount == totalAmount)
+                {
+                    booking.StatusId = 3;  // For Implementation
+                }
 
                 await this.bookingRepository.SaveChangesAsync();
             }

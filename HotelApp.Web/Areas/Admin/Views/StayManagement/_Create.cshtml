@@ -1,0 +1,35 @@
+﻿@model HotelApp.Web.ViewModels.Admin.StayManagement.StayManagementCreateViewModel
+
+@{
+    ViewData["Title"] = "Add New Stay";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center text-danger fw-bold">Add a New Payment</h2>
+    <hr class="mb-4">
+
+    <div class="row justify-content-center">
+        <div class="col-md-12">
+            <form asp-action="Create" method="post" class="bg-dark text-light p-4 rounded shadow-lg">
+                <!-- Hidden BookingId -->
+                <input type="hidden" asp-for="BookingId" />
+
+                <div class="mb-3">
+                    <label asp-for="GuestEmail" class="form-label fw-bold">Guest Email</label>
+                    <input asp-for="GuestEmail" type="email" class="form-control" placeholder="Enter guest email">
+                    <span asp-validation-for="GuestEmail" class="text-danger"></span>
+                </div>
+
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-danger fw-bold px-4">
+                        <i class="bi bi-plus-circle"></i> Add Stay
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
