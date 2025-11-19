@@ -22,6 +22,17 @@
             this.userManager = userManager;
         }
 
+        public async Task<Booking?> FindBookingByIdAsync(Guid id)
+        {
+            return await this.bookingRepository
+                .GetAllAttached()
+                .Include(b => b.Room)                     
+                    .ThenInclude(r => r.Category)        
+                .Include(b => b.Status)
+                .Include(b => b.Payments) 
+                .FirstOrDefaultAsync(b => b.Id == id);
+        }
+
         public async Task<IEnumerable<BookingManagementIndexViewModel>> GetBookingManagementBoardDataAsync()
         {
             return await bookingRepository

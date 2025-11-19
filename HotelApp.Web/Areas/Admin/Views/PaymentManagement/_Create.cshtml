@@ -28,16 +28,17 @@
 
                 <div class="mb-3">
                     <label asp-for="Amount" class="form-label fw-bold">Amount</label>
-                    <input asp-for="Amount" class="form-control" type="number" step="0.01" placeholder="Enter amount">
+                    <input asp-for="Amount" class="form-control" type="number" step="0.01" min="0.01" max="@Model.RemainingAmount" placeholder="Enter amount">
+                    <small class="text-warning">Maximum allowed: $@Model.RemainingAmount.ToString("F2")</small>
                     <span asp-validation-for="Amount" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3">
                     <label asp-for="@Model.PaymentMethodId" class="form-label-add-edit">Select Payment Method</label>
-                    <select asp-for="@Model.PaymentMethodId" class="form-control" aria-required="true" asp-items="@(new SelectList(Model.PaymentMethods, "Id", "Name"))">
+                    <select asp-for="PaymentMethodId" class="form-control" asp-items="@(new SelectList(Model.PaymentMethods, "Id", "Name"))">
                         <option value="">Select Payment Method</option>
                     </select>
-                    <span asp-validation-for="@Model.PaymentMethodId" class="text-danger"></span>
+                    <span asp-validation-for="PaymentMethodId" class="text-danger"></span>
                 </div>
 
                 <div class="text-center mt-4">

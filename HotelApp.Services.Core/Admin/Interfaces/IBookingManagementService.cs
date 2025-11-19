@@ -1,9 +1,12 @@
 ﻿namespace HotelApp.Services.Core.Admin.Interfaces
 {
+    using HotelApp.Data.Models;
     using HotelApp.Web.ViewModels.Admin.BookingManagement;
 
     public interface IBookingManagementService
     {
+        Task<Booking?> FindBookingByIdAsync(Guid id);
+
         Task<IEnumerable<BookingManagementIndexViewModel>> GetBookingManagementBoardDataAsync();
 
         Task<BookingManagementDetailsViewModel?> GetBookingManagementDetailsByIdAsync(string? id);

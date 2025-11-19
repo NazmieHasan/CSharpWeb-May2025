@@ -47,5 +47,14 @@
             public const string ServiceCreateError = "Error occurred while adding the booking! Please, send valid data!";
             public const string ServiceCreateExceptionError ="Unexpected error occurred while adding the booking! Please contact developer team!";
         }
+
+        public static class PaymentMessages
+        {
+            public const string FullNameRequiredMessage = "Full name is required.";
+            public const string PhoneNumberRequiredMessage = "Phone number is required.";
+            public const string AmountRequiredMessage = "Amount is required.";
+            public const string AmountBookingRemainingAmountMessage = "Amount cannot exceed remaining amount";
+            public const string PaymentMethodRequiredMessage = "Please select a payment method.";
+        }
     }
 }

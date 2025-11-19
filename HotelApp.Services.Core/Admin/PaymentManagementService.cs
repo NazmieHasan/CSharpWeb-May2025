@@ -40,29 +40,36 @@
 
         public async Task AddPaymentManagementAsync(PaymentManagementCreateViewModel inputModel)
         {
+            if (!inputModel.Amount.HasValue)
+            {
+                throw new InvalidOperationException("Amount is required.");
+            }
 
-            PaymentMethod? paymentMethodRef = await this.paymentMethodRepository
+            if (!inputModel.PaymentMethodId.HasValue)
+            {
+                throw new InvalidOperationException("Payment method is required.");
+            }
+
+            var paymentMethodRef = await this.paymentMethodRepository
                 .GetAllAttached()
-                .FirstOrDefaultAsync(pm => pm.Id == inputModel.PaymentMethodId);
+                .FirstOrDefaultAsync(pm => pm.Id == inputModel.PaymentMethodId.Value);
 
             if (paymentMethodRef == null)
             {
                 throw new InvalidOperationException("Invalid payment method.");
             }
 
-            // Add new payment
-            Payment newPayment = new Payment()
+            var newPayment = new Payment
             {
                 PaymentUserFullName = inputModel.FullName,
                 PaymentUserPhoneNumber = inputModel.PhoneNumber,
-                Amount = inputModel.Amount,
+                Amount = inputModel.Amount.Value,
                 BookingId = inputModel.BookingId,
-                PaymentMethodId = inputModel.PaymentMethodId, 
+                PaymentMethodId = inputModel.PaymentMethodId.Value
             };
 
             await this.paymentRepository.AddAsync(newPayment);
 
-            // Load booking after payment is saved
             var booking = await this.bookingRepository
                 .GetAllAttached()
                 .Include(b => b.Room)
@@ -75,14 +82,12 @@
                 decimal totalAmount = booking.TotalAmount;
                 decimal paidAmount = booking.Payments.Sum(p => p.Amount);
 
-                // If fully paid, update status
-                if (paidAmount == totalAmount)
-                {
-                    booking.StatusId = 3;  // For Implementation
-                }
+                if (paidAmount >= totalAmount)
+                    booking.StatusId = 3; // Fully paid
 
                 await this.bookingRepository.SaveChangesAsync();
             }
         }
+
     }
 }
