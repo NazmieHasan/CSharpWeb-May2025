@@ -69,5 +69,69 @@
             }
         }
 
+        public async Task<StayManagementEditFormModel?> GetStayEditFormModelAsync(string? id)
+        {
+            StayManagementEditFormModel? formModel = null;
+            if (!String.IsNullOrWhiteSpace(id))
+            {
+                Stay? stayToEdit = await this.stayRepository
+                    .GetAllAttached()
+                    .IgnoreQueryFilters()
+                    .SingleOrDefaultAsync(s => s.Id.ToString().ToLower() == id.ToLower());
+                if (stayToEdit != null)
+                {
+                    formModel = new StayManagementEditFormModel()
+                    {
+                        Id = stayToEdit.Id.ToString(),
+                        CheckoutOn = stayToEdit.CheckoutOn,
+                        BookingId = stayToEdit.BookingId,
+                    };
+                }
+            }
+
+            return formModel;
+        }
+
+        public async Task<bool> EditStayAsync(StayManagementEditFormModel? inputModel)
+        {
+            if (inputModel == null) return false;
+
+            var stayToEdit = await this.stayRepository
+                .GetAllAttached()
+                .SingleOrDefaultAsync(s => s.Id.ToString().ToLower() == inputModel.Id.ToLower());
+
+            if (stayToEdit == null) return false;
+
+            stayToEdit.CheckoutOn = DateTime.UtcNow;
+            var stayUpdated = await this.stayRepository.UpdateAsync(stayToEdit);
+
+            if (!stayUpdated) return false;
+
+            var booking = await this.bookingService.FindBookingByIdAsync(inputModel.BookingId);
+
+            if (booking != null)
+            {
+                var allStays = await this.stayRepository
+                    .GetAllAttached()
+                    .Where(s => s.BookingId == booking.Id && !s.IsDeleted)
+                    .ToListAsync();
+
+                var remainingStays = allStays.Where(s => s.CheckoutOn == null).ToList();
+                if (!remainingStays.Any()) 
+                {
+                    var lastCheckout = allStays.Max(s => s.CheckoutOn.Value);
+                    var lastCheckoutDate = DateOnly.FromDateTime(lastCheckout);
+
+                    booking.StatusId = lastCheckoutDate < booking.DateDeparture
+                        ? 6 // Done - Early Check Out
+                        : 5; // Done
+
+                    await this.bookingRepository.UpdateAsync(booking);
+                }
+            }
+
+            return true;
+        }
+
     }
 }

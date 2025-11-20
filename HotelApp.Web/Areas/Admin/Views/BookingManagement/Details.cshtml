@@ -103,7 +103,7 @@
                         <tr>
                             <th>Guest Email</th>
                             <th>Created On</th>
-                            <th>Checkout On</th>
+                            <th>Is Completed</th>
                             <th>Is Deleted</th>
                         </tr>
                     </thead>
@@ -113,7 +113,22 @@
                             <tr>
                                 <td>@stay.GuestEmail</td>
                                 <td>@stay.CreatedOn.ToString("yyyy-MM-dd HH:mm")</td>
-                                <td>@(stay.CheckoutOn?.ToString("yyyy-MM-dd HH:mm") ?? "N/A")</td>
+                                <td>
+                                    @if (stay.CheckoutOn == null)
+                                    {
+                                        <span>No</span>
+                                        <form method="post" asp-action="Edit" asp-controller="StayManagement" class="d-inline">
+                                            <input type="hidden" name="Id" value="@stay.Id" />
+                                            <input type="hidden" name="BookingId" value="@Guid.Parse(Model.Id)" />
+                                            <button type="submit" class="btn btn-danger btn-sm fw-bold ms-2">Check Out</button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <span>Yes (@stay.CheckoutOn.Value.ToString("yyyy-MM-dd HH:mm"))</span>
+                                    }
+                                </td>
+
                                 <td>
                                     @(stay.IsDeleted ? "Yes" : "No")
                                 </td>

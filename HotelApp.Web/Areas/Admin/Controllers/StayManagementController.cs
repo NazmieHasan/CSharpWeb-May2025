@@ -11,6 +11,8 @@
 
     using static HotelApp.Web.ViewModels.ValidationMessages.Stay;
 
+    using static GCommon.ApplicationConstants;
+
     public class StayManagementController : BaseAdminController
     {
         private readonly IStayManagementService stayService;
@@ -85,6 +87,38 @@
             {
                 ModelState.AddModelError(nameof(inputModel.GuestEmail), e.Message);
                 return PartialView("_Create", inputModel);
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(StayManagementEditFormModel inputModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return this.View(inputModel);
+            }
+
+            try
+            {
+                bool success = await this.stayService
+                    .EditStayAsync(inputModel);
+                if (!success)
+                {
+                    TempData[ErrorMessageKey] = "Error occurred while updating the stay! Ensure to select a valid data!";
+                    return this.RedirectToAction(nameof(Edit));
+                }
+                else
+                {
+                    TempData[SuccessMessageKey] = "Stay updated successfully!";
+                    return this.RedirectToAction("Details", "BookingManagement", new { id = inputModel.BookingId });
+                }
+            }
+            catch (Exception e)
+            {
+                TempData[ErrorMessageKey] =
+                    "Unexpected error occurred while editing the stay! Please contact developer team!";
+
+                return this.RedirectToAction(nameof(Index));
             }
         }
     }
