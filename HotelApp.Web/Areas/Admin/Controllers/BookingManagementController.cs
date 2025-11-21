@@ -14,11 +14,15 @@
     {
         private readonly IBookingManagementService bookingService;
         private readonly IUserManagementService userService;
+        private readonly IStatusManagementService statusService;
 
-        public BookingManagementController(IBookingManagementService bookingService, IUserManagementService userService)
+        public BookingManagementController(IBookingManagementService bookingService, 
+            IUserManagementService userService,
+            IStatusManagementService statusService)
         {
             this.bookingService = bookingService;
             this.userService = userService;
+            this.statusService = statusService;
         }
 
         public async Task<IActionResult> Index()
@@ -67,6 +71,8 @@
 
             editFormModel.AppManagerEmails = await this.userService
                 .GetManagerEmailsAsync();
+
+            editFormModel.Statuses = await this.statusService.GetStatusesDropDownDataAsync();
 
             return this.View(editFormModel);
         }

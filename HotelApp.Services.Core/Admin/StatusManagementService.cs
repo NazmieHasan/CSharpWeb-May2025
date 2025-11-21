@@ -6,6 +6,8 @@
     using Interfaces;
 
     using HotelApp.Web.ViewModels.Admin.StatusManagement;
+    using HotelApp.Web.ViewModels.Admin.BookingManagement;
+
 
     public class StatusManagementService : IStatusManagementService
     {
@@ -28,6 +30,26 @@
                 })
                 .ToListAsync()
                 ?? Enumerable.Empty<StatusManagementIndexViewModel>();
+        }
+
+        // not added GetStatusesDropDownDataAsync() to IStatusRepository because the method
+        // use a ViewModel, includes a projection
+        // TO DO: Move the projection to the repository as a helper method (but not part of the public interface),
+        // which returns IQueryable<Status> or an anonymous DTO,
+        // and then apply .Select(...) to a ViewModel in the service layer.
+        public async Task<IEnumerable<AddBookingStatusDropDownModel>> GetStatusesDropDownDataAsync()
+        {
+            IEnumerable<AddBookingStatusDropDownModel> statusesAsDropDown = await this.statusRepository
+                .GetAllAttached()
+                .AsNoTracking()
+                .Select(s => new AddBookingStatusDropDownModel()
+                {
+                    Id = s.Id,
+                    Name = s.Name
+                })
+                .ToArrayAsync();
+
+            return statusesAsDropDown;
         }
     }
 }

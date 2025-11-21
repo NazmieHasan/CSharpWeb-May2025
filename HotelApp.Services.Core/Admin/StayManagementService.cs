@@ -94,18 +94,27 @@
 
         public async Task<bool> EditStayAsync(StayManagementEditFormModel? inputModel)
         {
-            if (inputModel == null) return false;
+            if (inputModel == null) 
+            {
+                return false;
+            }
 
             var stayToEdit = await this.stayRepository
                 .GetAllAttached()
                 .SingleOrDefaultAsync(s => s.Id.ToString().ToLower() == inputModel.Id.ToLower());
 
-            if (stayToEdit == null) return false;
+            if (stayToEdit == null)
+            {
+                return false;
+            }
 
             stayToEdit.CheckoutOn = DateTime.UtcNow;
             var stayUpdated = await this.stayRepository.UpdateAsync(stayToEdit);
 
-            if (!stayUpdated) return false;
+            if (!stayUpdated)
+            {
+                return false;
+            }
 
             var booking = await this.bookingService.FindBookingByIdAsync(inputModel.BookingId);
 
@@ -117,9 +126,11 @@
                     .ToListAsync();
 
                 var remainingStays = allStays.Where(s => s.CheckoutOn == null).ToList();
-                if (!remainingStays.Any()) 
+                var expectedGuests = booking.AdultsCount + booking.ChildCount + booking.BabyCount;
+
+                if (!remainingStays.Any() && allStays.Count == expectedGuests)
                 {
-                    var lastCheckout = allStays.Max(s => s.CheckoutOn.Value);
+                    var lastCheckout = allStays.Max(s => s.CheckoutOn!.Value);
                     var lastCheckoutDate = DateOnly.FromDateTime(lastCheckout);
 
                     booking.StatusId = lastCheckoutDate < booking.DateDeparture

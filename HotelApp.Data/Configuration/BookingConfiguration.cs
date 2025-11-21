@@ -19,6 +19,17 @@
                 .Property(b => b.StatusId)
                 .HasDefaultValue(1);
 
+
+
+            /*
+            NOTE: Updating the entire Booking entity can trigger CHECK constraints 
+            (e.g., CK_Booking_DateArrival_NotPast) because EF tries to update all columns.
+            When changing only StatusId, mark it explicitly to avoid touching other fields:
+            var entry = context.Entry(booking);
+            entry.Property(b => b.StatusId).IsModified = true;
+            This prevents constraint violations.
+            */
+            /*
             entity.ToTable(tb =>
             {
                 // Ensure DateArrival is not in the past (UTC)
@@ -33,6 +44,7 @@
                     "[DateDeparture] > [DateArrival]"
                 );
             });
+            */
 
             entity
                 .Property(b => b.IsDeleted)

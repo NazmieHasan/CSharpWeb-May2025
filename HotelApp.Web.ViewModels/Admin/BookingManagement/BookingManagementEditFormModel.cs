@@ -22,5 +22,12 @@
         public IEnumerable<string>? AppManagerEmails { get; set; }
 
         public string? ManagerEmail { get; set; }
+
+        [Required(ErrorMessage = StatusRequiredMessage)]
+        [Display(Name = "Status")]
+        public int StatusId { get; set; }
+
+        public IEnumerable<AddBookingStatusDropDownModel> Statuses { get; set; } =
+            new List<AddBookingStatusDropDownModel>();
     }
 }

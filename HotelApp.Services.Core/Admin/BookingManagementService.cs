@@ -145,6 +145,7 @@
                         BabyCount = bookingToEdit.BabyCount,
                         ManagerEmail = bookingToEdit.Manager != null ?
                             bookingToEdit.Manager.User.Email ?? string.Empty : string.Empty,
+                        StatusId = bookingToEdit.StatusId
                     };
                 }
             }
@@ -173,6 +174,7 @@
                         bookingToEdit.ChildCount = inputModel.ChildCount;
                         bookingToEdit.BabyCount = inputModel.BabyCount;
                         bookingToEdit.Manager = manager;
+                        bookingToEdit.StatusId = inputModel.StatusId;
 
                         result = await this.bookingRepository
                             .UpdateAsync(bookingToEdit);
