@@ -25,7 +25,7 @@
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-lg">
             <div class="container-fluid">
                 <a class="navbar-brand fw-bold text-warning" asp-area="" asp-controller="Home" asp-action="Index">
-                    <i class="bi bi-camera-reels-fill"></i> HotelWebApp
+                    <img src="~/images/logo.png" alt="Logo" style="height:40px;">
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
                         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,7 +35,7 @@
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="Category" asp-action="Index">
-                                <i class="bi bi-film"></i> Categories
+                                Categories
                             </a>
                         </li>
 
@@ -43,71 +43,71 @@
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-light" asp-area="" asp-controller="Booking" asp-action="Add">
-                                    <i class="bi bi-ticket-perforated"></i> Add Booking
+                                    Add Booking
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-light" asp-area="" asp-controller="Booking" asp-action="My">
-                                    <i class="bi bi-bookmark-star"></i> My Bookings
+                                    My Bookings
                                 </a>
                             </li>
 
                             @if (User.IsInRole("Admin"))
                             {
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle text-light fw-bold" href="#" id="manageDropdown"
+                                    <a class="nav-link dropdown-toggle text-light" href="#" id="manageDropdown"
                                        role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="bi bi-tools"></i> Admin
+                                        ADMIN
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-dark border-0">
                                         <li>
                                             <a class="dropdown-item" asp-area="Admin" asp-controller="BookingManagement" asp-action="Index">
-                                                <i class="bi bi-building"></i> Manage Bookings
+                                                Manage Bookings
                                             </a>
                                         </li>
                                         <li>
                                             <a class="dropdown-item" asp-area="Admin" asp-controller="CategoryManagement" asp-action="Index">
-                                                <i class="bi bi-camera-reels"></i> Manage Categories
+                                                Manage Categories
                                             </a>
                                         </li>
                                         <li>
                                             <a class="dropdown-item" asp-area="Admin" asp-controller="GuestManagement" asp-action="Index">
-                                                <i class="bi bi-ticket-detailed"></i> Manage Guests
+                                                Manage Guests
                                             </a>
                                         </li>
                                         <li>
                                             <a class="dropdown-item" asp-area="Admin" asp-controller="ManagerManagement" asp-action="Index">
-                                                <i class="bi bi-ticket-detailed"></i> Manage Managers
+                                                Manage Managers
                                             </a>
                                         </li>
                                         <li>
                                             <a class="dropdown-item" asp-area="Admin" asp-controller="PaymentManagement" asp-action="Index">
-                                                <i class="bi bi-ticket-detailed"></i> Manage Payments
+                                                Manage Payments
                                             </a>
                                         </li>
                                         <li>
                                             <a class="dropdown-item" asp-area="Admin" asp-controller="PaymentMethodManagement" asp-action="Index">
-                                                <i class="bi bi-ticket-detailed"></i> Manage Payment Methods
+                                                Manage Payment Methods
                                             </a>
                                         </li>
                                         <li>
                                             <a class="dropdown-item" asp-area="Admin" asp-controller="RoomManagement" asp-action="Index">
-                                                <i class="bi bi-ticket-detailed"></i> Manage Rooms
+                                                Manage Rooms
                                             </a>
                                         </li>
                                         <li>
                                             <a class="dropdown-item" asp-area="Admin" asp-controller="StatusManagement" asp-action="Index">
-                                                <i class="bi bi-ticket-detailed"></i> Manage Statuses
+                                                Manage Statuses
                                             </a>
                                         </li>
                                         <li>
                                             <a class="dropdown-item" asp-area="Admin" asp-controller="StayManagement" asp-action="Index">
-                                                <i class="bi bi-ticket-detailed"></i> Manage Stays
+                                                Manage Stays
                                             </a>
                                         </li>
                                         <li>
                                             <a class="dropdown-item" asp-area="Admin" asp-controller="UserManagement" asp-action="Index">
-                                                <i class="bi bi-ticket-detailed"></i> Manage Users
+                                                Manage Users
                                             </a>
                                         </li>
                                     </ul>
@@ -120,15 +120,15 @@
             </div>
         </nav>
     </header>
-    <div class="container">
+    <div class="container-fluid p-0">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            <p>&copy; @footerNote HotelWebApp | Rooms And Apartmants For You</p>
+    <footer class="footer bg-dark text-white">
+        <div class="container text-center">
+            <p>&copy; @footerNote Hotel & SPA | Rooms And Apartmants For You</p>
         </div>
     </footer>
 

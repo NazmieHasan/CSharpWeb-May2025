@@ -71,7 +71,8 @@ namespace HotelApp.Web
             app.UseAuthorization();
             app.UseManagerAccessRestriction();
 
-            app.UserAdminRedirection();
+            // This middleware redirects admins to the admin dashboard
+            // app.UserAdminRedirection();
 
             app.MapControllerRoute(
                 name: "areas",

@@ -1,12 +1,33 @@
-﻿@{
+﻿@using HotelApp.Web.ViewModels.Category
+@model IEnumerable<AllCategoriesIndexViewModel>
+
+@{
     ViewData["Title"] = "Home";
 }
 
-<div class="container mt-4">
-    <div class="position-relative text-white text-center mb-4"
-         style="background: linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
-                 url('/images/header-home.jpg') center/cover no-repeat;
-                 height: 50vh; border-radius: 12px;">
+<div class="position-relative text-white text-center mb-4" 
+    style="background: linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
+    url('/images/header-home.jpg') center/cover no-repeat; height: 100vh;"> 
+</div>
+
+<div class="container mt-4 mb-5 text-center">
+    <h1 class="text-dark">WELCOME</h1>
+
+    <div class="row g-4">
+        @foreach (AllCategoriesIndexViewModel category in Model)
+        {
+            <div class="col-12 col-md-6 col-lg-4 mb-5">
+                <div class="card border-0 rounded-3 h-100">
+                    <img src="@category.ImageUrl"
+                         class="card-img-top"
+                         alt="@category.Name"
+                         style="height: 180px; object-fit: cover;">
+                    <div class="card-body text-center">
+                        <h5 class="fw-bold text-dark">@category.Name</h5>
+                    </div>
+                </div>
+            </div>
+        }
     </div>
 
 </div>
