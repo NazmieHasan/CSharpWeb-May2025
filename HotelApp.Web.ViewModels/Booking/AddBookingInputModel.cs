@@ -6,14 +6,13 @@
 
     public class AddBookingInputModel
     {
-        [Required(ErrorMessage = DateArrivalPastMessage)]
-        [DataType(DataType.Date)]
-        [Display(Name = "Arrival Date")]
+        [Required]
+        public Guid RoomId { get; set; }
+
+        [Required]
         public DateOnly DateArrival { get; set; }
 
-        [Required(ErrorMessage = DateDepartureBeforeArrivalMessage)]
-        [DataType(DataType.Date)]
-        [Display(Name = "Departure Date")]
+        [Required]
         public DateOnly DateDeparture { get; set; }
 
         [Required(ErrorMessage = AdultRequiredMessage)]
@@ -26,5 +25,7 @@
 
         [Display(Name = "Number of Babies (age 0–3)")]
         public int BabyCount { get; set; }
+
+        public int MaxGuests { get; set; }
     }
 }

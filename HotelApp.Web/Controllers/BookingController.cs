@@ -23,9 +23,24 @@
         }
 
         [HttpGet]
-        public async Task<IActionResult> Add()
+        public async Task<IActionResult> Add(string roomId, DateOnly dateArrival, DateOnly dateDeparture)
         {
-            return this.View();
+            var roomDetails = await this.roomService.GetRoomDetailsByIdAsync(roomId);
+
+            if (roomDetails == null)
+            {
+                return NotFound();
+            }
+
+            var model = new AddBookingInputModel
+            {
+                RoomId = Guid.Parse(roomId),
+                DateArrival = dateArrival,
+                DateDeparture = dateDeparture,
+                MaxGuests = roomDetails.CategoryBeds 
+            };
+
+            return View(model);
         }
 
         [HttpPost]

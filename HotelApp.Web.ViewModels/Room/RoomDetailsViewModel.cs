@@ -7,5 +7,7 @@
         public string Name { get; set; } = null!;
 
         public string Category { get; set; } = null!;
+
+        public int CategoryBeds { get; set; }
     }
 }

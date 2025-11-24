@@ -93,7 +93,7 @@
                             b.Manager.User.UserName : null,
                         Room = b.Room.Name,
                         RoomCategory = b.Room.Category.Name,
-                        RoomBedsCount = b.Room.Category.Beds,
+                        AllowedGuestCount = b.AdultsCount + b.ChildCount + b.BabyCount,
                         TotalAmount = b.TotalAmount,
                         PaidAmount = b.Payments.Sum(p => p.Amount),
                         RemainingAmount = b.TotalAmount - b.Payments.Sum(p => p.Amount),

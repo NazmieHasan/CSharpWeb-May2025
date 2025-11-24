@@ -9,5 +9,7 @@
         public string Category { get; set; } = null!;
 
         public int CategoryId { get; set; }
+
+        public string ImageUrl { get; set; } = null!;
     }
 }

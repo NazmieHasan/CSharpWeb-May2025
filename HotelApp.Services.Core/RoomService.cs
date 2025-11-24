@@ -10,17 +10,21 @@
     using Web.ViewModels.Room;
     using static GCommon.ApplicationConstants;
     using System.Collections.Generic;
+    using HotelApp.Data.Repository;
 
     public class RoomService : IRoomService
     {
         private readonly IRoomRepository roomRepository;
         private readonly ICategoryRepository categoryRepository;
+        private readonly IBookingRepository bookingRepository;
 
         public RoomService(IRoomRepository roomRepository,
-            ICategoryRepository categoryRepository)
+            ICategoryRepository categoryRepository,
+            IBookingRepository bookingRepository)
         {
             this.roomRepository = roomRepository;
             this.categoryRepository = categoryRepository;
+            this.bookingRepository = bookingRepository;
         }
 
 
@@ -116,7 +120,8 @@
                     {
                         Id = r.Id.ToString(),
                         Name = r.Name,
-                        Category = r.Category.Name
+                        Category = r.Category.Name,
+                        CategoryBeds = r.Category.Beds
                     })
                     .SingleOrDefaultAsync();
             }
@@ -176,6 +181,34 @@
             await this.roomRepository.DeleteAsync(roomToDelete);
 
             return true;
+        }
+
+        public async Task<IEnumerable<AllRoomsIndexViewModel>> FindRoomByDateArrivaleAndDateDepartureAsync(FindRoomInputModel inputModel)
+        {
+            var checkin = inputModel.DateArrival;
+            var checkout = inputModel.DateDeparture;
+
+            var rooms = await this.roomRepository
+                .GetAllAttached()
+                .Include(r => r.Category)        
+                .AsNoTracking()
+                .Where(r => !this.bookingRepository
+                    .GetAllAttached()
+                    .Any(b =>
+                        b.RoomId == r.Id &&
+                        b.DateArrival < checkout &&
+                        b.DateDeparture > checkin))
+                .Select(r => new AllRoomsIndexViewModel
+                {
+                    Id = r.Id.ToString(),
+                    Name = r.Name,
+                    CategoryId = r.CategoryId,
+                    Category = r.Category.Name,
+                    ImageUrl = r.Category.ImageUrl
+                })
+                .ToListAsync();
+
+            return rooms;
         }
 
 

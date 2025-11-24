@@ -25,7 +25,7 @@
                     <button class="btn btn-danger fw-bold shadow-sm" id="create">Add Stay</button>
                     <div id="add_stay"></div>
                 }
-                @if (Model.Status == "In Progress" && !Model.IsDeleted && Model.RoomBedsCount > (Model.Stays.Count()))
+                @if (Model.Status == "In Progress" && !Model.IsDeleted && Model.AllowedGuestCount > (Model.Stays.Count()))
                 {
                     <button class="btn btn-danger fw-bold shadow-sm" id="create">Add Stay</button>
                     <div id="add_stay"></div>

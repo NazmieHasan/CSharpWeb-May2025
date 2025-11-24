@@ -39,7 +39,7 @@
 
         public bool IsDeleted { get; set; }
 
-        public int RoomBedsCount { get; set; }
+        public int AllowedGuestCount { get; set; }
 
         public IEnumerable<StayManagementDetailsViewModel> Stays { get; set; } = new List<StayManagementDetailsViewModel>();
 

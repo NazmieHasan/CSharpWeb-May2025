@@ -25,8 +25,6 @@
 
         public async Task<bool> AddBookingAsync(string userId, AddBookingInputModel inputModel)
         {
-            bool opRes = false;
-
             if (inputModel.DateArrival < DateOnly.FromDateTime(DateTime.UtcNow) ||
                 inputModel.DateDeparture <= inputModel.DateArrival)
             {
@@ -35,25 +33,25 @@
 
             IdentityUser? user = await this.userManager.FindByIdAsync(userId);
 
-            if (user != null)
+            if (user == null)
             {
-                Booking newBooking = new Booking()
-                {
-                    DateArrival = inputModel.DateArrival,
-                    DateDeparture = inputModel.DateDeparture,
-                    AdultsCount = inputModel.AdultsCount,
-                    ChildCount = inputModel.ChildCount,
-                    BabyCount = inputModel.BabyCount,
-                    UserId = userId,
-                    RoomId = new Guid("AE50A5AB-9642-466F-B528-3CC61071BB4C")
-                };
-
-                await this.bookingRepository.AddAsync(newBooking);
-
-                opRes = true;
+                return false;
             }
 
-            return opRes;
+            var newBooking = new Booking
+            {
+                DateArrival = inputModel.DateArrival,
+                DateDeparture = inputModel.DateDeparture,
+                AdultsCount = inputModel.AdultsCount,
+                ChildCount = inputModel.ChildCount,
+                BabyCount = inputModel.BabyCount,
+                UserId = userId,
+                RoomId = inputModel.RoomId
+            };
+
+            await this.bookingRepository.AddAsync(newBooking);
+
+            return true;
         }
 
         public async Task<bool> AddBookingAsync(string userId, string arrival, string departure, int adultsCount, int childCount, int babyCount)

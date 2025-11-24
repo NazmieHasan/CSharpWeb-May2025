@@ -1,5 +1,6 @@
 ﻿namespace HotelApp.Services.Core.Interfaces
 {
+    using HotelApp.Web.ViewModels.Booking;
     using HotelApp.Web.ViewModels.Room;
 
     public interface IRoomService
@@ -19,5 +20,7 @@
         Task<bool> DeleteRoomAsync(string? id);
 
         Task<DeleteRoomViewModel?> GetRoomDeleteDetailsByIdAsync(string? id);
+
+        Task<IEnumerable<AllRoomsIndexViewModel>> FindRoomByDateArrivaleAndDateDepartureAsync(FindRoomInputModel inputModel);
     }
 }
