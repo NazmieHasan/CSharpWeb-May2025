@@ -5,5 +5,7 @@
     public interface IManagerManagementService
     {
         Task<IEnumerable<ManagerManagementIndexViewModel>> GetManagerManagementBoardDataAsync();
+
+        Task AddManagerManagementAsync(ManagerManagementCreateViewModel inputModel);
     }
 }

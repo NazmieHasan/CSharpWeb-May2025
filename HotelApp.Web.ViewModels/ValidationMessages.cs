@@ -65,5 +65,14 @@
             public const string GuestEmailInvalidMessage = "Please enter a valid email address.";
             public const string GuestEmailNotFoundMessage = "Guest with this email was not found.";
         }
+
+        public static class Manager
+        {
+            public const string ManagerEmailRequiredMessage = "Manager email is required.";
+            public const string ManagerEmailInvalidMessage = "Please enter a valid email address.";
+            public const string ManagerEmailNotFoundMessage = "User with this email was not found.";
+            public const string ManagerExistMessage = "This user is already a manager.";
+            public const string ManagerCreateUnexpectedErrorMessage = "Unexpected error occurred while adding manager! Please try again.";
+        }
     }
 }
