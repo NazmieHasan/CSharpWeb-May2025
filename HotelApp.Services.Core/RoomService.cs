@@ -211,6 +211,33 @@
             return rooms;
         }
 
+        public async Task<AllRoomsIndexViewModel?> FindRoomByDateArrivaleDateDepartureAndCategoryAsync(FindRoomInputModel inputModel)
+        {
+            var checkin = inputModel.DateArrival;
+            var checkout = inputModel.DateDeparture;
+
+            var room = await this.roomRepository
+                .GetAllAttached()
+                .Include(r => r.Category)
+                .AsNoTracking()
+                .Where(r => r.CategoryId == inputModel.CategoryId)
+                .Where(r => !this.bookingRepository.GetAllAttached()
+                    .Any(b =>
+                        b.RoomId == r.Id &&
+                        b.DateArrival < checkout &&
+                        b.DateDeparture > checkin))
+                .Select(r => new AllRoomsIndexViewModel
+                {
+                    Id = r.Id.ToString(),
+                    Name = r.Name,
+                    CategoryId = r.CategoryId,
+                    Category = r.Category.Name,
+                    ImageUrl = r.Category.ImageUrl
+                })
+                .FirstOrDefaultAsync(); 
+
+            return room;
+        }
 
         // TODO: Implement as generic method in BaseService
         private async Task<Room?> FindRoomByStringId(string? id)
@@ -229,5 +256,6 @@
 
             return room;
         }
+
     }
 }

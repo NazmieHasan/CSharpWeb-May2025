@@ -76,6 +76,55 @@ namespace HotelApp.Web.Controllers
             return View("FindRoom", resultModel);
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult FindRoomByCategory(int categoryId)
+        {
+            var model = new FindRoomInputModel
+            {
+                CategoryId = categoryId,
+                DateArrival = DateOnly.FromDateTime(DateTime.Today.AddDays(1)),
+                DateDeparture = DateOnly.FromDateTime(DateTime.Today.AddDays(3))
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> FindRoomByCategory(FindRoomInputModel inputModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData["ErrorMessage"] = "Please correct the errors in the form!";
+                return View(inputModel);
+            }
+
+            if (inputModel.DateArrival < DateOnly.FromDateTime(DateTime.UtcNow))
+            {
+                TempData["ErrorMessage"] = $"Arrival date cannot be in the past!";
+                return View(inputModel);
+            }
+
+            if (inputModel.DateDeparture <= inputModel.DateArrival)
+            {
+                TempData["ErrorMessage"] = $"Departure date must be after arrival date!";
+                return View(inputModel);
+            }
+
+            var room = await this.roomService
+                .FindRoomByDateArrivaleDateDepartureAndCategoryAsync(inputModel);
+
+            var resultModel = new FindRoomResultViewModel
+            {
+                DateArrival = inputModel.DateArrival,
+                DateDeparture = inputModel.DateDeparture,
+                Rooms = room != null ? new List<AllRoomsIndexViewModel> { room } : new List<AllRoomsIndexViewModel>()
+            };
+
+            return View("FindRoom", resultModel);
+        }
+
         public IActionResult Privacy()
         {
             return View();

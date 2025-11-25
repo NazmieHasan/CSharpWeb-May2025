@@ -22,5 +22,7 @@
         Task<DeleteRoomViewModel?> GetRoomDeleteDetailsByIdAsync(string? id);
 
         Task<IEnumerable<AllRoomsIndexViewModel>> FindRoomByDateArrivaleAndDateDepartureAsync(FindRoomInputModel inputModel);
+
+        Task<AllRoomsIndexViewModel?> FindRoomByDateArrivaleDateDepartureAndCategoryAsync(FindRoomInputModel inputModel);
     }
 }

@@ -15,5 +15,7 @@
         [DataType(DataType.Date)]
         [Display(Name = "Departure Date")]
         public DateOnly DateDeparture { get; set; } = DateOnly.FromDateTime(DateTime.Today.AddDays(3));
+
+        public int CategoryId { get; set; }
     }
 }

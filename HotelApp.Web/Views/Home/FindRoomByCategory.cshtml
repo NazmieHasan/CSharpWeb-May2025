@@ -1,0 +1,43 @@
+﻿@model HotelApp.Web.ViewModels.Room.FindRoomInputModel
+
+<div class="search-room text-center">
+    <div class="container">
+        <form asp-controller="Home" asp-action="FindRoomByCategory" method="post">
+            <input type="hidden" asp-for="CategoryId" />
+
+            <div class="form-group">
+                <div class="row">
+                    <h3 class="mt-5 mb-3 text-center">Search Room</h3>
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3 mb-3">
+                        <label asp-for="DateArrival"></label>
+                        <input asp-for="DateArrival" class="input-date" type="date" />
+                        <span asp-validation-for="DateArrival" class="text-danger"></span>
+                    </div>
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-3 mb-3">
+                        <label asp-for="DateDeparture"></label>
+                        <input asp-for="DateDeparture" class="input-date" type="date" />
+                        <span asp-validation-for="DateDeparture" class="text-danger"></span>
+                    </div>
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-sx-12 mt-3 mb-3">
+                        <button type="submit" class="btn btn-danger form-submit">Search</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="mt-3 mb-5 alert alert-danger text-center">
+                @TempData["ErrorMessage"]
+            </div>
+        }
+
+    </div>
+</div>
+
+@section Scripts {
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/user.css">
+}
