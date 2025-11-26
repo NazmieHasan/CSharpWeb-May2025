@@ -1,0 +1,26 @@
+﻿@using HotelApp.Web.ViewModels.Admin.RoomManagement
+@model RoomManagementDetailsViewModel
+
+@{
+    ViewData["Title"] = "Room Details";
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-5">
+            
+        </div>
+        <div class="col-md-7">
+            <h2 class="fw-bold text-primary mb-3">@Model.Name</h2>
+            <p><strong>Category:</strong> @Model.Category</p>
+            <p>Is Deleted: @Model.IsDeleted</p>
+
+            <div class="mt-4 mb-5">
+                <a asp-action="Index" class="btn btn-outline-primary ms-2">
+                    <i class="bi bi-arrow-left"></i> Back to List
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>

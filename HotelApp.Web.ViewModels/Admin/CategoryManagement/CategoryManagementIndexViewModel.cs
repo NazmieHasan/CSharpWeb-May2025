@@ -7,5 +7,7 @@
         public string Name { get; set; } = null!;
 
         public int Beds { get; set; }
+
+        public bool IsDeleted { get; set; }
     }
 }

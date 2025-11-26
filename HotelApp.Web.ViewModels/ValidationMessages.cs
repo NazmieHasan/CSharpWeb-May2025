@@ -26,7 +26,7 @@
         {
             // Error messages
             public const string NameRequiredMessage = "Name is required.";
-            public const string NameMinLengthMessage = "Name must be at least 1 characters.";
+            public const string NameMinLengthMessage = "Name must be at least 1 character.";
             public const string NameMaxLengthMessage = "Name cannot exceed 5 characters.";
 
             public const string CategoryRequiredMessage = "Please select a category.";

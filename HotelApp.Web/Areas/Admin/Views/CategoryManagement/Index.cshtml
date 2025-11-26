@@ -11,6 +11,9 @@
         <a asp-area="Admin" asp-controller="Home" asp-action="Index" class="btn btn-secondary fw-bold">
             <i class="bi bi-arrow-left"></i> Back to Dashboard
         </a>
+        <a asp-action="Create" class="btn btn-success fw-bold shadow-lg">
+            <i class="bi bi-plus-circle"></i> Add New Category
+        </a>
     </div>
 
     <div class="table-responsive">
@@ -20,6 +23,8 @@
                     <th>#</th>
                     <th>Name</th>
                     <th>Beds</th>
+                    <th>Is Deleted</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -29,6 +34,24 @@
                         <td class="align-middle">@category.Id</td>
                         <td class="align-middle">@category.Name</td>
                         <td class="align-middle">@category.Beds</td>
+                        <td class="align-middle">@category.IsDeleted</td>
+                        <td>
+                            <div class="d-flex justify-content-center gap-2">
+                                <a asp-action="Details" asp-route-id="@category.Id" class="btn btn-success btn-sm fw-bold">
+                                    <i class="bi bi-eye-square me-1"></i>Details
+                                </a>
+                                @if (!category.IsDeleted)
+                                {
+                                    <a asp-action="Edit" asp-route-id="@category.Id" class="btn btn-primary btn-sm fw-bold">
+                                        <i class="bi bi-pencil-square"></i> Edit
+                                    </a>
+                                }
+                                <a asp-action="ToggleDelete" asp-route-id="@category.Id" class="btn @(category.IsDeleted ? "btn-warning" : "btn-danger") btn-sm fw-bold">
+                                    <i class="bi @(category.IsDeleted ? "bi-arrow-clockwise" : "bi-trash")"></i>
+                                    @(category.IsDeleted ? "Restore" : "Delete")
+                                </a>
+                            </div>
+                        </td>
                     </tr>
                 }
             </tbody>
