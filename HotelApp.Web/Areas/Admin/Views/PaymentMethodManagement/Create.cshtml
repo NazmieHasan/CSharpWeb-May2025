@@ -1,0 +1,36 @@
+﻿@model HotelApp.Web.ViewModels.Admin.PaymentMethodManagement.PaymentMethodManagementFormInputModel
+
+@{
+    ViewData["Title"] = "Add New Payment Method";
+}
+
+
+<div class="container mt-5">
+    <h2 class="text-center text-warning fw-bold">Add a New Payment Method</h2>
+    <hr class="mb-4">
+
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form asp-area="Admin" asp-controller="PaymentMethodManagement" asp-action="Create" method="post" class="bg-dark text-light p-4 rounded shadow-lg">
+                <div class="mb-3">
+                    <label asp-for="Name" class="form-label fw-bold">Status Name</label>
+                    <input asp-for="Name" class="form-control" placeholder="Enter payment method name">
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-success fw-bold px-4">
+                        <i class="bi bi-plus-circle"></i> Add Payment Method
+                    </button>
+                    <a asp-action="Index" class="btn btn-outline-light ms-2">
+                        <i class="bi bi-arrow-left"></i> Back to List
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

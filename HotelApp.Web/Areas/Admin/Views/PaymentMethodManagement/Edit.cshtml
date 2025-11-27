@@ -1,0 +1,38 @@
+﻿@using HotelApp.Web.ViewModels.Admin.PaymentMethodManagement
+@model PaymentMethodManagementFormInputModel
+
+@{
+    ViewData["Title"] = "Edit Payment Method";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center text-warning fw-bold">Edit Payment Method</h2>
+    <hr class="mb-4">
+
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form asp-action="Edit" method="post" class="bg-dark text-light p-4 rounded shadow-lg">
+                <input type="hidden" asp-for="Id" />
+
+                <div class="mb-3">
+                    <label asp-for="Name" class="form-label fw-bold">Payment Method Name</label>
+                    <input asp-for="Name" class="form-control">
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary fw-bold px-4">
+                        <i class="bi bi-save"></i> Save Changes
+                    </button>
+                    <a asp-area="Admin" asp-controller="PaymentMethodManagement" asp-action="Index" class="btn btn-outline-light ms-2">
+                        <i class="bi bi-arrow-left"></i> Back to All Payment Methods
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

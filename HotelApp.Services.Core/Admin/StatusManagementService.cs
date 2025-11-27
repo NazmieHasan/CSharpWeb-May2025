@@ -2,6 +2,7 @@
 {
     using Microsoft.EntityFrameworkCore;
 
+    using Data.Models;
     using Data.Repository.Interfaces;
     using Interfaces;
 
@@ -22,11 +23,13 @@
         {
             return await statusRepository
                 .GetAllAttached()
+                .IgnoreQueryFilters()
                 .AsNoTracking()
                 .Select(s => new StatusManagementIndexViewModel
                 {
                     Id = s.Id,
                     Name = s.Name,
+                    IsDeleted = s.IsDeleted
                 })
                 .ToListAsync()
                 ?? Enumerable.Empty<StatusManagementIndexViewModel>();
@@ -51,6 +54,44 @@
 
             return statusesAsDropDown;
         }
+
+        public async Task AddStatusManagementAsync(StatusManagementFormInputModel inputModel)
+        {
+            Status newStatus = new Status()
+            {
+                Name = inputModel.Name
+            };
+
+            await this.statusRepository.AddAsync(newStatus);
+        }
+
+        public async Task<Tuple<bool, bool>> DeleteOrRestoreStatusAsync(int? id)
+        {
+            bool result = false;
+            bool isRestored = false;
+            if (id > 0)
+            {
+                Status? status = await this.statusRepository
+                    .GetAllAttached()
+                    .IgnoreQueryFilters()
+                    .SingleOrDefaultAsync(s => s.Id == id);
+                if (status != null)
+                {
+                    if (status.IsDeleted)
+                    {
+                        isRestored = true;
+                    }
+
+                    status.IsDeleted = !status.IsDeleted;
+
+                    result = await this.statusRepository
+                        .UpdateAsync(status);
+                }
+            }
+
+            return new Tuple<bool, bool>(result, isRestored);
+        }
+
     }
 }
 

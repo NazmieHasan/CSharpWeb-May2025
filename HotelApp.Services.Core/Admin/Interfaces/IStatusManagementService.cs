@@ -7,6 +7,10 @@
     {
         Task<IEnumerable<StatusManagementIndexViewModel>> GetStatusManagementBoardDataAsync();
 
+        Task AddStatusManagementAsync(StatusManagementFormInputModel inputModel);
+
         Task<IEnumerable<AddBookingStatusDropDownModel>> GetStatusesDropDownDataAsync();
+
+        Task<Tuple<bool, bool>> DeleteOrRestoreStatusAsync(int? id);
     }
 }

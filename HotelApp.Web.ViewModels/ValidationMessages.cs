@@ -1,5 +1,7 @@
 ﻿namespace HotelApp.Web.ViewModels
 {
+    using HotelApp.Data.Common;
+
     public static class ValidationMessages
     {
         public static class Category
@@ -48,6 +50,26 @@
 
             public const string ServiceCreateError = "Error occurred while adding the booking! Please, send valid data!";
             public const string ServiceCreateExceptionError ="Unexpected error occurred while adding the booking! Please contact developer team!";
+        }
+
+        public static class Status
+        {
+            // Error messages
+            public const string NameRequiredMessage = "Name is required.";
+            public const string NameMinLengthMessage = "Name must be at least 3 characters.";
+            public const string NameMaxLengthMessage = "Name cannot exceed 30 characters.";
+            public const string ServiceCreateError =
+                "Fatal error occurred while adding your status! Please try again later!";
+        }
+
+        public static class PaymentMethod
+        {
+            // Error messages
+            public const string NameRequiredMessage = "Name is required.";
+            public const string NameMinLengthMessage = "Name must be at least 3 characters.";
+            public const string NameMaxLengthMessage = "Name cannot exceed 30 characters.";
+            public const string ServiceCreateError =
+                "Fatal error occurred while adding your payment method! Please try again later!";
         }
 
         public static class PaymentMessages
