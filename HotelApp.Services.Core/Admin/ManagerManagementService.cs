@@ -25,6 +25,7 @@
         {
             return await managerRepository
                 .GetAllAttached()
+                .IgnoreQueryFilters()
                 .AsNoTracking()
                 .Select(m => new ManagerManagementIndexViewModel
                 {
@@ -62,6 +63,62 @@
             };
 
             await this.managerRepository.AddAsync(newManager);
+        }
+
+        public async Task<ManagerManagementDetailsViewModel?> GetManagerManagementDetailsByIdAsync(string? id)
+        {
+            var manager = await managerRepository.GetAllAttached()
+                .IgnoreQueryFilters()
+                .Where(m => m.Id.ToString() == id)
+                .Include(m => m.User)
+                .Include(m => m.ManagedBookings)
+                    .ThenInclude(b => b.Status)
+                .Include(m => m.ManagedBookings)
+                    .ThenInclude(b => b.Room)
+                .FirstOrDefaultAsync();
+
+            if (manager == null)
+            {
+                return null;
+            }
+
+            return new ManagerManagementDetailsViewModel
+            {
+                Id = manager.Id,
+                IsDeleted = manager.IsDeleted,
+                UserId = manager.UserId,
+                Email = manager.User.Email,
+                ManagedBookings = manager.ManagedBookings
+                    .OrderByDescending(b => b.CreatedOn)
+                    .ToList()
+            };
+        }
+
+        public async Task<Tuple<bool, bool>> DeleteOrRestoreManagerAsync(string? id)
+        {
+            bool result = false;
+            bool isRestored = false;
+            if (!String.IsNullOrWhiteSpace(id))
+            {
+                Manager? manager = await this.managerRepository
+                    .GetAllAttached()
+                    .IgnoreQueryFilters()
+                    .SingleOrDefaultAsync(m => m.Id.ToString().ToLower() == id.ToLower());
+                if (manager != null)
+                {
+                    if (manager.IsDeleted)
+                    {
+                        isRestored = true;
+                    }
+
+                    manager.IsDeleted = !manager.IsDeleted;
+
+                    result = await this.managerRepository
+                        .UpdateAsync(manager);
+                }
+            }
+
+            return new Tuple<bool, bool>(result, isRestored);
         }
 
     }

@@ -7,5 +7,9 @@
         Task<IEnumerable<ManagerManagementIndexViewModel>> GetManagerManagementBoardDataAsync();
 
         Task AddManagerManagementAsync(ManagerManagementCreateViewModel inputModel);
+
+        Task<ManagerManagementDetailsViewModel?> GetManagerManagementDetailsByIdAsync(string? id);
+
+        Task<Tuple<bool, bool>> DeleteOrRestoreManagerAsync(string? id);
     }
 }

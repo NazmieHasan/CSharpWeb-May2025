@@ -30,6 +30,7 @@
                     <th>#</th>
                     <th>Email</th>
                     <th>Is Deleted</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -39,6 +40,17 @@
                         <td class="align-middle">@manager.Id</td>
                         <td class="align-middle">@manager.Email</td>
                         <td class="align-middle">@manager.IsDeleted</td>
+                        <td>
+                            <div class="d-flex justify-content-center gap-2">
+                                <a asp-action="Details" asp-route-id="@manager.Id" class="btn btn-success btn-sm fw-bold">
+                                    <i class="bi bi-eye-square me-1"></i>Details
+                                </a>
+                                <a asp-action="ToggleDelete" asp-route-id="@manager.Id" class="btn @(manager.IsDeleted ? "btn-warning" : "btn-danger") btn-sm fw-bold">
+                                    <i class="bi @(manager.IsDeleted ? "bi-arrow-clockwise" : "bi-trash")"></i>
+                                    @(manager.IsDeleted ? "Restore" : "Delete")
+                                </a>
+                            </div>
+                        </td>
                     </tr>
                 }
             </tbody>

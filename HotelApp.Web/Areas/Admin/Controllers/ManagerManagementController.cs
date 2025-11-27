@@ -13,6 +13,7 @@
     using static GCommon.ApplicationConstants;
     using HotelApp.Web.ViewModels.Admin.StayManagement;
     using HotelApp.Web.ViewModels;
+    using HotelApp.Web.ViewModels.Admin.BookingManagement;
 
     public class ManagerManagementController : BaseAdminController
     {
@@ -72,6 +73,52 @@
 
                 return View(inputModel);
             }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Details(string? id)
+        {
+            try
+            {
+                ManagerManagementDetailsViewModel? managerDetails = await this.managerService
+                    .GetManagerManagementDetailsByIdAsync(id);
+
+                if (managerDetails == null)
+                {
+                    return this.RedirectToAction(nameof(Index));
+                }
+
+                return this.View(managerDetails);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+
+                return this.RedirectToAction(nameof(Index));
+            }
+
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ToggleDelete(string? id)
+        {
+            Tuple<bool, bool> opResult = await this.managerService
+                .DeleteOrRestoreManagerAsync(id);
+            bool success = opResult.Item1;
+            bool isRestored = opResult.Item2;
+
+            if (!success)
+            {
+                TempData[ErrorMessageKey] = "Manager could not be found!";
+            }
+            else
+            {
+                string operation = isRestored ? "restored" : "deleted";
+
+                TempData[SuccessMessageKey] = $"Manager {operation} successfully!";
+            }
+
+            return this.RedirectToAction(nameof(Index));
         }
 
     }
