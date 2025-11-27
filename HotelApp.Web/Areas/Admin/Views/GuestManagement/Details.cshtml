@@ -1,0 +1,69 @@
+﻿@using HotelApp.Web.ViewModels.Admin.GuestManagement
+@model GuestManagementDetailsViewModel
+
+@{
+    ViewData["Title"] = "Guest Details";
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="fw-bold text-primary mb-3">Guest Details - @Model.FirstName @Model.FamilyName</h2>
+            <hr />
+            <p><strong>Guest ID:</strong> @Model.Id, <strong>Is Deleted:</strong> @Model.IsDeleted</p>
+            <p><strong>Phone Number:</strong> @Model.PhoneNumber, <strong>Email:</strong> @Model.Email</p>
+            <hr />
+
+            <h4 class="mt-4">Stays</h4>
+
+            @if (Model.Stays != null && Model.Stays.Any())
+            {
+                <table class="table table-bordered mt-3">
+                    <thead>
+                        <tr>
+                            <th>Stay ID</th>
+                            <th>Check in</th>
+                            <th>Check out</th>
+                            <th>Is Deleted</th>
+                            <th>Booking ID</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var stay in Model.Stays)
+                        {
+                            <tr>
+                                <td>@stay.Id</td>
+                                <td>@stay.CreatedOn.ToString("yyyy-MM-dd")</td>
+                                <td>@(stay.CheckoutOn?.ToString("yyyy-MM-dd") ?? "-")</td>
+                                <td>@stay.IsDeleted</td>
+                                <td>
+                                    <a asp-area="Admin"
+                                       asp-controller="BookingManagement"
+                                       asp-action="Details"
+                                       asp-route-id="@stay.BookingId"
+                                       class="link-primary text-decoration-none"
+                                       target="_blank">
+                                        @stay.BookingId
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p class="text-muted mt-3">Not found stays.</p>
+            }
+
+            <div class="mt-4 mb-5">
+                <a asp-action="Index" class="btn btn-outline-primary">
+                    <i class="bi bi-arrow-left"></i> Back to List
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
