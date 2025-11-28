@@ -19,6 +19,8 @@
                 <tr class="text-warning text-center">
                     <th>#</th>
                     <th>Created On</th>
+                    <th>Is Deleted</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -27,6 +29,18 @@
                     <tr>
                         <td class="align-middle">@stay.Id</td>
                         <td class="align-middle">@stay.CreatedOn.ToString("yyyy-MM-dd HH:mm")</td>
+                        <td class="align-middle">@stay.IsDeleted</td>
+                        <td>
+                            <div class="d-flex justify-content-center gap-2">
+                                <a asp-action="Details" asp-route-id="@stay.Id" class="btn btn-success btn-sm fw-bold">
+                                    <i class="bi bi-eye-square me-1"></i>Details
+                                </a>
+                                <a asp-action="ToggleDelete" asp-route-id="@stay.Id" class="btn @(stay.IsDeleted ? "btn-warning" : "btn-danger") btn-sm fw-bold">
+                                    <i class="bi @(stay.IsDeleted ? "bi-arrow-clockwise" : "bi-trash")"></i>
+                                    @(stay.IsDeleted ? "Restore" : "Delete")
+                                </a>
+                            </div>
+                        </td>
                     </tr>
                 }
             </tbody>

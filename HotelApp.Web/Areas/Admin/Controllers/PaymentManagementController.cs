@@ -2,13 +2,11 @@
 {
     using HotelApp.Web.ViewModels;
     using HotelApp.Web.ViewModels.Admin.PaymentManagement;
-
     using Microsoft.AspNetCore.Mvc;
 
     using Services.Core.Admin.Interfaces;
 
-    using System.Collections.Generic;
-
+    using static GCommon.ApplicationConstants;
     using static HotelApp.Web.ViewModels.ValidationMessages.PaymentMessages;
 
 
@@ -107,6 +105,52 @@
                 Console.WriteLine(e.Message);
                 return RedirectToAction("Details", "BookingManagement", new { id = inputModel.BookingId });
             }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Details(string? id)
+        {
+            try
+            {
+                PaymentManagementDetailsViewModel? paymentDetails = await this.paymentService
+                    .GetPaymentManagementDetailsByIdAsync(id);
+
+                if (paymentDetails == null)
+                {
+                    return this.RedirectToAction(nameof(Index));
+                }
+
+                return this.View(paymentDetails);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+
+                return this.RedirectToAction(nameof(Index));
+            }
+
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ToggleDelete(string? id)
+        {
+            Tuple<bool, bool> opResult = await this.paymentService
+                .DeleteOrRestorePaymentAsync(id);
+            bool success = opResult.Item1;
+            bool isRestored = opResult.Item2;
+
+            if (!success)
+            {
+                TempData[ErrorMessageKey] = "Payment could not be found!";
+            }
+            else
+            {
+                string operation = isRestored ? "restored" : "deleted";
+
+                TempData[SuccessMessageKey] = $"Payment {operation} successfully!";
+            }
+
+            return this.RedirectToAction(nameof(Index));
         }
 
     }

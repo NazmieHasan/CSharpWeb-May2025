@@ -8,8 +8,12 @@
 
         Task AddStayManagementAsync(StayManagementCreateViewModel inputModel);
 
+        Task<StayManagementDetailsViewModel?> GetStayManagementDetailsByIdAsync(string? id);
+
         Task<StayManagementEditFormModel?> GetStayEditFormModelAsync(string? id);
 
         Task<bool> EditStayAsync(StayManagementEditFormModel? inputModel);
+
+        Task<Tuple<bool, bool>> DeleteOrRestoreStayAsync(string? id);
     }
 }

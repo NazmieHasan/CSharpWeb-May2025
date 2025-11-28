@@ -7,5 +7,9 @@
         Task<IEnumerable<PaymentManagementIndexViewModel>> GetPaymentManagementBoardDataAsync();
 
         Task AddPaymentManagementAsync(PaymentManagementCreateViewModel inputModel);
+
+        Task<PaymentManagementDetailsViewModel?> GetPaymentManagementDetailsByIdAsync(string? id);
+
+        Task<Tuple<bool, bool>> DeleteOrRestorePaymentAsync(string? id);
     }
 }

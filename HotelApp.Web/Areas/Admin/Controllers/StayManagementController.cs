@@ -12,6 +12,7 @@
     using static HotelApp.Web.ViewModels.ValidationMessages.Stay;
 
     using static GCommon.ApplicationConstants;
+    using HotelApp.Web.ViewModels.Admin.PaymentManagement;
 
     public class StayManagementController : BaseAdminController
     {
@@ -90,6 +91,30 @@
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Details(string? id)
+        {
+            try
+            {
+                StayManagementDetailsViewModel? stayDetails = await this.stayService
+                    .GetStayManagementDetailsByIdAsync(id);
+
+                if (stayDetails == null)
+                {
+                    return this.RedirectToAction(nameof(Index));
+                }
+
+                return this.View(stayDetails);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+
+                return this.RedirectToAction(nameof(Index));
+            }
+
+        }
+
         [HttpPost]
         public async Task<IActionResult> Edit(StayManagementEditFormModel inputModel)
         {
@@ -120,6 +145,28 @@
 
                 return this.RedirectToAction(nameof(Index));
             }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ToggleDelete(string? id)
+        {
+            Tuple<bool, bool> opResult = await this.stayService
+                .DeleteOrRestoreStayAsync(id);
+            bool success = opResult.Item1;
+            bool isRestored = opResult.Item2;
+
+            if (!success)
+            {
+                TempData[ErrorMessageKey] = "Stay could not be found!";
+            }
+            else
+            {
+                string operation = isRestored ? "restored" : "deleted";
+
+                TempData[SuccessMessageKey] = $"Stay {operation} successfully!";
+            }
+
+            return this.RedirectToAction(nameof(Index));
         }
     }
 }

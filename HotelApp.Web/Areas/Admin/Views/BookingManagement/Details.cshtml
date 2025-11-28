@@ -69,6 +69,7 @@
                             <th>Phone</th>
                             <th>Payment Method</th>
                             <th>Is Deleted</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -82,6 +83,14 @@
                                 <td>@payment.PaymentMethodName</td>
                                 <td>
                                     @(payment.IsDeleted ? "Yes" : "No")
+                                </td>
+                                <td>
+                                    <a asp-controller="PaymentManagement"
+                                       asp-action="Details"
+                                       asp-route-id="@payment.Id"
+                                       class="text-info fw-bold">
+                                        Details
+                                    </a>
                                 </td>
                             </tr>
                         }
@@ -105,6 +114,7 @@
                             <th>Created On</th>
                             <th>Is Completed</th>
                             <th>Is Deleted</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -131,6 +141,14 @@
 
                                 <td>
                                     @(stay.IsDeleted ? "Yes" : "No")
+                                </td>
+                                <td>
+                                    <a asp-controller="StayManagement"
+                                       asp-action="Details"
+                                       asp-route-id="@stay.Id"
+                                       class="text-info fw-bold">
+                                        Details
+                                    </a>
                                 </td>
                             </tr>
                         }

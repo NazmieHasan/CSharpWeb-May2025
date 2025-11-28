@@ -20,6 +20,8 @@
                     <th>#</th>
                     <th>Created On</th>
                     <th>Family and Name</th>
+                    <th>Is Deleted</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -29,6 +31,18 @@
                         <td class="align-middle">@payment.Id</td>
                         <td class="align-middle">@payment.CreatedOn.ToString("yyyy-MM-dd HH:mm")</td>
                         <td class="align-middle">@payment.PaymentUserFullName</td>
+                        <td class="align-middle">@payment.IsDeleted</td>
+                        <td>
+                            <div class="d-flex justify-content-center gap-2">
+                                <a asp-action="Details" asp-route-id="@payment.Id" class="btn btn-success btn-sm fw-bold">
+                                    <i class="bi bi-eye-square me-1"></i>Details
+                                </a>
+                                <a asp-action="ToggleDelete" asp-route-id="@payment.Id" class="btn @(payment.IsDeleted ? "btn-warning" : "btn-danger") btn-sm fw-bold">
+                                    <i class="bi @(payment.IsDeleted ? "bi-arrow-clockwise" : "bi-trash")"></i>
+                                    @(payment.IsDeleted ? "Restore" : "Delete")
+                                </a>
+                            </div>
+                        </td>
                     </tr>
                 }
             </tbody>

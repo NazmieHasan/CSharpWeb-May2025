@@ -7,6 +7,8 @@
     using Interfaces;
 
     using HotelApp.Web.ViewModels.Admin.PaymentManagement;
+    using HotelApp.Web.ViewModels.Admin.GuestManagement;
+    using HotelApp.Web.ViewModels.Admin.StayManagement;
 
     public class PaymentManagementService : IPaymentManagementService
     {
@@ -30,12 +32,15 @@
         {
             return await paymentRepository
                 .GetAllAttached()
+                .IgnoreQueryFilters()
                 .AsNoTracking()
+                .OrderByDescending(p => p.CreatedOn)
                 .Select(p => new PaymentManagementIndexViewModel
                 {
                     Id = p.Id,
                     CreatedOn = p.CreatedOn,
                     PaymentUserFullName = p.PaymentUserFullName,
+                    IsDeleted = p.IsDeleted,
                 })
                 .ToListAsync()
                 ?? Enumerable.Empty<PaymentManagementIndexViewModel>();
@@ -88,6 +93,62 @@
 
                 await this.bookingRepository.SaveChangesAsync();
             }
+        }
+
+        public async Task<PaymentManagementDetailsViewModel?> GetPaymentManagementDetailsByIdAsync(string? id)
+        {
+            PaymentManagementDetailsViewModel? paymentDetails = null;
+
+            bool isIdValidGuid = Guid.TryParse(id, out Guid paymentId);
+
+            if (isIdValidGuid)
+            {
+                paymentDetails = await this.paymentRepository
+                    .GetAllAttached()
+                    .IgnoreQueryFilters()
+                    .AsNoTracking()
+                    .Where(p => p.Id == paymentId)
+                    .Select(p => new PaymentManagementDetailsViewModel()
+                    {
+                        Id = p.Id,
+                        CreatedOn = p.CreatedOn,
+                        Amount = p.Amount,
+                        PaymentUserFullName = p.PaymentUserFullName,
+                        PaymentUserPhoneNumber = p.PaymentUserPhoneNumber,
+                        IsDeleted = p.IsDeleted,
+                        PaymentMethodName = p.PaymentMethod.Name
+                    })
+                    .SingleOrDefaultAsync();
+            }
+
+            return paymentDetails;
+        }
+
+        public async Task<Tuple<bool, bool>> DeleteOrRestorePaymentAsync(string? id)
+        {
+            bool result = false;
+            bool isRestored = false;
+            if (!String.IsNullOrWhiteSpace(id))
+            {
+                Payment? payment = await this.paymentRepository
+                    .GetAllAttached()
+                    .IgnoreQueryFilters()
+                    .SingleOrDefaultAsync(p => p.Id.ToString().ToLower() == id.ToLower());
+                if (payment != null)
+                {
+                    if (payment.IsDeleted)
+                    {
+                        isRestored = true;
+                    }
+
+                    payment.IsDeleted = !payment.IsDeleted;
+
+                    result = await this.paymentRepository
+                        .UpdateAsync(payment);
+                }
+            }
+
+            return new Tuple<bool, bool>(result, isRestored);
         }
 
     }

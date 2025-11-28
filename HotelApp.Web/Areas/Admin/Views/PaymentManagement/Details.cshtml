@@ -1,0 +1,28 @@
+﻿@using HotelApp.Web.ViewModels.Admin.PaymentManagement
+@model PaymentManagementDetailsViewModel
+
+@{
+    ViewData["Title"] = "Payment Details";
+}
+
+<div class="container mt-5 text-center">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h2 class="fw-bold text-primary mb-3">Payment Details</h2>
+            <p><strong>Payment ID: @Model.Id</strong></p>
+            <hr />
+            <p>Created On: @Model.CreatedOn.ToString("yyyy-MM-dd HH:mm")</p>
+            <p>Amount: <strong>$@Model.Amount.ToString("0.00")</strong></p>
+            <p>Name and Family: <strong>@Model.PaymentUserFullName</strong></p>
+            <p>Phone Number: @Model.PaymentUserPhoneNumber</p>
+            <p>Payment Method: @Model.PaymentMethodName</p>
+            <p>Is Deleted: @Model.IsDeleted</p>
+
+            <div class="mt-4 mb-5">
+                <a asp-action="Index" class="btn btn-outline-primary">
+                    <i class="bi bi-arrow-left"></i> Back to List
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

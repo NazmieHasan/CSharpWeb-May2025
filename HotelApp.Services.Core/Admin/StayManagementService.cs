@@ -8,6 +8,7 @@
     using HotelApp.Web.ViewModels.Admin.StayManagement;
     using HotelApp.Data.Models;
     using HotelApp.Web.ViewModels;
+    using HotelApp.Web.ViewModels.Admin.PaymentManagement;
 
     public class StayManagementService : IStayManagementService
     {
@@ -31,11 +32,14 @@
         {
             return await stayRepository
                 .GetAllAttached()
+                .IgnoreQueryFilters()
                 .AsNoTracking()
+                .OrderByDescending(s => s.CreatedOn)
                 .Select(s => new StayManagementIndexViewModel
                 {
                     Id = s.Id,
                     CreatedOn = s.CreatedOn,
+                    IsDeleted = s.IsDeleted
                 })
                 .ToListAsync()
                 ?? Enumerable.Empty<StayManagementIndexViewModel>();
@@ -67,6 +71,33 @@
                 booking.StatusId = 4;  // In Progress
                 await this.bookingRepository.SaveChangesAsync();
             }
+        }
+
+        public async Task<StayManagementDetailsViewModel?> GetStayManagementDetailsByIdAsync(string? id)
+        {
+            StayManagementDetailsViewModel? stayDetails = null;
+
+            bool isIdValidGuid = Guid.TryParse(id, out Guid stayId);
+
+            if (isIdValidGuid)
+            {
+                stayDetails = await this.stayRepository
+                    .GetAllAttached()
+                    .IgnoreQueryFilters()
+                    .AsNoTracking()
+                    .Where(s => s.Id == stayId)
+                    .Select(s => new StayManagementDetailsViewModel()
+                    {
+                        Id = s.Id,
+                        GuestEmail = s.Guest.Email,
+                        CreatedOn = s.CreatedOn,
+                        CheckoutOn = s.CheckoutOn,
+                        IsDeleted = s.IsDeleted
+                    })
+                    .SingleOrDefaultAsync();
+            }
+
+            return stayDetails;
         }
 
         public async Task<StayManagementEditFormModel?> GetStayEditFormModelAsync(string? id)
@@ -144,5 +175,31 @@
             return true;
         }
 
+        public async Task<Tuple<bool, bool>> DeleteOrRestoreStayAsync(string? id)
+        {
+            bool result = false;
+            bool isRestored = false;
+            if (!String.IsNullOrWhiteSpace(id))
+            {
+                Stay? stay = await this.stayRepository
+                    .GetAllAttached()
+                    .IgnoreQueryFilters()
+                    .SingleOrDefaultAsync(s => s.Id.ToString().ToLower() == id.ToLower());
+                if (stay != null)
+                {
+                    if (stay.IsDeleted)
+                    {
+                        isRestored = true;
+                    }
+
+                    stay.IsDeleted = !stay.IsDeleted;
+
+                    result = await this.stayRepository
+                        .UpdateAsync(stay);
+                }
+            }
+
+            return new Tuple<bool, bool>(result, isRestored);
+        }
     }
 }

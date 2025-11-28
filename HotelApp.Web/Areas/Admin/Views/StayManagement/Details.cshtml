@@ -1,0 +1,25 @@
+﻿@using HotelApp.Web.ViewModels.Admin.StayManagement
+@model StayManagementDetailsViewModel
+
+@{
+    ViewData["Title"] = "Stay Details";
+}
+
+<div class="container mt-5 text-center">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h2 class="fw-bold text-primary mb-3">Stay Details</h2>
+            <p><strong>Stay ID: @Model.Id</strong></p>
+            <hr />
+            <p>Created On: @Model.CreatedOn.ToString("yyyy-MM-dd HH:mm")</p>
+            <p>Checkout On: @(Model.CheckoutOn?.ToString("yyyy-MM-dd") ?? "-")</p>
+            <p>Is Deleted: @Model.IsDeleted</p>
+            <div class="mt-4 mb-5">
+                <a asp-action="Index" class="btn btn-outline-primary">
+                    <i class="bi bi-arrow-left"></i> Back to List
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
