@@ -1,10 +1,10 @@
-﻿namespace HotelApp.Web.ViewModels.Booking
+﻿namespace HotelApp.Web.ViewModels.Manager
 {
-    public class BookingDetailsViewModel
+    public class ManagerBookingDetailsViewModel
     {
         public string Id { get; set; } = null!;
 
-        public DateTime CreatedOn { get; set; } 
+        public DateTime CreatedOn { get; set; }
 
         public DateOnly DateArrival { get; set; }
 

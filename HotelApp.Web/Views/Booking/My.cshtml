@@ -6,12 +6,6 @@
 }
 
 <div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1 class="text-light fw-bold">My Bookings</h1>
-        <a asp-controller="Home" asp-action="Index" class="btn btn-secondary fw-bold">
-            <i class="bi bi-arrow-left"></i> Back to Home Page
-        </a>
-    </div>
 
     @if (!Model.Any())
     {
@@ -31,21 +25,12 @@
                         Arrival Date: @booking.DateArrival.ToString("yyyy-MM-dd") |
                         Departure Date: @booking.DateDeparture.ToString("yyyy-MM-dd")
                     </p>
-                    <p>Room Number: @booking.Room</p>
+                    <p>Category: @booking.Category</p>
                     <p>
                         Adults Count: @booking.AdultsCount |
                         Child Count: @booking.ChildCount |
                         Babies Count: @booking.BabyCount
                     </p>
-
-                    <div class="me-3">
-                        <a asp-controller="Booking"
-                           asp-action="Details"
-                           asp-route-id="@booking.Id"
-                           class="btn btn-outline-primary btn-sm rounded-pill px-3">
-                            <i class="fas fa-eye"></i> View Details
-                        </a>
-                    </div>
                 </div>
                 <hr />
             }

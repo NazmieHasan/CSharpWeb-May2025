@@ -1,30 +1,22 @@
 ﻿namespace HotelApp.Services.Core.Interfaces
 {
     using HotelApp.Web.ViewModels.Booking;
-    using HotelApp.Web.ViewModels.Room;
+    using HotelApp.Web.ViewModels.Manager;
 
     public interface IBookingService
     {
-        Task<IEnumerable<AllBookingsIndexViewModel>> GetAllBookingsAsync();
-
         Task<bool> AddBookingAsync(string userId, AddBookingInputModel inputModel);
-
-        Task<bool> AddBookingAsync(string userId, string arrival, string departure, int adultsCount, int childCount, int babyCount);
-
-        Task<BookingDetailsViewModel?> GetBookingDetailsByIdAsync(string? id);
-
-        Task<EditBookingInputModel?> GetBookingForEditAsync(string? id);
-
-        Task<bool> PersistUpdatedBookingAsync(EditBookingInputModel inputModel);
-
-        Task<bool> SoftDeleteBookingAsync(string? id);
-
-        Task<bool> DeleteBookingAsync(string? id);
-
-        Task<DeleteBookingViewModel?> GetBookingDeleteDetailsByIdAsync(string? id);
 
         Task<IEnumerable<MyBookingsViewModel>> GetBookingsByUserIdAsync(string userId);
 
+        Task<ManagerBookingDetailsViewModel?> GetBookingDetailsByIdAsync(string? id);
+
+        Task<IEnumerable<ManagerBookingsIndexViewModel>> GetBookingsByManagerIdAsync(string userId);
+
+        /* Booking API */
+        Task<bool> AddBookingAsync(string userId, string arrival, string departure, int adultsCount, int childCount, int babyCount);
+
+        /* Booking API */
         Task<IEnumerable<string>> GetBookingsIdByUserIdAsync(string? userId);
     }
 }

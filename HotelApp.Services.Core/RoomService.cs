@@ -15,94 +15,14 @@
     public class RoomService : IRoomService
     {
         private readonly IRoomRepository roomRepository;
-        private readonly ICategoryRepository categoryRepository;
         private readonly IBookingRepository bookingRepository;
 
         public RoomService(IRoomRepository roomRepository,
-            ICategoryRepository categoryRepository,
             IBookingRepository bookingRepository)
         {
             this.roomRepository = roomRepository;
-            this.categoryRepository = categoryRepository;
             this.bookingRepository = bookingRepository;
         }
-
-
-        public async Task<bool> AddRoomAsync(AddRoomInputModel inputModel)
-        {
-            bool opRes = false;
-
-            Category? catRef = await this.categoryRepository
-                .GetAllAttached()
-                .FirstOrDefaultAsync(c => c.Id == inputModel.CategoryId);
-
-            if (catRef != null)
-            {
-                Room newRoom = new Room()
-                {
-                    Name = inputModel.Name,
-                    CategoryId = inputModel.CategoryId
-                };
-
-                await this.roomRepository.AddAsync(newRoom);
-
-                opRes = true;
-            }
-
-            return opRes;
-        }
-
-        public async Task<bool> DeleteRoomAsync(string? id)
-        {
-            Room? roomToDelete = await this.FindRoomByStringId(id);
-            if (roomToDelete == null)
-            {
-                return false;
-            }
-
-            // TODO: To be investigated when relations to Room entity are introduced
-            await this.roomRepository
-                .HardDeleteAsync(roomToDelete);
-
-            return true;
-        }
-
-        public async Task<IEnumerable<AllRoomsIndexViewModel>> GetAllRoomsAsync()
-        {
-            IEnumerable<AllRoomsIndexViewModel> allRooms = await this.roomRepository
-                .GetAllAttached()
-                .Include(r => r.Category)
-                .Where(r => !r.IsDeleted)
-                .Select(r => new AllRoomsIndexViewModel
-                {
-                    Id = r.Id.ToString(),
-                    Name = r.Name,
-                    Category = r.Category.Name,
-                    CategoryId = r.CategoryId,
-                })
-                .ToArrayAsync();
-
-            return allRooms;
-        }
-
-        public async Task<DeleteRoomViewModel?> GetRoomDeleteDetailsByIdAsync(string? id)
-        {
-            DeleteRoomViewModel? deleteRoomViewModel = null;
-
-            Room? roomToBeDeleted = await this.FindRoomByStringId(id);
-            if (roomToBeDeleted != null)
-            {
-                deleteRoomViewModel = new DeleteRoomViewModel()
-                {
-                    Id = roomToBeDeleted.Id.ToString(),
-                    Name = roomToBeDeleted.Name,
-                    CategoryName = roomToBeDeleted.Category.Name
-                };
-            }
-
-            return deleteRoomViewModel;
-        }
-
         public async Task<RoomDetailsViewModel?> GetRoomDetailsByIdAsync(string? id)
         {
             RoomDetailsViewModel? roomDetails = null;
@@ -127,60 +47,6 @@
             }
 
             return roomDetails;
-        }
-
-        public async Task<EditRoomInputModel?> GetRoomForEditAsync(string? id)
-        {
-            EditRoomInputModel? editModel = null;
-
-            bool isIdValidGuid = Guid.TryParse(id, out Guid roomId);
-
-            if (isIdValidGuid)
-            {
-                editModel = await this.roomRepository
-                    .GetAllAttached()
-                    .AsNoTracking()
-                    .Where(r => r.Id == roomId)
-                    .Select(r => new EditRoomInputModel()
-                    {
-                        Id = r.Id.ToString(),
-                        Name = r.Name,
-                        CategoryId = r.CategoryId
-                    })
-                    .SingleOrDefaultAsync();
-            }
-
-            return editModel;
-        }
-
-        public async Task<bool> PersistUpdatedRoomAsync(EditRoomInputModel inputModel)
-        {
-            Room? editableRoom = await this.FindRoomByStringId(inputModel.Id);
-
-            if (editableRoom == null)
-            {
-                return false;
-            }
-
-            editableRoom.Name = inputModel.Name;
-            editableRoom.CategoryId = inputModel.CategoryId;
-
-            await this.roomRepository.UpdateAsync(editableRoom);
-
-            return true;
-        }
-
-        public async Task<bool> SoftDeleteRoomAsync(string? id)
-        {
-            Room? roomToDelete = await this.FindRoomByStringId(id);
-            if (roomToDelete == null)
-            {
-                return false;
-            }
-
-            await this.roomRepository.DeleteAsync(roomToDelete);
-
-            return true;
         }
 
         public async Task<IEnumerable<AllRoomsIndexViewModel>> FindRoomByDateArrivaleAndDateDepartureAsync(FindRoomInputModel inputModel)
@@ -235,24 +101,6 @@
                     ImageUrl = r.Category.ImageUrl
                 })
                 .FirstOrDefaultAsync(); 
-
-            return room;
-        }
-
-        // TODO: Implement as generic method in BaseService
-        private async Task<Room?> FindRoomByStringId(string? id)
-        {
-            Room? room = null;
-
-            if (!string.IsNullOrWhiteSpace(id))
-            {
-                bool isGuidValid = Guid.TryParse(id, out Guid roomGuid);
-                if (isGuidValid)
-                {
-                    room = await this.roomRepository
-                    .GetByIdAsync(roomGuid);
-                }
-            }
 
             return room;
         }
