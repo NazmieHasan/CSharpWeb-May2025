@@ -79,5 +79,70 @@
                     innerException: e);
             }
         }
+
+        public async Task<bool> RemoveUserFromRoleAsync(string userId, string role)
+        {
+            ApplicationUser? user = await this.userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                throw new ArgumentException("User does not exist!");
+            }
+
+            bool roleExists = await this.roleManager.RoleExistsAsync(role);
+            if (!roleExists)
+            {
+                throw new ArgumentException("Role does not exist!");
+            }
+
+            bool isInRole = await this.userManager.IsInRoleAsync(user, role);
+            if (!isInRole)
+            {
+                return false;
+            }
+
+            var result = await this.userManager.RemoveFromRoleAsync(user, role);
+            return result.Succeeded;
+        }
+
+        public async Task<UserManagementDetailsViewModel?> GetUserManagementDetailsByIdAsync(string? id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                return null;
+            }
+
+            ApplicationUser? user = await this.userManager
+                .Users
+                .Include(u => u.Bookings)
+                    .ThenInclude(b => b.Status)
+                .FirstOrDefaultAsync(u => u.Id == id);
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            var roles = await this.userManager.GetRolesAsync(user);
+
+            var bookings = (user.Bookings ?? Enumerable.Empty<Booking>())
+                .Select(b => new UserBookingViewModel
+                {
+                    Id = b.Id,
+                    CreatedOn = b.CreatedOn,
+                    Status = b.Status.Name
+                })
+                .ToList();
+
+            var model = new UserManagementDetailsViewModel
+            {
+                Id = user.Id,
+                Email = user.Email ?? string.Empty,
+                Roles = roles,
+                Bookings = bookings
+            };
+
+            return model;
+        }
+
     }
 }

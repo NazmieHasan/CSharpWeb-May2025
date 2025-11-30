@@ -35,8 +35,8 @@
                         </td>
                         <td class="text-center align-middle">
                             <div class="d-flex justify-content-center align-items-center gap-2 flex-wrap">
-                                @if (!user.Roles.Contains("Admin"))
-                                {
+                                @* @if (!user.Roles.Contains("Admin"))
+                                { *@
                                     <select id="roleDropdown-@user.Id" class="form-select form-select-sm w-auto me-2">
                                         @foreach (IdentityRole role in roleManager.Roles.ToList())
                                         {
@@ -61,18 +61,18 @@
                                             <i class="bi bi-person-x-fill"></i> Remove
                                         </button>
                                     </form>
-
-                                    <form method="post" asp-action="DeleteUser" asp-controller="UserManagement" asp-area="Admin" class="d-inline">
-                                        <input type="hidden" name="userId" value="@user.Id" />
-                                        <button type="submit" class="btn btn-danger btn-sm fw-bold px-3 py-2">
-                                            <i class="bi bi-trash-fill"></i> Delete
-                                        </button>
-                                    </form>
-                                }
-                                else
+                                    <a asp-area="Admin"
+                                        asp-controller="UserManagement"
+                                        asp-action="Details"
+                                        asp-route-id="@user.Id"
+                                        class="btn btn-info btn-sm fw-bold px-3 py-2">
+                                        <i class="bi bi-eye-fill"></i> Details
+                                    </a>
+                                @* } *@
+                                @* else
                                 {
                                     <span class="text-muted fw-bold">Cannot edit Admin</span>
-                                }
+                                } *@
                             </div>
                         </td>
                     </tr>

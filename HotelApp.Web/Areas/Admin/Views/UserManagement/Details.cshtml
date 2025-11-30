@@ -1,0 +1,66 @@
+﻿@using HotelApp.Web.ViewModels.Admin.UserManagement
+@model UserManagementDetailsViewModel
+
+@{
+    ViewData["Title"] = "User Details";
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="fw-bold text-danger mb-3">User Details</h2>
+            <hr />
+            <p><strong>User ID:</strong> @Model.Id</p>
+            <p><strong>Email:</strong> @Model.Email</p>
+            <hr />
+
+            <h4 class="mt-4 text-danger">Bookings</h4>
+
+            @if (Model.Bookings != null && Model.Bookings.Any())
+            {
+                <table class="table table-bordered mt-3">
+                    <thead>
+                        <tr>
+                            <th>Booking ID</th>
+                            <th>Created On</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var booking in Model.Bookings)
+                        {
+                            <tr>
+                                <td>@booking.Id</td>
+                                <td>@booking.CreatedOn.ToString("yyyy-MM-dd")</td>
+                                <td>@booking.Status</td>
+                                <td>
+                                    <a asp-area="Admin"
+                                       asp-controller="BookingManagement"
+                                       asp-action="Details"
+                                       asp-route-id="@booking.Id"
+                                       class="link-primary text-decoration-none"
+                                       target="_blank">
+                                        View Booking
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p class="text-muted mt-3">Not found booking.</p>
+            }
+
+            <div class="mt-4 mb-5">
+                <a asp-action="Index" class="btn btn-outline-primary">
+                    <i class="bi bi-arrow-left"></i> Back to List
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

@@ -9,5 +9,10 @@
         Task<IEnumerable<string>> GetManagerEmailsAsync();
 
         Task<bool> AssignUserToRoleAsync(RoleSelectionInputModel inputModel);
+
+        Task<bool> RemoveUserFromRoleAsync(string userId, string role);
+
+        Task<UserManagementDetailsViewModel?> GetUserManagementDetailsByIdAsync(string? id);
+
     }
 }

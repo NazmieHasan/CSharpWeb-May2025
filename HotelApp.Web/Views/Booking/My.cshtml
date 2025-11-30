@@ -1,11 +1,19 @@
-﻿@using HotelApp.Web.ViewModels.Booking
+﻿@using Microsoft.AspNetCore.Identity
+@using HotelApp.Data.Models
+@using HotelApp.Web.ViewModels.Booking
+
 @model IEnumerable<MyBookingsViewModel>
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
 
 @{
     ViewData["Title"] = "My Bookings";
+    var userEmail = UserManager.GetUserName(User);
 }
 
-<div class="container mt-4">
+<div class="container mt-3">
+    <small class="text-end d-block">Hello, @userEmail!</small>
 
     @if (!Model.Any())
     {
@@ -16,6 +24,7 @@
     else
     {
         <div>
+            <h3 class="mt-3 mb-5 fw-bold">@ViewData["Title"]</h3>
             @foreach (var booking in Model)
             {
                 <div>
