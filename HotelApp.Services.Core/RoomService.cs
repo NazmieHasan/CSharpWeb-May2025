@@ -54,16 +54,24 @@
             var checkin = inputModel.DateArrival;
             var checkout = inputModel.DateDeparture;
 
-            var rooms = await this.roomRepository
+            var freeRoomsQuery = roomRepository
                 .GetAllAttached()
-                .Include(r => r.Category)        
+                .Include(r => r.Category)
                 .AsNoTracking()
-                .Where(r => !this.bookingRepository
+                .Where(r => !bookingRepository
                     .GetAllAttached()
                     .Any(b =>
                         b.RoomId == r.Id &&
+                        !b.IsDeleted &&
                         b.DateArrival < checkout &&
-                        b.DateDeparture > checkin))
+                        checkin < b.DateDeparture
+                    ));
+
+            var rooms = freeRoomsQuery
+                .AsEnumerable() 
+                .GroupBy(r => r.CategoryId)
+                .Select(g => g.OrderBy(r => r.Name).First())
+                .OrderBy(r => r.Name)
                 .Select(r => new AllRoomsIndexViewModel
                 {
                     Id = r.Id.ToString(),
@@ -72,7 +80,7 @@
                     Category = r.Category.Name,
                     ImageUrl = r.Category.ImageUrl
                 })
-                .ToListAsync();
+                .ToList();
 
             return rooms;
         }
@@ -81,17 +89,22 @@
         {
             var checkin = inputModel.DateArrival;
             var checkout = inputModel.DateDeparture;
+            var categoryId = inputModel.CategoryId; 
 
-            var room = await this.roomRepository
+            var room = await roomRepository
                 .GetAllAttached()
                 .Include(r => r.Category)
                 .AsNoTracking()
-                .Where(r => r.CategoryId == inputModel.CategoryId)
-                .Where(r => !this.bookingRepository.GetAllAttached()
+                .Where(r => r.CategoryId == categoryId) 
+                .Where(r => !bookingRepository
+                    .GetAllAttached()
                     .Any(b =>
                         b.RoomId == r.Id &&
+                        !b.IsDeleted &&
                         b.DateArrival < checkout &&
-                        b.DateDeparture > checkin))
+                        checkin < b.DateDeparture
+                    ))
+                .OrderBy(r => r.Name) 
                 .Select(r => new AllRoomsIndexViewModel
                 {
                     Id = r.Id.ToString(),

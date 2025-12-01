@@ -115,10 +115,14 @@ namespace HotelApp.Web.Controllers
             var room = await this.roomService
                 .FindRoomByDateArrivaleDateDepartureAndCategoryAsync(inputModel);
 
+            string categoryName = await this.categoryService
+                .FindCategoryNameByCategoryId(inputModel.CategoryId);
+
             var resultModel = new FindRoomResultViewModel
             {
                 DateArrival = inputModel.DateArrival,
                 DateDeparture = inputModel.DateDeparture,
+                CategoryName = categoryName,
                 Rooms = room != null ? new List<AllRoomsIndexViewModel> { room } : new List<AllRoomsIndexViewModel>()
             };
 

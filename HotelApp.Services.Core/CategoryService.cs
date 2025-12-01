@@ -20,6 +20,21 @@
             this.categoryRepository = categoryRepository;
         }
 
+        public async Task<string?> FindCategoryNameByCategoryId(int? id)
+        {
+            if (id == null || id <= 0)
+            {
+                return null;
+            }
+
+            return await categoryRepository
+                .GetAllAttached()
+                .Where(c => c.Id == id)
+                .Select(c => c.Name)
+                .FirstOrDefaultAsync();
+        }
+
+
         public async Task<IEnumerable<AllCategoriesIndexViewModel>> GetAllCategoriesAsync()
         {
             IEnumerable<AllCategoriesIndexViewModel> allCategories = await this.categoryRepository

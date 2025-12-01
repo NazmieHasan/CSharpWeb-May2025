@@ -6,5 +6,7 @@
     public interface ICategoryService
     {
         Task<IEnumerable<AllCategoriesIndexViewModel>> GetAllCategoriesAsync();
+
+        Task<string?> FindCategoryNameByCategoryId(int? id);
     }
 }

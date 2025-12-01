@@ -55,6 +55,7 @@
                 .GetAllAttached()
                 .IgnoreQueryFilters()
                 .AsNoTracking()
+                .OrderBy(r => r.Name)
                 .Select(r => new RoomManagementIndexViewModel
                 {
                     Id = r.Id.ToString(),

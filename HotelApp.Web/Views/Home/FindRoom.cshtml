@@ -1,7 +1,13 @@
 ﻿@using HotelApp.Web.ViewModels.Room
 @model FindRoomResultViewModel
 
-<h3 class="mt-5 mb-5 text-center">Find Room Result @Model.DateArrival – @Model.DateDeparture</h3>
+<h3 class="mt-5 mb-1 text-center">Find Room Result @Model.DateArrival – @Model.DateDeparture</h3>
+<h5 class="mb-5 text-center">
+    @if (!string.IsNullOrEmpty(Model.CategoryName))
+    {
+        @Model.CategoryName
+    }
+</h5>
 
 @if (!Model.Rooms.Any())
 {
