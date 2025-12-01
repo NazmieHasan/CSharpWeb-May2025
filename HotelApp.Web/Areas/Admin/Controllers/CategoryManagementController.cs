@@ -45,13 +45,16 @@
             try
             {
                 await this.categoryService.AddCategoryManagementAsync(inputModel);
-
                 return this.RedirectToAction(nameof(Index));
+            }
+            catch (InvalidOperationException ex) 
+            {
+                this.ModelState.AddModelError(nameof(inputModel.Name), ex.Message);
+                return this.View(inputModel);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-
                 this.ModelState.AddModelError(string.Empty, ServiceCreateError);
                 return this.View(inputModel);
             }
@@ -119,11 +122,16 @@
 
                 return this.RedirectToAction(nameof(Details), new { id = inputModel.Id });
             }
+            catch (InvalidOperationException ex)
+            {
+                this.ModelState.AddModelError(nameof(inputModel.Name), ex.Message);
+                return this.View(inputModel);
+            }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-
-                return this.RedirectToAction(nameof(Index));
+                this.ModelState.AddModelError(string.Empty, "An unexpected error occurred.");
+                return this.View(inputModel);
             }
         }
 

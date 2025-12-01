@@ -9,6 +9,7 @@
     using HotelApp.Web.ViewModels.Admin.RoomManagement;
 
     using static GCommon.ApplicationConstants;
+    using HotelApp.Web.ViewModels;
 
     public class CategoryManagementService : ICategoryManagementService
     {
@@ -38,6 +39,16 @@
 
         public async Task AddCategoryManagementAsync(CategoryManagementFormInputModel inputModel)
         {
+            var existingCategory = await this.categoryRepository
+                .GetAllAttached()
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.Name.ToLower() == inputModel.Name.ToLower());
+
+            if (existingCategory != null)
+            {
+                throw new InvalidOperationException(ValidationMessages.Category.NameAlreadyExistsMessage);
+            }
+
             Category newCat = new Category()
             {
                 Name = inputModel.Name,
@@ -49,6 +60,7 @@
 
             await this.categoryRepository.AddAsync(newCat);
         }
+
 
         public async Task<CategoryManagementDetailsViewModel?> GetCategoryDetailsByIdAsync(int? id)
         {
@@ -101,13 +113,22 @@
 
         public async Task<bool> EditCategoryAsync(CategoryManagementFormInputModel inputModel)
         {
-            bool result = false;
-
             Category? editableCat = await this.FindCategoryById(inputModel.Id);
-
             if (editableCat == null)
             {
                 return false;
+            }
+
+            var existingCategory = await this.categoryRepository
+                .GetAllAttached()
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c =>
+                    c.Name.ToLower() == inputModel.Name.ToLower() &&
+                    c.Id != inputModel.Id); 
+
+            if (existingCategory != null)
+            {
+                throw new InvalidOperationException(ValidationMessages.Category.NameAlreadyExistsMessage);
             }
 
             editableCat.Name = inputModel.Name;
@@ -116,8 +137,7 @@
             editableCat.Beds = inputModel.Beds;
             editableCat.ImageUrl = inputModel.ImageUrl;
 
-            result = await this.categoryRepository.UpdateAsync(editableCat);
-
+            bool result = await this.categoryRepository.UpdateAsync(editableCat);
             return result;
         }
 

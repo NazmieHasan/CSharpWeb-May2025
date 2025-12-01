@@ -10,6 +10,7 @@
             public const string NameRequiredMessage = "Name is required.";
             public const string NameMinLengthMessage = "Name must be at least 3 characters.";
             public const string NameMaxLengthMessage = "Name cannot exceed 20 characters.";
+            public const string NameAlreadyExistsMessage = "A category with this name already exists.";
 
             public const string DescriptionRequiredMessage = "Description is required.";
             public const string DescriptionMinLengthMessage = "Description must be at least 10 characters.";
