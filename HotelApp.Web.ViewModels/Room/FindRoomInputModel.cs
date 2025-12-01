@@ -9,12 +9,12 @@
         [Required(ErrorMessage = DateArrivalPastMessage)]
         [DataType(DataType.Date)]
         [Display(Name = "Arrival Date")]
-        public DateOnly DateArrival { get; set; } = DateOnly.FromDateTime(DateTime.Today.AddDays(1));
+        public DateOnly DateArrival { get; set; } = DateOnly.FromDateTime(DateTime.Today);
 
         [Required(ErrorMessage = DateDepartureBeforeArrivalMessage)]
         [DataType(DataType.Date)]
         [Display(Name = "Departure Date")]
-        public DateOnly DateDeparture { get; set; } = DateOnly.FromDateTime(DateTime.Today.AddDays(3));
+        public DateOnly DateDeparture { get; set; } = DateOnly.FromDateTime(DateTime.Today.AddDays(2));
 
         public int CategoryId { get; set; }
     }

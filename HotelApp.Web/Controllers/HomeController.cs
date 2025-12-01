@@ -82,9 +82,7 @@ namespace HotelApp.Web.Controllers
         {
             var model = new FindRoomInputModel
             {
-                CategoryId = categoryId,
-                DateArrival = DateOnly.FromDateTime(DateTime.Today.AddDays(1)),
-                DateDeparture = DateOnly.FromDateTime(DateTime.Today.AddDays(3))
+                CategoryId = categoryId
             };
 
             return View(model);
