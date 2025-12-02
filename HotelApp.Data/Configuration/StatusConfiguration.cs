@@ -67,6 +67,16 @@
                 {
                     Id = 6,
                     Name = "Done - Early Check Out"
+                },
+                new Status()
+                {
+                    Id = 7,
+                    Name = "Done - No Guests"
+                },
+                new Status()
+                {
+                    Id = 8,
+                    Name = "Done - Partial Attendance"
                 }
             };
 

@@ -4,28 +4,28 @@
 @{
     ViewData["Title"] = "Home";
 }
-
-<div class="position-relative text-white text-center"
-     style="background: linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
-    url('/images/header-home.jpg') center/cover no-repeat; height: 100vh;"> 
-</div>
+<section class="home home-width header">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <h1 class="header-title text-center"></h1>
+            </div>
+        </div>
+    </div>
+</section>
 
 @await Html.PartialAsync("_FindRoom", new HotelApp.Web.ViewModels.Room.FindRoomInputModel())
 
-<div class="container mt-4 mb-5 text-center">
-    <h1 class="text-dark">WELCOME</h1>
-
-    <div class="row g-4">
+<div class="container home-container">
+    <h2>WELCOME</h2>
+    <div class="row">
         @foreach (AllCategoriesIndexViewModel category in Model)
         {
-            <div class="col-12 col-md-6 col-lg-4 mb-5">
-                <div class="card border-0 rounded-3 h-100">
-                    <img src="@category.ImageUrl"
-                         class="card-img-top"
-                         alt="@category.Name"
-                         style="height: 180px; object-fit: cover;">
-                    <div class="card-body text-center">
-                        <h5 class="fw-bold text-dark">@category.Name</h5>
+            <div class="col-md-4 col-sm-12 col-home">
+                <img src="@category.ImageUrl" class="img-thumbnail" alt="@category.Name" />
+                    <div class="room-info">
+                        <h4>@category.Name</h4>
+                        <p>@category.Description</p>
                         <a asp-controller="Home"
                            asp-action="FindRoomByCategory"
                            asp-route-categoryId="@category.Id"
@@ -33,18 +33,51 @@
                             BOOKING
                         </a>
                     </div>
-                </div>
             </div>
         }
     </div>
+</div>
 
+<div class="container custom-container-home text-center">
+    <div class="row custom-row">
+        <div class="col-md-10 offset-md-1">
+            <div class="row custom-row">
+                <div class="col-md-6 col-sm-12 custom-col col-venues">
+                    <h5>VENUES</h5>
+                    <hr />
+                    <h3>Restaurants, bar and cafe</h3>
+                    <p>Stylish atmosphere, the quality service and a variety of special selected dishes.</p>
+                    <a href="#"><button class="btn btn-danger btn-outline">READ MORE</button></a>
+                </div>
+                <div class="col-md-6 col-sm-12 custom-col">
+                    <img src="../images/home-venues.jpg" alt="img" class="img-thumbnail">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row custom-row">
+        <div class="col-md-10 offset-md-1">
+            <div class="row custom-row">
+                <div class="col-md-6 col-sm-12 custom-col">
+                    <img src="../images/home-relax-zone.jpg" alt="img" class="img-thumbnail">
+                </div>
+                <div class="col-md-6 col-sm-12 custom-col col-relax-zone">
+                    <h5>RELAX ZONE</h5>
+                    <hr />
+                    <h3>Sauna and pools</h3>
+                    <p>SPA & Wellness center of the hotel offers harmonious and a healthy environment.</p>
+                    <a href="#"><button class="btn btn-danger btn-outline">READ MORE</button></a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
 }
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/user.css">
+    
 }
 
 

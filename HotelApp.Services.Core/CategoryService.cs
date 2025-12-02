@@ -46,6 +46,7 @@
                     Name = c.Name,
                     Price = c.Price,
                     Beds = c.Beds,
+                    Description = c.Description,
                     ImageUrl = c.ImageUrl,
                 })
                 .ToListAsync();

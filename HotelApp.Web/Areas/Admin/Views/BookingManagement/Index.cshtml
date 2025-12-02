@@ -36,16 +36,16 @@
                         <td class="align-middle">@booking.IsDeleted</td>
                         <td>
                             <div class="d-flex justify-content-center gap-2">
-                                <a asp-action="Details" asp-route-id="@booking.Id" class="btn btn-success btn-sm fw-bold" target="_blank">
-                                    <i class="bi bi-eye-square me-1"></i>Details
+                                <a asp-action="Details" asp-route-id="@booking.Id" class="btn btn-success" target="_blank">
+                                    <i class="bi bi-eye square"></i> Details
                                 </a>
                                 @if (!booking.IsDeleted)
                                 {
-                                    <a asp-action="Edit" asp-route-id="@booking.Id" class="btn btn-primary btn-sm fw-bold" target="_blank">
+                                    <a asp-action="Edit" asp-route-id="@booking.Id" class="btn btn-primary" target="_blank">
                                         <i class="bi bi-pencil-square"></i> Edit
                                     </a>
                                 }
-                                <a asp-action="ToggleDelete" asp-route-id="@booking.Id" class="btn @(booking.IsDeleted ? "btn-warning" : "btn-danger") btn-sm fw-bold">
+                                <a asp-action="ToggleDelete" asp-route-id="@booking.Id" class="btn @(booking.IsDeleted ? "btn-warning" : "btn-danger")">
                                     <i class="bi @(booking.IsDeleted ? "bi-arrow-clockwise" : "bi-trash")"></i>
                                     @(booking.IsDeleted ? "Restore" : "Delete")
                                 </a>

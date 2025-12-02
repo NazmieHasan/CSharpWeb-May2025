@@ -62,7 +62,9 @@ namespace HotelApp.Data.Migrations
                     { 3, "For Implementation" },
                     { 4, "In Progress" },
                     { 5, "Done" },
-                    { 6, "Done - Early Check Out" }
+                    { 6, "Done - Early Check Out" },
+                    { 7, "Done - No Guests" },
+                    { 8, "Done - Partial Attendance" }
                 });
         }
 
