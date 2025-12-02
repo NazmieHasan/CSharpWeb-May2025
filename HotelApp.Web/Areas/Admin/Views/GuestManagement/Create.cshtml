@@ -4,11 +4,11 @@
     ViewData["Title"] = "Add New Guest";
 }
 
-<div class="container mt-5">
-    <h2 class="text-center text-warning fw-bold">Add a New Guset</h2>
+<div class="container mt-5 mb-5">
+    <h2 class="text-center text-warning fw-bold">@ViewData["Title"]</h2>
     <hr class="mb-4">
 
-    <div class="row justify-content-center">
+    <div class="row justify-content-center mb-5">
         <div class="col-md-6">
             <form asp-action="Create" method="post" class="bg-dark text-light p-4 rounded shadow-lg">
                 <div class="mb-3">
@@ -33,6 +33,13 @@
                     <label asp-for="Email" class="form-label fw-bold">Email</label>
                     <input asp-for="Email" class="form-control" placeholder="Enter email">
                     <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+
+                <div class="mb-3">
+                    <label asp-for="BirthDate" class="form-label">Birth Date</label>
+                    <input asp-for="BirthDate" class="form-control" type="date" />
+                    <span asp-validation-for="BirthDate" class="text-danger"></span>
                 </div>
 
                 <div class="text-center mt-4">

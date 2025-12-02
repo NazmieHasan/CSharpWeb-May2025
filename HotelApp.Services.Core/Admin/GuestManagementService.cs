@@ -26,6 +26,7 @@
                 FamilyName = inputModel.FamilyName,
                 PhoneNumber = inputModel.PhoneNumber,
                 Email = inputModel.Email,
+                BirthDate = inputModel.BirthDate
             };
 
             await this.guestRepository.AddAsync(newGuest);
@@ -75,6 +76,7 @@
                         FamilyName = g.FamilyName,
                         PhoneNumber = g.PhoneNumber,
                         Email = g.Email,
+                        BirthDate = g.BirthDate.Value,
                         IsDeleted = g.IsDeleted,
                         Stays = g.Stays.Select(s => new StayManagementDetailsViewModelInGuestDetails
                         {
@@ -109,7 +111,8 @@
                         FirstName = guestToEdit.FirstName,
                         FamilyName = guestToEdit.FamilyName,
                         PhoneNumber = guestToEdit.PhoneNumber,
-                        Email = guestToEdit.Email
+                        Email = guestToEdit.Email,
+                        BirthDate = guestToEdit.BirthDate.Value
                     };
                 }
             }
@@ -130,6 +133,7 @@
                     guestToEdit.FamilyName = inputModel.FamilyName;
                     guestToEdit.PhoneNumber = inputModel.PhoneNumber;
                     guestToEdit.Email = inputModel.Email;
+                    guestToEdit.BirthDate = inputModel.BirthDate;
 
                     result = await this.guestRepository
                         .UpdateAsync(guestToEdit);

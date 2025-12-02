@@ -15,17 +15,12 @@
             <p>Created On: @Model.CreatedOn.ToString("yyyy-MM-dd HH:mm:ss")</p>
             <p>
                 Status: @Model.Status
-                @if (@Model.Status == "Awaiting Payment" && @Model.IsDeleted == false)
+                @if (Model.AllowedOperation == "AddPayment")
                 {
                     <button class="btn btn-danger fw-bold shadow-sm" id="add">Add Payment</button>
                     <div id="add_payment"></div>
                 }
-                @if (@Model.Status == "For Implementation" && @Model.IsDeleted == false)
-                {
-                    <button class="btn btn-danger fw-bold shadow-sm" id="create">Add Stay</button>
-                    <div id="add_stay"></div>
-                }
-                @if (Model.Status == "In Progress" && !Model.IsDeleted && Model.AllowedGuestCount > (Model.Stays.Count()))
+                else if (Model.AllowedOperation == "AddStay")
                 {
                     <button class="btn btn-danger fw-bold shadow-sm" id="create">Add Stay</button>
                     <div id="add_stay"></div>

@@ -41,6 +41,9 @@
 
         public int AllowedGuestCount { get; set; }
 
+        // Add payment or Add stay or null
+        public string AllowedOperation { get; set; } = "None";
+
         public IEnumerable<StayManagementDetailsViewModel> Stays { get; set; } = new List<StayManagementDetailsViewModel>();
 
         public IEnumerable<PaymentManagementDetailsViewModel> Payments { get; set; } = new List<PaymentManagementDetailsViewModel>();

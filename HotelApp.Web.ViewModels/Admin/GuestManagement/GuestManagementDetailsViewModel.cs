@@ -9,6 +9,8 @@
 
         public string Email { get; set; } = null!;
 
+        public DateOnly BirthDate { get; set; }
+
         public ICollection<StayManagementDetailsViewModelInGuestDetails> Stays { get; set; }
             = new List<StayManagementDetailsViewModelInGuestDetails>();
     }

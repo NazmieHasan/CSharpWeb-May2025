@@ -62,62 +62,87 @@
 
             bool isIdValidGuid = Guid.TryParse(id, out Guid bookingId);
 
-            if (isIdValidGuid)
+            if (!isIdValidGuid)
             {
-                bookingDetails = await this.bookingRepository
-                    .GetAllAttached()
-                    .IgnoreQueryFilters()
-                    .AsNoTracking()
-                    .Include(b => b.User)
-                    .Include(b => b.Room)
-                        .ThenInclude(r => r.Category)
-                    .Include(b => b.Payments)
-                        .ThenInclude(p => p.PaymentMethod)
-                    .Include(b => b.Status)
-                    .Include(b => b.Stays) 
-                        .ThenInclude(s => s.Guest) 
-                    .Where(b => b.Id == bookingId)
-                    .Select(b => new BookingManagementDetailsViewModel()
+                return null;
+            }
+
+            bookingDetails = await this.bookingRepository
+                .GetAllAttached()
+                .IgnoreQueryFilters()
+                .AsNoTracking()
+                .Include(b => b.User)
+                .Include(b => b.Room)
+                    .ThenInclude(r => r.Category)
+                .Include(b => b.Payments)
+                    .ThenInclude(p => p.PaymentMethod)
+                .Include(b => b.Status)
+                .Include(b => b.Stays)
+                    .ThenInclude(s => s.Guest)
+                .Where(b => b.Id == bookingId)
+                .Select(b => new BookingManagementDetailsViewModel()
+                {
+                    Id = b.Id.ToString(),
+                    CreatedOn = b.CreatedOn,
+                    Status = b.Status.Name,
+                    DateArrival = b.DateArrival,
+                    DateDeparture = b.DateDeparture,
+                    DaysCount = b.DaysCount,
+                    AdultsCount = b.AdultsCount,
+                    ChildCount = b.ChildCount,
+                    BabyCount = b.BabyCount,
+                    UserEmail = b.User.Email,
+                    ManagerEmail = b.Manager != null ? b.Manager.User.UserName : null,
+                    Room = b.Room.Name,
+                    RoomCategory = b.Room.Category.Name,
+                    AllowedGuestCount = b.AdultsCount + b.ChildCount + b.BabyCount,
+                    TotalAmount = b.TotalAmount,
+                    PaidAmount = b.Payments.Sum(p => p.Amount),
+                    RemainingAmount = b.TotalAmount - b.Payments.Sum(p => p.Amount),
+                    IsDeleted = b.IsDeleted,
+                    Payments = b.Payments.Select(p => new PaymentManagementDetailsViewModel
                     {
-                        Id = b.Id.ToString(),
-                        CreatedOn = b.CreatedOn,
-                        Status = b.Status.Name,
-                        DateArrival = b.DateArrival,
-                        DateDeparture = b.DateDeparture,
-                        DaysCount = b.DaysCount,
-                        AdultsCount = b.AdultsCount,
-                        ChildCount = b.ChildCount,
-                        BabyCount = b.BabyCount,
-                        UserEmail = b.User.Email,
-                        ManagerEmail = b.Manager != null ?
-                            b.Manager.User.UserName : null,
-                        Room = b.Room.Name,
-                        RoomCategory = b.Room.Category.Name,
-                        AllowedGuestCount = b.AdultsCount + b.ChildCount + b.BabyCount,
-                        TotalAmount = b.TotalAmount,
-                        PaidAmount = b.Payments.Sum(p => p.Amount),
-                        RemainingAmount = b.TotalAmount - b.Payments.Sum(p => p.Amount),
-                        IsDeleted = b.IsDeleted,
-                        Payments = b.Payments.Select(p => new PaymentManagementDetailsViewModel
-                        {
-                            Id = p.Id,
-                            CreatedOn = p.CreatedOn,
-                            Amount = p.Amount,
-                            PaymentUserFullName = p.PaymentUserFullName,
-                            PaymentUserPhoneNumber = p.PaymentUserPhoneNumber,
-                            IsDeleted = p.IsDeleted,
-                            PaymentMethodName = p.PaymentMethod.Name
-                        }).ToList(),
-                        Stays = b.Stays.Select(s => new StayManagementDetailsViewModel
-                        {
-                            Id = s.Id,
-                            GuestEmail = s.Guest.Email,
-                            CreatedOn = s.CreatedOn,
-                            CheckoutOn = s.CheckoutOn,
-                            IsDeleted = s.IsDeleted
-                        }).ToList()
-                    })
-                    .SingleOrDefaultAsync();
+                        Id = p.Id,
+                        CreatedOn = p.CreatedOn,
+                        Amount = p.Amount,
+                        PaymentUserFullName = p.PaymentUserFullName,
+                        PaymentUserPhoneNumber = p.PaymentUserPhoneNumber,
+                        IsDeleted = p.IsDeleted,
+                        PaymentMethodName = p.PaymentMethod.Name
+                    }).ToList(),
+                    Stays = b.Stays.Select(s => new StayManagementDetailsViewModel
+                    {
+                        Id = s.Id,
+                        GuestEmail = s.Guest.Email,
+                        CreatedOn = s.CreatedOn,
+                        CheckoutOn = s.CheckoutOn,
+                        IsDeleted = s.IsDeleted
+                    }).ToList()
+                })
+                .SingleOrDefaultAsync();
+
+            if (bookingDetails != null)
+            {
+                if (bookingDetails.IsDeleted)
+                {
+                    bookingDetails.AllowedOperation = "None";
+                }
+                else if (bookingDetails.Status == "Awaiting Payment")
+                {
+                    bookingDetails.AllowedOperation = "AddPayment";
+                }
+                else if (bookingDetails.Status == "For Implementation" && DateOnly.FromDateTime(DateTime.UtcNow) >= bookingDetails.DateArrival)
+                {
+                    bookingDetails.AllowedOperation = "AddStay";
+                }
+                else if (bookingDetails.Status == "In Progress" && bookingDetails.AllowedGuestCount > bookingDetails.Stays.Count())
+                {
+                    bookingDetails.AllowedOperation = "AddStay";
+                }
+                else
+                {
+                    bookingDetails.AllowedOperation = "None";
+                }
             }
 
             return bookingDetails;

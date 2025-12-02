@@ -21,6 +21,8 @@
 
         public string Email { get; set; } = null!;
 
+        public DateOnly? BirthDate { get; set; }
+
         public bool IsDeleted { get; set; }
 
         public ICollection<Stay> Stays { get; set; } = new HashSet<Stay>();
