@@ -2,6 +2,13 @@
 body {
     background: #f0f0f0;
 }
+a {
+    text-decoration: none;
+}
+a:hover,
+a:focus {
+    text-decoration: none;
+}
 /* html, body end */
 
 /* nav */
@@ -45,6 +52,15 @@ body {
 .spa-center {
     background: url('../images/header-spa-center.jpg');
 }
+.events {
+    background: url('../images/header-events.jpg');
+}
+.offers {
+    background: url('../images/header-offers.jpg');
+}
+.contact {
+    background: url('../images/header-contact.jpg');
+} 
 
 .home-width {
     height: 480px;
@@ -202,12 +218,16 @@ body {
     color: darkred;
 }
 
-.col-venues hr, .col-relax-zone hr {
-    margin: auto;
-    border-top: 1px solid #262627;
-    width: 10%;
+.col-venues hr,
+.col-relax-zone hr {
+    width: 10%; 
+    margin: 1rem auto; 
+    border: none; 
+    border-top: 1px solid #262627; 
+    background: none; 
+    height: 0; 
+    opacity: 1; 
 }
-
 .custom-col h3 {
     margin-top: 30px;
     margin-bottom: 40px;
@@ -269,16 +289,21 @@ body {
     background: white;
 }
 
-    .venues-info h3, .spa-center-info h3 {
+    .venues-info h4, .spa-center-info h4 {
         margin-bottom: 20px;
         word-spacing: 5px;
         color: darkred;
     }
 
-    .venues-info hr, .spa-center-info hr {
-        margin: auto;
-        width: 20%;
-        border-top: 3px solid #8b0000;
+    .venues-info hr,
+    .spa-center-info hr {
+        width: 20%; 
+        margin: 1rem auto; 
+        border: none; 
+        border-top: 3px solid #8b0000; 
+        background: none; 
+        height: 0; 
+        opacity: 1; 
     }
 
     .venues-info p, .spa-center-info p {
@@ -328,6 +353,244 @@ body {
         word-spacing: 0.65rem;
     }
 /* venues page end, spa center page end */
+
+/* events page */
+.custom-container-events {
+    margin-top: 50px;
+    margin-bottom: 40px;
+}
+
+.custom-col h2 {
+    margin-top: 50px;
+    margin-bottom: 30px;
+}
+
+.col-events hr {
+    width: 20%; 
+    margin: 1rem auto; 
+    border: none; 
+    border-top: 2px solid #8b0000; 
+    background: none; 
+    height: 0;
+    opacity: 1; 
+}
+
+.col-events p {
+    padding-top: 40px;
+    padding-right: 40px;
+    padding-bottom: 60px;
+    padding-left: 40px;
+}
+.special-events h3 {
+    margin-bottom: 20px;
+}
+
+.special-events .row {
+    margin-top: 30px;
+}
+
+.special-events hr {
+    width: 10%;
+    margin: 1rem auto; 
+    border: none; 
+    border-top: 2px solid #8b0000; 
+    background: none; 
+    opacity: 1; 
+    height: 0;
+}
+
+.special-events .col-md-4, .special-events .col-sm-12 {
+    margin-bottom: 10px;
+    padding-right: 5px;
+    padding-left: 5px;
+}
+
+.special-events .info {
+    padding: 10px;
+    background: white;
+}
+
+.event-link {
+    font-size: 1.5rem;
+    font-weight: 500;
+    word-spacing: 5px;
+    color: #212529;
+}
+
+.event-link:hover {
+    color: darkred;
+}
+
+.special-events .info p {
+    margin-top: 10px;
+    font-size: 18px;
+}
+/* events page end */
+
+/* offers page */
+.header-offers {
+    margin-top: -8em;
+}
+
+    .header-offers p {
+        margin-bottom: 0;
+        font-size: 20px;
+    }
+
+.offers1-container, .offers2-container {
+    margin-top: 50px;
+    margin-bottom: 30px;
+    padding-top: 30px;
+    padding-bottom: 10px;
+    font-size: 20px;
+}
+
+    .offers1-container .row, .offers2-container .row {
+        margin-right: 0;
+        margin-left: 0;
+    }
+
+    .offers1-container .col-img {
+        margin-right: -40px;
+        padding-right: 0;
+        padding-left: 0;
+    }
+
+    .offers1-container .col-text {
+        margin-left: -40px;
+        padding-right: 0;
+        padding-left: 0;
+    }
+
+.order-last {
+    margin-left: -40px;
+    padding-right: 0;
+    padding-left: 0;
+}
+
+.order-first {
+    margin-right: -40px;
+    padding-right: 0;
+    padding-left: 0;
+}
+
+.offers1-container .offers-info, .offers2-container .offers-info {
+    margin-top: 80px;
+    padding: 40px;
+    background: white;
+    border: 1px solid white;
+    border-radius: 2px;
+}
+
+.offers1-container a, .offers2-container a {
+    text-decoration: underline;
+    cursor: pointer;
+    color: darkred;
+}
+/* offers page end */
+
+/* contact page */
+.location {
+    margin-top: 20px;
+    font-size: 18px;
+}
+
+    .location .col1,
+    .location .col2 {
+        margin-bottom: 20px;
+    }
+
+    .location h1 {
+        margin-top: -10px;
+    }
+
+.jumbo-dark {
+    background-color: #dc3545;
+    color: white;
+    padding: 2rem; 
+    border-radius: 0.25rem; 
+}
+
+    .jumbo-dark h2 {
+        margin-bottom: 30px;
+    }
+
+    .jumbo-dark p {
+        font-weight: bold;
+    }
+
+    .jumbo-dark .phone,
+    .jumbo-dark .email {
+        padding: 10px;
+        background-color: #dc3545;
+        border: 1px solid white;
+        transition: all 0.3s ease;
+    }
+
+    .phone:hover,
+    .email:hover {
+        background-color: white !important;
+        color: #dc3545 !important;
+        border-color: #dc3545 !important;
+    }
+    .phone:hover i,
+    .email:hover i {
+        color: #dc3545 !important;
+    }
+    
+.hr-before {
+    margin-bottom: 10px;
+}
+
+.hr-after {
+    margin-top: 10px;
+}
+
+.jumbo-dark hr {
+    width: 40%;
+    margin: 1rem auto;
+    border: none;
+    border-top: 2px solid white;
+    background: none;
+    height: 0;
+    opacity: 1;
+}
+
+.contact-info .jumbo-light {
+    background-color: white;
+    color: #dc3545;
+    padding: 2rem;
+    border-radius: 0.25rem;
+}
+
+    .contact-info .jumbo-light h2 {
+        margin-bottom: 20px;
+    }
+
+    .contact-info .jumbo-light h5 {
+        margin-bottom: 35px;
+    }
+
+    .contact-info .jumbo-light .col {
+        padding: 2px;
+    }
+
+.contact-info .img-thumbnail {
+    margin-bottom: 1rem;
+}
+
+.gps-coordinates {
+    margin-bottom: 40px;
+}
+
+    .gps-coordinates h4 {
+        margin-top: 20px;
+    }
+
+.maps {
+    margin-bottom: 30px;
+}
+/* contact page end */
 
 /* footer */
 .footer-p {
