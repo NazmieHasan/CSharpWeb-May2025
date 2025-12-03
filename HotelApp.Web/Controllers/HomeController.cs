@@ -9,7 +9,6 @@ namespace HotelApp.Web.Controllers
     using Microsoft.AspNetCore.Mvc;
 
     using static GCommon.ApplicationConstants;
-    using HotelApp.Web.ViewModels.Booking;
 
     public class HomeController : BaseController
     {

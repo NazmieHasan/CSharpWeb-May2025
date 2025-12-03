@@ -39,9 +39,18 @@ body {
 .home {
     background: url('../images/header-home.jpg');
 }
+.venues {
+    background: url('../images/header-venues.jpg');
+}
+.spa-center {
+    background: url('../images/header-spa-center.jpg');
+}
 
 .home-width {
     height: 480px;
+}
+.venues-width, .spa-center-width, .events-width, .offers-width, .contact-width {
+    height: 560px;
 }
 
 .header {
@@ -232,6 +241,93 @@ body {
         border-color: darkred;
     }
 /* home page end */
+
+/* venues page, spa center page */
+.venue, .spa-center-zone {
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+    .venue .row, .spa-center-zone .row {
+        margin-right: 0;
+        margin-left: 0;
+    }
+
+.venues-img, .spa-center-img {
+    padding-right: 0;
+    padding-left: 0;
+}
+
+.venues-text, .spa-center-text {
+    padding-right: 0;
+    padding-left: 0;
+}
+
+.venues-info, .spa-center-info {
+    margin-bottom: 0;
+    padding: 90px 20px;
+    background: white;
+}
+
+    .venues-info h3, .spa-center-info h3 {
+        margin-bottom: 20px;
+        word-spacing: 5px;
+        color: darkred;
+    }
+
+    .venues-info hr, .spa-center-info hr {
+        margin: auto;
+        width: 20%;
+        border-top: 3px solid #8b0000;
+    }
+
+    .venues-info p, .spa-center-info p {
+        margin-top: 20px;
+        font-size: 18px;
+        word-spacing: 3px;
+    }
+
+    .venues-info h5, .spa-center-info h5 {
+        margin-bottom: 0;
+    }
+
+.cont-venues {
+    background: url('../images/cont-venues.jpg');
+    width: 100%;
+    height: 600px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    margin-bottom: 20px;
+}
+
+    .cont-venues h1 {
+        padding-top: 230px;
+        text-align: center;
+        color: white;
+        font-size: 5rem;
+        word-spacing: 0.65rem;
+    }
+
+.cont-spa {
+    background: url('../images/cont-spa-center.jpg');
+    width: 100%;
+    height: 600px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    margin-bottom: 20px;
+}
+
+    .cont-spa h1 {
+        padding-top: 200px;
+        text-align: center;
+        color: white;
+        text-shadow: 2px 2px 8px #ff0000;
+        font-size: 5rem;
+        word-spacing: 0.65rem;
+    }
+/* venues page end, spa center page end */
 
 /* footer */
 .footer-p {
