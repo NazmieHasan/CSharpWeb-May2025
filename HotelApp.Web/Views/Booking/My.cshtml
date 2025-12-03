@@ -17,8 +17,15 @@
 
     @if (!Model.Any())
     {
-        <div class="alert alert-warning text-center">
-            <strong>Your bookings list is empty!</strong> Add booking to your booking list to see them here.
+        <div class="mt-5 text-center">
+            <h3 class="mt-3 mb-3">Your bookings list is empty!</h3>
+            <p>Add a booking to your booking list to see it here.</p>
+            <p>Browse our rooms and choose the perfect stay for your upcoming visit.</p>
+            <p>Don't miss out on our special offers and seasonal promotions!</p>
+            <p>If you need help, our reception team is always ready to assist you.</p>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-danger btn-outline mt-2">
+                View All Rooms
+            </a>
         </div>
     }
     else
@@ -40,6 +47,10 @@
                         Child Count: @booking.ChildCount |
                         Babies Count: @booking.BabyCount
                     </p>
+                    <p>Status: @booking.Status</p>
+                    <p>Total Amount $@booking.TotalAmount.ToString("0.00")</p>
+                    <p>Paid Amount $@booking.PaidAmount.ToString("0.00")</p>
+                    <p>Remaining Amount $@booking.RemainingAmount.ToString("0.00")</p>
                 </div>
                 <hr />
             }

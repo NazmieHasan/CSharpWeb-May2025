@@ -1,35 +1,42 @@
-﻿@using HotelApp.Web.ViewModels.Room
+﻿@using HotelApp.Web.ViewModels.Room 
 @model FindRoomResultViewModel
 
-<div class="mt-5 mb-5">
-    <h3 class="mb-1 text-center">Find Room Result</h3>
-    <h5 class="mb-3 text-center">@Model.DateArrival – @Model.DateDeparture</h5>
+<div class="container mt-5 mb-5 d-flex flex-column align-items-center">
+    <div class="mb-5">
+        <h1 class="mb-1">Find Room Result</h1>
+        <h5 class="mb-3">@Model.DateArrival – @Model.DateDeparture</h5>
 
-    @if (!string.IsNullOrEmpty(Model.CategoryName))
+        @if (!string.IsNullOrEmpty(Model.CategoryName))
+        {
+            <h5>@Model.CategoryName</h5>
+        }
+    </div>
+
+    @if (!Model.Rooms.Any())
     {
-        <h5 class="text-center">@Model.CategoryName</h5>
-    }
-</div>
+        <h3 class="mb-3 text-danger fw-normal">Sorry, no available rooms for these dates!</h3>
+        <p>Try adjusting your dates or selecting another room category.</p>
+        <p>Our reception team is happy to help you find the perfect accommodation.</p>
+        <p>Don’t forget to check our special offers and seasonal promotions!</p>
 
-@if (!Model.Rooms.Any())
-{
-    <h3 class="mt-5 mb-5 text-center">No available rooms for these dates.</h3>
-}
-else
-{
-    <div class="container">
+        <a asp-controller="Home" asp-action="Index" class="btn btn-danger btn-outline mt-2">
+            View All Rooms
+        </a>
+    }
+    else
+    {
         @foreach (var room in Model.Rooms)
         {
             <div class="row justify-content-center mb-4">
                 <div class="col-12 col-md-6">
                     <div class="row">
-                        <div class="col-12 col-md-6 d-flex align-items-center">
+                        <div class="col-12 col-md-6 d-flex align-items-center justify-content-center">
                             <img src="@room.ImageUrl" class="img-fluid" />
                         </div>
-                        <div class="col-12 col-md-6 mt-2">
+                        <div class="col-12 col-md-6 mt-3">
                             <h5>@room.Name</h5>
                             <p>@room.Category</p>
-                            <a class="btn btn-primary"
+                            <a class="btn btn-danger"
                                asp-controller="Booking"
                                asp-action="Add"
                                asp-route-roomId="@room.Id"
@@ -37,12 +44,10 @@ else
                                asp-route-dateDeparture="@Model.DateDeparture.ToString("yyyy-MM-dd")">
                                 Booking
                             </a>
-
                         </div>
                     </div>
                 </div>
             </div>
         }
-    </div>
-        
-}
+    }
+</div>

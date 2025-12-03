@@ -67,6 +67,7 @@
                 .GetAllAttached()
                 .Include(b => b.Room)
                     .ThenInclude(r => r.Category)
+                .Include(b => b.Status)
                 .AsNoTracking()
                 .Where(b => b.UserId.ToLower() == userId.ToLower())
                 .OrderByDescending(b => b.CreatedOn)
@@ -79,7 +80,11 @@
                     AdultsCount = b.AdultsCount,
                     ChildCount = b.ChildCount,
                     BabyCount = b.BabyCount,
-                    Category = b.Room.Category.Name
+                    TotalAmount = b.TotalAmount,
+                    PaidAmount = b.Payments.Sum(p => p.Amount),
+                    RemainingAmount = b.TotalAmount - b.Payments.Sum(p => p.Amount),
+                    Category = b.Room.Category.Name,
+                    Status = b.Status.Name,
                 })
                 .ToArrayAsync();
 
