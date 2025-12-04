@@ -35,7 +35,17 @@
             <p>Arrival Date: @Model.DateArrival.ToString("yyyy-MM-dd")</p>
             <p>Departure Date: @Model.DateDeparture.ToString("yyyy-MM-dd")</p>
             <p>Day(s): @Model.DaysCount</p>
-            <p>Room: @Model.Room</p>
+            <p>
+                Room: 
+                <a asp-area="Admin"
+                    asp-controller="RoomManagement"
+                    asp-action="Details"
+                    asp-route-id="@Model.RoomId"
+                    class="link-danger text-decoration-none"
+                    target="_blank">
+                    @Model.Room
+                </a>
+            </p>
             <p>Category: @Model.RoomCategory</p>
             <p>Total Amount $@Model.TotalAmount.ToString("0.00")</p>
             <p>Paid Amount $@Model.PaidAmount.ToString("0.00")</p>

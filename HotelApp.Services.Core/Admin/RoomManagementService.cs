@@ -5,13 +5,12 @@
     using Data.Models;
     using Data.Repository.Interfaces;
     using Interfaces;
-    using Web.ViewModels.Admin.RoomManagement;
 
-    using static HotelApp.Web.ViewModels.ValidationMessages.Room;
+    using Web.ViewModels.Admin.RoomManagement;
+    using Web.ViewModels.Admin.BookingManagement;
 
     using static GCommon.ApplicationConstants;
-    using HotelApp.Web.ViewModels;
-    using HotelApp.Web.ViewModels.Room;
+    using static HotelApp.Web.ViewModels.ValidationMessages.Room;
 
     public class RoomManagementService : IRoomManagementService
     {
@@ -78,6 +77,8 @@
                     .GetAllAttached()
                     .IgnoreQueryFilters()
                     .Include(r => r.Category)
+                    .Include(r => r.Bookings)
+                        .ThenInclude(b => b.Status) 
                     .AsNoTracking()
                     .Where(r => r.Id == roomId)
                     .Select(r => new RoomManagementDetailsViewModel()
@@ -86,13 +87,24 @@
                         Name = r.Name,
                         Category = r.Category.Name,
                         CategoryBeds = r.Category.Beds,
-                        IsDeleted = r.IsDeleted
+                        IsDeleted = r.IsDeleted,
+                        Bookings = r.Bookings
+                            .Select(b => new BookingInfoViewModel
+                            {
+                                BookingId = b.Id.ToString(),
+                                DateArrival = b.DateArrival,
+                                DateDeparture = b.DateDeparture,
+                                CreatedOn = b.CreatedOn,
+                                Status = b.Status.Name
+                            })
+                            .ToList()
                     })
                     .SingleOrDefaultAsync();
             }
 
             return roomDetails;
         }
+
 
         public async Task<EditRoomManagementInputModel?> GetRoomForEditAsync(string? id)
         {

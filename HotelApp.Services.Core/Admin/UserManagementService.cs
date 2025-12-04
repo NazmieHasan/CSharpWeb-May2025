@@ -7,6 +7,7 @@
     using Data.Repository.Interfaces;
     using Interfaces;
     using Web.ViewModels.Admin.UserManagement;
+    using Web.ViewModels.Admin.BookingManagement;
 
     public class UserManagementService : IUserManagementService
     {
@@ -125,9 +126,11 @@
             var roles = await this.userManager.GetRolesAsync(user);
 
             var bookings = (user.Bookings ?? Enumerable.Empty<Booking>())
-                .Select(b => new UserBookingViewModel
+                .Select(b => new BookingInfoViewModel
                 {
-                    Id = b.Id,
+                    BookingId = b.Id.ToString(),
+                    DateArrival = b.DateArrival,
+                    DateDeparture = b.DateDeparture,
                     CreatedOn = b.CreatedOn,
                     Status = b.Status.Name
                 })

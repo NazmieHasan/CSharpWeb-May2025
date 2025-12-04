@@ -23,6 +23,8 @@
                         <tr>
                             <th>Booking ID</th>
                             <th>Created On</th>
+                            <th>Date Arrival</th>
+                            <th>Date Departure</th>
                             <th>Status</th>
                         </tr>
                     </thead>
@@ -30,14 +32,16 @@
                         @foreach (var booking in Model.Bookings)
                         {
                             <tr>
-                                <td>@booking.Id</td>
+                                <td>@booking.BookingId</td>
                                 <td>@booking.CreatedOn.ToString("yyyy-MM-dd")</td>
+                                <td>@booking.DateArrival.ToString("yyyy-MM-dd")</td>
+                                <td>@booking.DateDeparture.ToString("yyyy-MM-dd")</td>
                                 <td>@booking.Status</td>
                                 <td>
                                     <a asp-area="Admin"
                                        asp-controller="BookingManagement"
                                        asp-action="Details"
-                                       asp-route-id="@booking.Id"
+                                       asp-route-id="@booking.BookingId"
                                        class="link-primary text-decoration-none"
                                        target="_blank">
                                         View Booking

@@ -93,6 +93,7 @@
                     BabyCount = b.BabyCount,
                     UserEmail = b.User.Email,
                     ManagerEmail = b.Manager != null ? b.Manager.User.UserName : null,
+                    RoomId = b.Room.Id.ToString(),
                     Room = b.Room.Name,
                     RoomCategory = b.Room.Category.Name,
                     AllowedGuestCount = b.AdultsCount + b.ChildCount + b.BabyCount,
