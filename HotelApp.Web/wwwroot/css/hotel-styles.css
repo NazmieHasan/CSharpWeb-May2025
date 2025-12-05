@@ -345,7 +345,7 @@ a:focus {
 }
 
     .cont-spa h1 {
-        padding-top: 200px;
+        padding-top: 12.5rem;
         text-align: center;
         color: white;
         text-shadow: 2px 2px 8px #ff0000;
@@ -356,13 +356,13 @@ a:focus {
 
 /* events page */
 .custom-container-events {
-    margin-top: 50px;
-    margin-bottom: 40px;
+    margin-top: 6rem;
+    margin-bottom: 5rem;
 }
 
 .custom-col h2 {
-    margin-top: 50px;
-    margin-bottom: 30px;
+    margin-top: 3rem;
+    margin-bottom: 2rem;
 }
 
 .col-events hr {
@@ -380,6 +380,10 @@ a:focus {
     padding-right: 40px;
     padding-bottom: 60px;
     padding-left: 40px;
+}
+.special-events {
+    margin-top: 4rem;
+    margin-bottom: 5rem;
 }
 .special-events h3 {
     margin-bottom: 20px;
@@ -438,9 +442,9 @@ a:focus {
     }
 
 .offers1-container, .offers2-container {
-    margin-top: 50px;
-    margin-bottom: 30px;
-    padding-top: 30px;
+    margin-top: 5rem;
+    margin-bottom: 4rem;
+    padding-top: 2rem;
     padding-bottom: 10px;
     font-size: 20px;
 }
@@ -451,32 +455,32 @@ a:focus {
     }
 
     .offers1-container .col-img {
-        margin-right: -40px;
+        margin-right: -2.5rem;
         padding-right: 0;
         padding-left: 0;
     }
 
     .offers1-container .col-text {
-        margin-left: -40px;
+        margin-left: -2.5rem;
         padding-right: 0;
         padding-left: 0;
     }
 
 .order-last {
-    margin-left: -40px;
+    margin-left: -2.5rem;
     padding-right: 0;
     padding-left: 0;
 }
 
 .order-first {
-    margin-right: -40px;
+    margin-right: -2.5rem;
     padding-right: 0;
     padding-left: 0;
 }
 
 .offers1-container .offers-info, .offers2-container .offers-info {
-    margin-top: 80px;
-    padding: 40px;
+    margin-top: 5rem;
+    padding: 2.5rem;
     background: white;
     border: 1px solid white;
     border-radius: 2px;
@@ -491,7 +495,6 @@ a:focus {
 
 /* contact page */
 .location {
-    margin-top: 20px;
     font-size: 18px;
 }
 
