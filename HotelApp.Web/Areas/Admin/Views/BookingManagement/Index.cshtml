@@ -4,8 +4,15 @@
 
 @inject RoleManager<IdentityRole> roleManager;
 
+@{
+    ViewData["Title"] = "Booking Management";
+
+    int currentPage = ViewBag.PageNumber ?? 1;
+    int totalPages = ViewBag.TotalPages ?? 1;
+}
+
 <div class="container mt-5">
-    <h1 class="text-center mb-4 text-warning fw-bold">Booking Management</h1>
+    <h1 class="text-center mb-4 text-warning fw-bold">@ViewData["Title"]</h1>
 
     <div class="d-flex justify-content-between mb-3">
         <a asp-area="Admin" asp-controller="Home" asp-action="Index" class="btn btn-secondary fw-bold">
@@ -56,4 +63,8 @@
             </tbody>
         </table>
     </div>
+
+    @await Html.PartialAsync("_PaginationPartial", (currentPage, totalPages, "Index", "BookingManagement"))
+    <p class="text-center mt-2">Page @currentPage of @totalPages</p>
+
 </div>

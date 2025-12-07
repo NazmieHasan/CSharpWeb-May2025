@@ -1,10 +1,13 @@
 ﻿namespace HotelApp.Services.Core.Admin.Interfaces
 {
+    using HotelApp.GCommon;
     using HotelApp.Web.ViewModels.Admin.RoomManagement;
 
     public interface IRoomManagementService
     {
-        Task<IEnumerable<RoomManagementIndexViewModel>> GetRoomManagementBoardDataAsync();
+        Task<IEnumerable<RoomManagementIndexViewModel>> GetRoomManagementBoardDataAsync(int pageNumber = 1, int pageSize = ApplicationConstants.AdminPaginationPageSize);
+
+        Task<int> GetTotalRoomsCountAsync();
 
         Task<bool> AddRoomManagementAsync(AddRoomManagementInputModel inputModel);
 

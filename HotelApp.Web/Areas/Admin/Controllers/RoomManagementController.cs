@@ -1,5 +1,7 @@
 ﻿namespace HotelApp.Web.Areas.Admin.Controllers
 {
+    using HotelApp.GCommon;
+    using HotelApp.Services.Core;
     using HotelApp.Web.ViewModels;
     using HotelApp.Web.ViewModels.Admin.RoomManagement;
 
@@ -22,12 +24,29 @@
             this.categoryService = categoryService;
         }
 
-        public async Task<IActionResult> Index()
+        [HttpGet]
+        public async Task<IActionResult> Index(int pageNumber = 1)
         {
-            IEnumerable<RoomManagementIndexViewModel> allRooms = await this.roomService
-                .GetRoomManagementBoardDataAsync();
+            try
+            {
+                int pageSize = ApplicationConstants.AdminPaginationPageSize;
 
-            return View(allRooms);
+                var pagedRooms = await roomService
+                .GetRoomManagementBoardDataAsync(pageNumber, pageSize);
+
+                int totalRooms = await roomService.GetTotalRoomsCountAsync();
+
+                ViewBag.PageNumber = pageNumber;
+                ViewBag.PageSize = pageSize;
+                ViewBag.TotalPages = (int)Math.Ceiling((double)totalRooms / pageSize);
+
+                return View(pagedRooms);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return this.RedirectToAction(nameof(Index), "Home");
+            }
         }
 
         [HttpGet]

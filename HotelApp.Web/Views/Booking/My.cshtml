@@ -10,6 +10,9 @@
 @{
     ViewData["Title"] = "My Bookings";
     var userEmail = UserManager.GetUserName(User);
+
+    int currentPage = ViewBag.PageNumber ?? 1;
+    int totalPages = ViewBag.TotalPages ?? 1;
 }
 
 <div class="container mt-3 mb-5">
@@ -54,6 +57,9 @@
                 </div>
                 <hr />
             }
+
+            @await Html.PartialAsync("_PaginationPartial", (currentPage, totalPages, "My", "Booking"))
+            <p class="text-center mt-2">Page @currentPage of @totalPages</p>
         </div>
     }
 </div>

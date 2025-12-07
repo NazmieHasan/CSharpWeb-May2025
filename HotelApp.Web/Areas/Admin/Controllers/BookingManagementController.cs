@@ -1,7 +1,7 @@
 ﻿namespace HotelApp.Web.Areas.Admin.Controllers
 {
+    using HotelApp.GCommon;
     using HotelApp.Web.ViewModels.Admin.BookingManagement;
-    using HotelApp.Web.ViewModels.Booking;
     using Microsoft.AspNetCore.Mvc;
 
     using Services.Core.Admin.Interfaces;
@@ -25,12 +25,29 @@
             this.statusService = statusService;
         }
 
-        public async Task<IActionResult> Index()
+        [HttpGet]
+        public async Task<IActionResult> Index(int pageNumber = 1)
         {
-            IEnumerable<BookingManagementIndexViewModel> allBookings = await this.bookingService
-                .GetBookingManagementBoardDataAsync();
+            try
+            {
+                int pageSize = ApplicationConstants.AdminPaginationPageSize;
 
-            return View(allBookings);
+                var pagedBookings = await bookingService
+                    .GetBookingManagementBoardDataAsync(pageNumber, pageSize);
+
+                int totalBookings = await bookingService.GetTotalBookingsCountAsync();
+
+                ViewBag.PageNumber = pageNumber;
+                ViewBag.PageSize = pageSize;
+                ViewBag.TotalPages = (int)Math.Ceiling((double)totalBookings / pageSize);
+
+                return View(pagedBookings);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return this.RedirectToAction(nameof(Index), "Home");
+            }
         }
 
         [HttpGet]

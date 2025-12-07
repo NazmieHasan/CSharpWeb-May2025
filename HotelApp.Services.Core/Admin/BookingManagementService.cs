@@ -9,6 +9,7 @@
     using Web.ViewModels.Admin.BookingManagement;
     using Web.ViewModels.Admin.StayManagement;
     using HotelApp.Web.ViewModels.Admin.PaymentManagement;
+    using HotelApp.GCommon;
 
     public class BookingManagementService : IBookingManagementService
     {
@@ -35,25 +36,37 @@
                 .FirstOrDefaultAsync(b => b.Id == id);
         }
 
-        public async Task<IEnumerable<BookingManagementIndexViewModel>> GetBookingManagementBoardDataAsync()
+        public async Task<IEnumerable<BookingManagementIndexViewModel>> GetBookingManagementBoardDataAsync(int pageNumber = 1, int pageSize = ApplicationConstants.AdminPaginationPageSize)
+        {
+            var query = this.bookingRepository
+                .GetAllAttached()
+                .IgnoreQueryFilters()
+                .Include(b => b.User)
+                .Include(b => b.Manager)
+                    .ThenInclude(m => m.User)
+                .AsNoTracking()
+                .OrderByDescending(b => b.CreatedOn)
+                .Select(b => new BookingManagementIndexViewModel
+                {
+                    Id = b.Id.ToString(),
+                    CreatedOn = b.CreatedOn,
+                    UserEmail = b.User.Email,
+                    ManagerEmail = b.Manager != null ? b.Manager.User.UserName : null,
+                    IsDeleted = b.IsDeleted
+                });
+
+            return await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+        }
+
+        public async Task<int> GetTotalBookingsCountAsync()
         {
             return await bookingRepository
-               .GetAllAttached()
-               .IgnoreQueryFilters()
-               .AsNoTracking()
-               .Include(b => b.User)
-               .OrderByDescending(b => b.CreatedOn)
-               .Select(b => new BookingManagementIndexViewModel
-               {
-                   Id = b.Id.ToString(),
-                   CreatedOn = b.CreatedOn,
-                   UserEmail = b.User.Email,
-                   ManagerEmail = b.Manager != null ?
-                        b.Manager.User.UserName : null,
-                   IsDeleted = b.IsDeleted
-               })
-               .ToListAsync()
-               ?? Enumerable.Empty<BookingManagementIndexViewModel>();
+                .GetAllAttached()
+                .IgnoreQueryFilters()
+                .CountAsync();
         }
 
         public async Task<BookingManagementDetailsViewModel?> GetBookingManagementDetailsByIdAsync(string? id)

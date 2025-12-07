@@ -1,5 +1,6 @@
 ﻿namespace HotelApp.Services.Core.Interfaces
 {
+    using HotelApp.GCommon;
     using HotelApp.Web.ViewModels.Booking;
     using HotelApp.Web.ViewModels.Manager;
 
@@ -7,7 +8,9 @@
     {
         Task<bool> AddBookingAsync(string userId, AddBookingInputModel inputModel);
 
-        Task<IEnumerable<MyBookingsViewModel>> GetBookingsByUserIdAsync(string userId);
+        Task<IEnumerable<MyBookingsViewModel>> GetBookingsByUserIdAsync(string userId, int pageNumber = 1, int pageSize = ApplicationConstants.MyBookingsPaginationPageSize);
+
+        Task<int> GetBookingsCountByUserIdAsync(string userId);
 
         Task<ManagerBookingDetailsViewModel?> GetBookingDetailsByIdAsync(string? id);
 

@@ -8,6 +8,7 @@
 
     using static GCommon.ApplicationConstants;
     using HotelApp.Web.ViewModels;
+    using HotelApp.GCommon;
 
     public class BookingController : BaseController
     {
@@ -85,7 +86,7 @@
         }
 
         [HttpGet]
-        public async Task<IActionResult> My()
+        public async Task<IActionResult> My(int pageNumber = 1)
         {
             // TODO: Added bookings in list, if booking created with API
             try
@@ -96,8 +97,17 @@
                     return this.Forbid();
                 }
 
+                int pageSize = ApplicationConstants.MyBookingsPaginationPageSize;
+
                 IEnumerable<MyBookingsViewModel> userBookings = await this.bookingService
-                    .GetBookingsByUserIdAsync(userId);
+                    .GetBookingsByUserIdAsync(userId, pageNumber, pageSize);
+
+                int totalBookings = await this.bookingService.GetBookingsCountByUserIdAsync(userId);
+
+                ViewBag.PageNumber = pageNumber;
+                ViewBag.PageSize = pageSize;
+                ViewBag.TotalPages = (int)Math.Ceiling((double)totalBookings / pageSize);
+
                 return View(userBookings);
             }
             catch (Exception e)

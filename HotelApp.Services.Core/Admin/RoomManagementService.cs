@@ -11,6 +11,7 @@
 
     using static GCommon.ApplicationConstants;
     using static HotelApp.Web.ViewModels.ValidationMessages.Room;
+    using HotelApp.GCommon;
 
     public class RoomManagementService : IRoomManagementService
     {
@@ -48,9 +49,9 @@
             return opRes;
         }
 
-        public async Task<IEnumerable<RoomManagementIndexViewModel>> GetRoomManagementBoardDataAsync()
+        public async Task<IEnumerable<RoomManagementIndexViewModel>> GetRoomManagementBoardDataAsync(int pageNumber = 1, int pageSize = ApplicationConstants.AdminPaginationPageSize)
         {
-            return await roomRepository
+            var query = this.roomRepository
                 .GetAllAttached()
                 .IgnoreQueryFilters()
                 .AsNoTracking()
@@ -60,9 +61,20 @@
                     Id = r.Id.ToString(),
                     Name = r.Name,
                     IsDeleted = r.IsDeleted
-                })
-                .ToListAsync()
-                ?? Enumerable.Empty<RoomManagementIndexViewModel>();
+                });
+
+            return await query
+               .Skip((pageNumber - 1) * pageSize)
+               .Take(pageSize)
+               .ToListAsync();
+        }
+
+        public async Task<int> GetTotalRoomsCountAsync()
+        {
+            return await roomRepository
+                .GetAllAttached()
+                .IgnoreQueryFilters()
+                .CountAsync();
         }
 
         public async Task<RoomManagementDetailsViewModel?> GetRoomDetailsByIdAsync(string? id)

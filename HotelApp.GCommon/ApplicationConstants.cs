@@ -16,5 +16,8 @@
         public const string WarningMessageKey = "warning";
         public const string ErrorMessageKey = "error";
         public const string SuccessMessageKey = "success";
+
+        public const int MyBookingsPaginationPageSize = 5;
+        public const int AdminPaginationPageSize = 10;
     }
 }

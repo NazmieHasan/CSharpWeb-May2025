@@ -13,6 +13,7 @@
     using HotelApp.Web.ViewModels.Manager;
 
     using static GCommon.ApplicationConstants;
+    using HotelApp.GCommon;
 
     public class BookingService : IBookingService
     {
@@ -60,10 +61,9 @@
             return true;
         }
 
-        public async Task<IEnumerable<MyBookingsViewModel>> GetBookingsByUserIdAsync(string userId)
+        public async Task<IEnumerable<MyBookingsViewModel>> GetBookingsByUserIdAsync(string userId, int pageNumber = 1, int pageSize = ApplicationConstants.MyBookingsPaginationPageSize)  
         {
-            // Due to the use of the built-in IdentityUser, we do not have direct navigation collection from the user side
-            IEnumerable<MyBookingsViewModel> myBookings = await this.bookingRepository
+            var query = this.bookingRepository
                 .GetAllAttached()
                 .Include(b => b.Room)
                     .ThenInclude(r => r.Category)
@@ -85,10 +85,19 @@
                     RemainingAmount = b.TotalAmount - b.Payments.Sum(p => p.Amount),
                     Category = b.Room.Category.Name,
                     Status = b.Status.Name,
-                })
-                .ToArrayAsync();
+                });
 
-            return myBookings;
+            return await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToArrayAsync();
+        }
+
+        public async Task<int> GetBookingsCountByUserIdAsync(string userId)
+        {
+            return await this.bookingRepository
+                .GetAllAttached()
+                .CountAsync(b => b.UserId.ToLower() == userId.ToLower());
         }
 
         /* Manager method */

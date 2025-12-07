@@ -4,8 +4,15 @@
 
 @inject RoleManager<IdentityRole> roleManager;
 
+@{
+    ViewData["Title"] = "Room Management";
+
+    int currentPage = ViewBag.PageNumber ?? 1;
+    int totalPages = ViewBag.TotalPages ?? 1;
+}
+
 <div class="container mt-5">
-    <h1 class="text-center mb-4 text-warning fw-bold">Room Management</h1>
+    <h1 class="text-center mb-4 text-warning fw-bold">ViewData["Title"]</h1>
 
     @if (TempData["SuccessMessage"] != null)
     {
@@ -43,7 +50,7 @@
                         <td>
                             <div class="d-flex justify-content-center gap-2">
                                 <a asp-action="Details" asp-route-id="@room.Id" class="btn btn-success btn-sm fw-bold">
-                                    <i class="bi bi-eye-square me-1"></i>Details
+                                    <i class="bi bi-eye square"></i>Details
                                 </a>
                                 @if (!room.IsDeleted)
                                 {
@@ -62,6 +69,10 @@
             </tbody>
         </table>
     </div>
+
+    @await Html.PartialAsync("_PaginationPartial", (currentPage, totalPages, "Index", "RoomManagement"))
+    <p class="text-center mt-2">Page @currentPage of @totalPages</p>
+
 </div>
 
 
