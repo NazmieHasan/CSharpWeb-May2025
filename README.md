@@ -18,9 +18,9 @@ Welcome to **HotelApp**, a web application designed to demonstrate core web deve
 - **Bootstrap 5**: Responsive and modern UI components.
 
 ### Testing
-- **NUnit 5**: Comprehensive testing framework.
-- **Moq 5**: Mocking framework for unit testing.
-- **MockQueryable 5**: Simplifying LINQ mocking for Entity Framework queries.
+- **NUnit **: Comprehensive testing framework.
+- **Moq **: Mocking framework for unit testing.
+- **MockQueryable **: Simplifying LINQ mocking for Entity Framework queries.
 
 ---
 
