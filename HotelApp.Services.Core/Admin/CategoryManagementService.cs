@@ -82,7 +82,14 @@
                     Price = c.Price,
                     Beds = c.Beds,
                     ImageUrl = c.ImageUrl,
-                    IsDeleted = c.IsDeleted
+                    IsDeleted = c.IsDeleted,
+                    Rooms = c.Rooms
+                        .OrderBy(r => r.Name)
+                        .Select(r => new RoomInCategoryViewModel
+                        {
+                            Id = r.Id,
+                            Name = r.Name
+                        }).ToList()
                 })
                 .SingleOrDefaultAsync();
         }

@@ -89,6 +89,9 @@
                     .Select(s => new StayManagementDetailsViewModel()
                     {
                         Id = s.Id,
+                        GuestId = s.Guest.Id,
+                        GuestFirstName = s.Guest.FirstName,
+                        GuestFamilyName = s.Guest.FamilyName,
                         GuestEmail = s.Guest.Email,
                         CreatedOn = s.CreatedOn,
                         CheckoutOn = s.CheckoutOn,

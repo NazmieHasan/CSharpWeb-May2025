@@ -17,6 +17,16 @@
             <p>Phone Number: @Model.PaymentUserPhoneNumber</p>
             <p>Payment Method: @Model.PaymentMethodName</p>
             <p>Is Deleted: @Model.IsDeleted</p>
+            <p>
+                <a asp-area="Admin"
+                   asp-controller="BookingManagement"
+                   asp-action="Details"
+                   asp-route-id="@Model.BookingId"
+                   class="link-primary"
+                   target="_blank">
+                    View Booking
+                </a>
+            </p>
 
             <div class="mt-4 mb-5">
                 <a asp-action="Index" class="btn btn-outline-primary">

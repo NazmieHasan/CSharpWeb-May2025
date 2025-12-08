@@ -97,6 +97,7 @@
                     {
                         Id = r.Id.ToString(),
                         Name = r.Name,
+                        CategoryId = r.CategoryId,
                         Category = r.Category.Name,
                         CategoryBeds = r.Category.Beds,
                         IsDeleted = r.IsDeleted,

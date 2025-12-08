@@ -8,6 +8,8 @@
         public decimal Price { get; set; }
 
         public string ImageUrl { get; set; } = null!;
+
+        public IEnumerable<RoomInCategoryViewModel> Rooms { get; set; } = new List<RoomInCategoryViewModel>();
     }
 
 }

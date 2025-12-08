@@ -17,5 +17,7 @@
         public int PaymentMethodId { get; set; }
 
         public string PaymentMethodName { get; set; } = null!;
+
+        public Guid BookingId { get; set; }
     }
 }

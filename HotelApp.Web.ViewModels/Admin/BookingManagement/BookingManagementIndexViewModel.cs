@@ -8,9 +8,11 @@
 
         public DateTime CreatedOn { get; set; }
 
-        public string UserEmail { get; set; } = null!;
+        public DateOnly DateArrival { get; set; }
 
-        public string? ManagerEmail { get; set; }
+        public DateOnly DateDeparture { get; set; }
+
+        public string Status { get; set; } = null!;
 
         public bool IsDeleted { get; set; }
     }

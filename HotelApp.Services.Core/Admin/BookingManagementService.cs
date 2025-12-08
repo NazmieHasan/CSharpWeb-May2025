@@ -32,7 +32,8 @@
                 .Include(b => b.Room)                     
                     .ThenInclude(r => r.Category)        
                 .Include(b => b.Status)
-                .Include(b => b.Payments) 
+                .Include(b => b.Payments)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(b => b.Id == id);
         }
 
@@ -41,17 +42,16 @@
             var query = this.bookingRepository
                 .GetAllAttached()
                 .IgnoreQueryFilters()
-                .Include(b => b.User)
-                .Include(b => b.Manager)
-                    .ThenInclude(m => m.User)
+                .Include(b => b.Status)
                 .AsNoTracking()
                 .OrderByDescending(b => b.CreatedOn)
                 .Select(b => new BookingManagementIndexViewModel
                 {
                     Id = b.Id.ToString(),
                     CreatedOn = b.CreatedOn,
-                    UserEmail = b.User.Email,
-                    ManagerEmail = b.Manager != null ? b.Manager.User.UserName : null,
+                    DateArrival = b.DateArrival,
+                    DateDeparture = b.DateDeparture,
+                    Status = b.Status.Name,
                     IsDeleted = b.IsDeleted
                 });
 
@@ -83,7 +83,6 @@
             bookingDetails = await this.bookingRepository
                 .GetAllAttached()
                 .IgnoreQueryFilters()
-                .AsNoTracking()
                 .Include(b => b.User)
                 .Include(b => b.Room)
                     .ThenInclude(r => r.Category)
@@ -92,6 +91,7 @@
                 .Include(b => b.Status)
                 .Include(b => b.Stays)
                     .ThenInclude(s => s.Guest)
+                .AsNoTracking()
                 .Where(b => b.Id == bookingId)
                 .Select(b => new BookingManagementDetailsViewModel()
                 {
@@ -173,6 +173,7 @@
                     .Include(b => b.Manager)
                     .ThenInclude(m => m.User)
                     .IgnoreQueryFilters()
+                    .AsNoTracking()
                     .SingleOrDefaultAsync(b => b.Id.ToString().ToLower() == id.ToLower());
                 if (bookingToEdit != null)
                 {

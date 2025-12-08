@@ -9,6 +9,8 @@
 
     int currentPage = ViewBag.PageNumber ?? 1;
     int totalPages = ViewBag.TotalPages ?? 1;
+    int pageSize = ViewBag.PageSize ?? 10; 
+    int bookingCounter = ((currentPage - 1) * pageSize) + 1;
 }
 
 <div class="container mt-5">
@@ -26,8 +28,9 @@
                 <tr class="text-warning text-center">
                     <th>#</th>
                     <th>Created On</th>
-                    <th>User</th>
-                    <th>Manager</th>
+                    <th>Arrival Date</th>
+                    <th>Departure Date</th>
+                    <th>Status</th>
                     <th>Is Deleted</th>
                     <th>Actions</th>
                 </tr>
@@ -36,10 +39,11 @@
                 @foreach (var booking in Model)
                 {
                     <tr>
-                        <td class="align-middle">@booking.Id</td>
+                        <td class="align-middle">@bookingCounter</td>
                         <td class="align-middle">@booking.CreatedOn.ToString("yyyy-MM-dd")</td>
-                        <td class="align-middle">@booking.UserEmail</td>
-                        <td class="align-middle">@booking.ManagerEmail</td>
+                        <td class="align-middle">@booking.DateArrival.ToString("yyyy-MM-dd")</td>
+                        <td class="align-middle">@booking.DateDeparture.ToString("yyyy-MM-dd")</td>
+                        <td class="align-middle">@booking.Status</td>
                         <td class="align-middle">@booking.IsDeleted</td>
                         <td>
                             <div class="d-flex justify-content-center gap-2">
@@ -59,6 +63,7 @@
                             </div>
                         </td>
                     </tr>
+                    bookingCounter++;
                 }
             </tbody>
         </table>

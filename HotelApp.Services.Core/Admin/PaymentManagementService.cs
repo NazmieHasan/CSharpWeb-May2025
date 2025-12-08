@@ -116,7 +116,8 @@
                         PaymentUserFullName = p.PaymentUserFullName,
                         PaymentUserPhoneNumber = p.PaymentUserPhoneNumber,
                         IsDeleted = p.IsDeleted,
-                        PaymentMethodName = p.PaymentMethod.Name
+                        PaymentMethodName = p.PaymentMethod.Name,
+                        BookingId = p.BookingId
                     })
                     .SingleOrDefaultAsync();
             }

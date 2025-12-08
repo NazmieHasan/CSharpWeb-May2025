@@ -8,8 +8,20 @@
 <div class="container mt-5 text-center">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <h2 class="fw-bold text-primary mb-3">Stay Details</h2>
+            <h2 class="fw-bold text-primary mb-3">Stay Details </h2>
             <p><strong>Stay ID: @Model.Id</strong></p>
+            <p>
+                Guest
+                <a asp-area="Admin"
+                   asp-controller="GuestManagement"
+                   asp-action="Details"
+                   asp-route-id="@Model.GuestId"
+                   class="link-primary text-decoration-none"
+                   target="_blank">
+                   @Model.GuestFirstName @Model.GuestFamilyName
+                </a>
+            </p>
+            <p>@Model.GuestEmail</p>
             <hr />
             <p>Created On: @Model.CreatedOn.ToString("yyyy-MM-dd HH:mm")</p>
             <p>Checkout On: @(Model.CheckoutOn?.ToString("yyyy-MM-dd") ?? "-")</p>

@@ -11,7 +11,16 @@
             <h1 class="fw-bold mb-3">@ViewData["Title"]</h1>
             <hr />
             <h2 class="mb-3">@Model.Name</h2>
-            <p>Category: @Model.Category</p>
+            <p>
+                <a asp-area="Admin"
+                   asp-controller="CategoryManagement"
+                   asp-action="Details"
+                   asp-route-id="@Model.CategoryId"
+                   class="link-primary text-decoration-none"
+                   target="_blank">
+                   @Model.Category
+                </a>
+            </p>
             <p>Category Beds: @Model.CategoryBeds</p>
             <p>Is Deleted: @Model.IsDeleted</p>
 

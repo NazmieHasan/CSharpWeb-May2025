@@ -33,7 +33,16 @@
                         @foreach (var stay in Model.Stays)
                         {
                             <tr>
-                                <td>@stay.Id</td>
+                                <td>
+                                    <a asp-area="Admin"
+                                       asp-controller="StayManagement"
+                                       asp-action="Details"
+                                       asp-route-id="@stay.Id"
+                                       class="link-primary text-decoration-none"
+                                       target="_blank">
+                                        @stay.Id
+                                    </a>
+                                </td>
                                 <td>@stay.CreatedOn.ToString("yyyy-MM-dd")</td>
                                 <td>@(stay.CheckoutOn?.ToString("yyyy-MM-dd") ?? "-")</td>
                                 <td>@stay.IsDeleted</td>
