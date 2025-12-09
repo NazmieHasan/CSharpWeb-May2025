@@ -29,20 +29,24 @@ Welcome to **HotelApp**, a web application designed to demonstrate core web deve
    git clone https://github.com/NazmieHasan/CSharpWeb-May2025.git
    ```
    
-2. Connection DB: HotelApp.Web appsetings.json, HotelApp.WebApi appsetings.json
-
+2. Connection DB
+- HotelApp.Web appsetings.json
+- HotelApp.WebApi appsetings.json
 
 3. Create secrets.json in HotelApp.Web
 {
   "UserSeed": {
+
     "TestUser": {
       "Email": "your-email-here",
       "Password": "your-password-here"
     },
+
     "TestAdmin": {
       "Email": "your-admin-email-here",
       "Password": "your-admin-password-here"
     }
+
   }
 }
 

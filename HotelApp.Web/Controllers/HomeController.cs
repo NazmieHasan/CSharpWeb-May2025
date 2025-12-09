@@ -34,19 +34,15 @@ namespace HotelApp.Web.Controllers
             return View(allCategories);
         }
 
-        // TODO fix ERR_CASHE_MISS, use PRG pattern
-
         [HttpGet]
-        [AllowAnonymous]
-        public IActionResult FindRoom()
-        {
-            return View();
-        }
-
-        [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> FindRoom(FindRoomInputModel inputModel)
         {
+            if (!Request.Query.ContainsKey("DateArrival") || !Request.Query.ContainsKey("DateDeparture"))
+            {
+                return View();
+            }
+
             if (!ModelState.IsValid)
             {
                 TempData["ErrorMessage"] = "Please correct the errors in the form!";
@@ -81,6 +77,11 @@ namespace HotelApp.Web.Controllers
         [AllowAnonymous]
         public IActionResult FindRoomByCategory(int categoryId)
         {
+            if (categoryId == 0)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             var model = new FindRoomInputModel
             {
                 CategoryId = categoryId
@@ -89,26 +90,36 @@ namespace HotelApp.Web.Controllers
             return View(model);
         }
 
-        [HttpPost]
+        [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> FindRoomByCategory(FindRoomInputModel inputModel)
+        public async Task<IActionResult> FindRoomByCategorySearch(FindRoomInputModel inputModel)
         {
+            if (inputModel.CategoryId == 0)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            if (!Request.Query.ContainsKey("DateArrival") || !Request.Query.ContainsKey("DateDeparture"))
+            {
+                return View("FindRoomByCategory", inputModel);
+            }
+
             if (!ModelState.IsValid)
             {
                 TempData["ErrorMessage"] = "Please correct the errors in the form!";
-                return View(inputModel);
+                return View("FindRoomByCategory", inputModel);
             }
 
             if (inputModel.DateArrival < DateOnly.FromDateTime(DateTime.UtcNow))
             {
                 TempData["ErrorMessage"] = $"Arrival date cannot be in the past!";
-                return View(inputModel);
+                return View("FindRoomByCategory", inputModel);
             }
 
             if (inputModel.DateDeparture <= inputModel.DateArrival)
             {
                 TempData["ErrorMessage"] = $"Departure date must be after arrival date!";
-                return View(inputModel);
+                return View("FindRoomByCategory", inputModel);
             }
 
             var room = await this.roomService
