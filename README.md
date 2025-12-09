@@ -12,15 +12,13 @@ Welcome to **HotelApp**, a web application designed to demonstrate core web deve
 - **Entity Framework 8**: Efficient database interactions with LINQ and more.
 - **Newtonsoft.Json**: Advanced JSON serialization and deserialization.
 
-### Testing (TODO)
-
 ### Frontend
 - **Bootstrap 5**: Responsive and modern UI components.
 
 ### Testing
-- **NUnit **: Comprehensive testing framework.
-- **Moq **: Mocking framework for unit testing.
-- **MockQueryable **: Simplifying LINQ mocking for Entity Framework queries.
+- **NUnit**: Comprehensive testing framework.
+- **Moq**: Mocking framework for unit testing.
+- **MockQueryable**: Simplifying LINQ mocking for Entity Framework queries.
 
 ---
 
@@ -34,8 +32,19 @@ Welcome to **HotelApp**, a web application designed to demonstrate core web deve
 2. Connection DB: HotelApp.Web appsetings.json, HotelApp.WebApi appsetings.json
 
 
-3. Create secrets.json with users
-
+3. Create secrets.json in HotelApp.Web
+{
+  "UserSeed": {
+    "TestUser": {
+      "Email": "your-email-here",
+      "Password": "your-password-here"
+    },
+    "TestAdmin": {
+      "Email": "your-admin-email-here",
+      "Password": "your-admin-password-here"
+    }
+  }
+}
 
 4. Navigate to the project directory:
    ```bash

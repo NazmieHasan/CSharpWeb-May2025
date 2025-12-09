@@ -34,6 +34,8 @@ namespace HotelApp.Web.Controllers
             return View(allCategories);
         }
 
+        // TODO fix ERR_CASHE_MISS, use PRG pattern
+
         [HttpGet]
         [AllowAnonymous]
         public IActionResult FindRoom()

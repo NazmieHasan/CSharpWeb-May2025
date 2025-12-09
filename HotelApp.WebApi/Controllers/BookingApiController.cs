@@ -16,6 +16,8 @@
             this.bookingService = bookingService;
         }
 
+        // TODO fix Status 401 Unauthorized
+
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

@@ -46,6 +46,14 @@
         [HttpPost]
         public async Task<IActionResult> Add(AddBookingInputModel inputModel)
         {
+            var roomDetails = await this.roomService.GetRoomDetailsByIdAsync(inputModel.RoomId.ToString());
+            if (roomDetails == null)
+            {
+                return NotFound();
+            }
+
+            inputModel.MaxGuests = roomDetails.CategoryBeds;
+
             if (!ModelState.IsValid)
             {
                 return this.View(inputModel);
