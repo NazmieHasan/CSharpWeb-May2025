@@ -575,11 +575,23 @@ a:focus {
     }
 
     .contact-info .jumbo-light .col {
+        margin-bottom: 1rem;
         padding: 2px;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-image: url('/images/social-icon-background.png');
+        background-size: cover;
+        background-position: center;
+        height: 100px;
     }
 
-.contact-info .img-thumbnail {
-    margin-bottom: 1rem;
+.fs-1 {
+    font-size: 3rem !important;
+}
+.contact-info .jumbo-light .col:hover i {
+    cursor: pointer; 
 }
 
 .gps-coordinates {
