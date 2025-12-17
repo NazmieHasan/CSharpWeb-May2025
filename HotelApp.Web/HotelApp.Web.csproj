@@ -26,4 +26,8 @@
     <ProjectReference Include="..\HotelApp.Web.ViewModels\HotelApp.Web.ViewModels.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\images\upload\categories\" />
+  </ItemGroup>
+
 </Project>

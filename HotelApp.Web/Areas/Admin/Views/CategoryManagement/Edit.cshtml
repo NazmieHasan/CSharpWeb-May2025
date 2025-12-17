@@ -11,7 +11,7 @@
 
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <form asp-action="Edit" method="post" class="bg-dark text-light p-4 rounded shadow-lg">
+            <form asp-action="Edit" method="post" enctype="multipart/form-data" class="bg-dark text-light p-4 rounded shadow-lg">
                 <input type="hidden" asp-for="Id" />
 
                 <div class="mb-3">
@@ -38,11 +38,19 @@
                     <span asp-validation-for="Beds" class="text-danger"></span>
                 </div>
 
-                <!-- TODO Upload image-->
                 <div class="mb-3">
-                    <label asp-for="ImageUrl" class="form-label fw-bold">Image URL</label>
-                    <input asp-for="ImageUrl" class="form-control">
-                    <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                    <label class="form-label fw-bold">Current Image</label>
+                    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                    {
+                        <div>
+                            <img src="@Model.ImageUrl" alt="Category Image" style="max-width:212px; max-height:250px;">
+                        </div>
+                    }
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Image" class="form-label fw-bold">Upload New Image (optional)</label>
+                    <input asp-for="Image" type="file" class="form-control">
+                    <span asp-validation-for="Image" class="text-danger"></span>
                 </div>
 
                 <div class="text-center mt-4">

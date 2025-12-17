@@ -11,7 +11,7 @@
 
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <form asp-area="Admin" asp-controller="CategoryManagement" asp-action="Create" method="post" class="bg-dark text-light p-4 rounded shadow-lg">
+            <form asp-area="Admin" asp-controller="CategoryManagement" asp-action="Create" method="post" enctype="multipart/form-data" class="bg-dark text-light p-4 rounded shadow-lg">
                 <div class="mb-3">
                     <label asp-for="Name" class="form-label fw-bold">Category Name</label>
                     <input asp-for="Name" class="form-control" placeholder="Enter category name">
@@ -36,10 +36,10 @@
                     <span asp-validation-for="Beds" class="text-danger"></span>
                 </div>
 
-                <!-- TODO Upload image-->
                 <div class="mb-3">
-                    <label asp-for="ImageUrl" class="form-label fw-bold">Image URL</label>
-                    <input asp-for="ImageUrl" class="form-control" placeholder="Enter image URL">
+                    <label asp-for="Image" class="form-label fw-bold">Upload Image</label>
+                    <input asp-for="Image" type="file" class="form-control">
+                    <span asp-validation-for="Image" class="text-danger"></span>
                 </div>
 
                 <div class="text-center mt-4">

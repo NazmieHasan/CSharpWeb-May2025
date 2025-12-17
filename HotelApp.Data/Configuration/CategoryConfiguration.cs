@@ -63,28 +63,55 @@
                 {
                     Id = 1,
                     Name = "Double Room",
-                    Description = "Modern and stylish design for you",
+                    Description = "Modern and stylish design",
                     Beds = 2,
-                    Price = 500.00M,
-                    ImageUrl = "https://cdn.pixabay.com/photo/2015/11/06/11/45/interior-1026452_960_720.jpg"
+                    Price = 300.00M,
+                    ImageUrl = "/images/upload/categories/7fb46e46-d4d6-41b8-8b54-9c81096462f1.jpg"
                 },
                 new Category()
                 {
                     Id = 2,
-                    Name = "Apartment",
-                    Description = "Modern design, comfort and convenience",
-                    Beds = 4,
-                    Price = 800.00M,
-                    ImageUrl = "https://cdn.pixabay.com/photo/2017/04/28/22/14/room-2269591_960_720.jpg"
+                    Name = "Family Room",
+                    Description = "Convenience for all the family",
+                    Beds = 3,
+                    Price = 500.00M,
+                    ImageUrl = "/images/upload/categories/3ce40dc4-f2a7-4cf1-97e6-3d9e68f892fe.jpg"
                 },
                 new Category()
                 {
                     Id = 3,
-                    Name = "Apartment Lux",
+                    Name = "Apartment",
+                    Description = "Modern design, comfort and convenience",
+                    Beds = 4,
+                    Price = 1000.00M,
+                    ImageUrl = "/images/upload/categories/b77081e5-111e-4220-a122-597e46708efd.jpg"
+                },
+                new Category()
+                {
+                    Id = 4,
+                    Name = "Double Room L",
+                    Description = "Luxury, elegance and comfort",
+                    Beds = 2,
+                    Price = 400.00M,
+                    ImageUrl = "/images/upload/categories/e3d7e66a-aebd-45d7-9ad4-04f65c2704f6.jpg"
+                },
+                new Category()
+                {
+                    Id = 5,
+                    Name = "Apartment L",
                     Description = "Luxury, elegance and comfort",
                     Beds = 4,
                     Price = 1500.00M,
-                    ImageUrl = "https://cdn.pixabay.com/photo/2015/01/10/11/39/hotel-595121_960_720.jpg"
+                    ImageUrl = "/images/upload/categories/44e74722-5f1d-4736-bf28-bc7d914a9192.jpg"
+                },
+                new Category()
+                {
+                    Id = 6,
+                    Name = "Apartment Super L",
+                    Description = "Super luxury, elegance and comfort",
+                    Beds = 4,
+                    Price = 2000.00M,
+                    ImageUrl = "/images/upload/categories/7aa43c19-831a-4890-bd6e-dded11e88d3f.jpg"
                 }
             };
 

@@ -63,85 +63,106 @@
                 new Room
                 {
                     Id = Guid.Parse("c1bd2a4a-6f9b-4daf-a0bb-4f7cdccf6101"),
-                    Name = "204",
-                    CategoryId = 1,
-                    IsDeleted = false
-                },
-                new Room
-                {
-                    Id = Guid.Parse("bfb7b7af-d533-4b7e-a7a9-69d27e0e5d47"),
-                    Name = "205",
-                    CategoryId = 1,
-                    IsDeleted = false
-                },
-                new Room
-                {
-                    Id = Guid.Parse("ee45d08c-f4d7-4b87-9ceb-6157c703a7dc"),
                     Name = "301",
                     CategoryId = 2,
                     IsDeleted = false
                 },
                 new Room
                 {
-                    Id = Guid.Parse("f1e8ce5d-8c16-4bf6-9ff6-70db57fcd118"),
+                    Id = Guid.Parse("bfb7b7af-d533-4b7e-a7a9-69d27e0e5d47"),
                     Name = "302",
                     CategoryId = 2,
                     IsDeleted = false
                 },
                 new Room
                 {
-                    Id = Guid.Parse("40c553a9-f28f-4d17-bd83-92fd2c63ff91"),
+                    Id = Guid.Parse("ee45d08c-f4d7-4b87-9ceb-6157c703a7dc"),
                     Name = "303",
                     CategoryId = 2,
                     IsDeleted = false
                 },
                 new Room
                 {
-                    Id = Guid.Parse("fbb4b2e4-7319-45a7-ac07-fe7e7345d5cb"),
-                    Name = "304",
-                    CategoryId = 2,
-                    IsDeleted = false
-                },
-                new Room
-                {
-                    Id = Guid.Parse("c6d17679-1de6-4cbb-b625-408b7bff3dc4"),
-                    Name = "305",
-                    CategoryId = 2,
-                    IsDeleted = false
-                },
-                new Room
-                {
-                    Id = Guid.Parse("7f48c43a-8c88-486b-a59e-0e89bd4453ec"),
+                    Id = Guid.Parse("f1e8ce5d-8c16-4bf6-9ff6-70db57fcd118"),
                     Name = "401",
                     CategoryId = 3,
                     IsDeleted = false
                 },
                 new Room
                 {
-                    Id = Guid.Parse("e76e6f0c-e838-4f47-b836-882b7ccc6983"),
+                    Id = Guid.Parse("40c553a9-f28f-4d17-bd83-92fd2c63ff91"),
                     Name = "402",
                     CategoryId = 3,
                     IsDeleted = false
                 },
                 new Room
                 {
-                    Id = Guid.Parse("a93c5830-33fb-4d67-b8d8-468ed20c5efd"),
+                    Id = Guid.Parse("fbb4b2e4-7319-45a7-ac07-fe7e7345d5cb"),
                     Name = "403",
                     CategoryId = 3,
                     IsDeleted = false
                 },
                 new Room
                 {
+                    Id = Guid.Parse("c6d17679-1de6-4cbb-b625-408b7bff3dc4"),
+                    Name = "501",
+                    CategoryId = 4,
+                    IsDeleted = false
+                },
+                new Room
+                {
+                    Id = Guid.Parse("7f48c43a-8c88-486b-a59e-0e89bd4453ec"),
+                    Name = "502",
+                    CategoryId = 4,
+                    IsDeleted = false
+                },
+                new Room
+                {
+                    Id = Guid.Parse("e76e6f0c-e838-4f47-b836-882b7ccc6983"),
+                    Name = "503",
+                    CategoryId = 4,
+                    IsDeleted = false
+                },
+                new Room
+                {
+                    Id = Guid.Parse("a93c5830-33fb-4d67-b8d8-468ed20c5efd"),
+                    Name = "601",
+                    CategoryId = 5,
+                    IsDeleted = false
+                },
+                new Room
+                {
                     Id = Guid.Parse("8ffd66e2-7938-4e62-a246-f63cd583f2de"),
-                    Name = "404",
-                    CategoryId = 3,
+                    Name = "602",
+                    CategoryId = 5,
                     IsDeleted = false
                 },
                 new Room
                 {
                     Id = Guid.Parse("d5f93a83-98f4-46a9-85da-ff2f3282e6f5"),
-                    Name = "405",
-                    CategoryId = 3,
+                    Name = "603",
+                    CategoryId = 5,
+                    IsDeleted = false
+                },
+                new Room
+                {
+                    Id = Guid.Parse("41c54c25-a26f-41e2-95a0-e58210f8506e"),
+                    Name = "701",
+                    CategoryId = 6,
+                    IsDeleted = false
+                },
+                new Room
+                {
+                    Id = Guid.Parse("22b64510-5d86-41e4-869e-04e7a76374dc"),
+                    Name = "702",
+                    CategoryId = 6,
+                    IsDeleted = false
+                },
+                new Room
+                {
+                    Id = Guid.Parse("a4a36a83-1f95-47f7-a1c6-91c116b033ef"),
+                    Name = "703",
+                    CategoryId = 6,
                     IsDeleted = false
                 }
             };

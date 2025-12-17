@@ -1,23 +1,26 @@
 ﻿namespace HotelApp.Web.Areas.Admin.Controllers
 {
-    using HotelApp.Web.ViewModels.Admin.CategoryManagement;
-    using Microsoft.AspNetCore.Mvc;
-
-    using Services.Core.Admin.Interfaces;
-    using static ViewModels.ValidationMessages.Category;
-
-    using static GCommon.ApplicationConstants;
-
     using System.Collections.Generic;
-    using HotelApp.Web.ViewModels.Category;
+
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Hosting;
+
+
+    using HotelApp.Web.ViewModels.Admin.CategoryManagement;
+    using Services.Core.Admin.Interfaces;
+
+    using static ViewModels.ValidationMessages.Category;
+    using static GCommon.ApplicationConstants;
 
     public class CategoryManagementController : BaseAdminController
     {
         private readonly ICategoryManagementService categoryService;
+        private readonly IWebHostEnvironment webHostEnvironment;
 
-        public CategoryManagementController(ICategoryManagementService categoryService)
+        public CategoryManagementController(ICategoryManagementService categoryService, IWebHostEnvironment webHostEnvironment)
         {
             this.categoryService = categoryService;
+            this.webHostEnvironment = webHostEnvironment;
         }
 
         public async Task<IActionResult> Index()
@@ -42,12 +45,43 @@
                 return this.View(inputModel);
             }
 
+            if (inputModel.Image == null || inputModel.Image.Length == 0)
+            {
+                this.ModelState.AddModelError(nameof(inputModel.Image), "Please, upload image");
+                return this.View(inputModel);
+            }
+
+            if (inputModel.Image.Length > 2 * 1024 * 1024)
+            {
+                this.ModelState.AddModelError(nameof(inputModel.Image), "Max size is 2MB");
+                return this.View(inputModel);
+            }
+
+            string ext = Path.GetExtension(inputModel.Image.FileName).ToLower();
+            if (ext != ".jpg" && ext != ".jpeg" && ext != ".png")
+            {
+                this.ModelState.AddModelError(nameof(inputModel.Image), "Allowed files formats are jpg, jpeg, png");
+                return this.View(inputModel);
+            }
+
             try
             {
+                string uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "images/upload/categories");
+                Directory.CreateDirectory(uploadsFolder);
+                string fileName = Guid.NewGuid() + ext;
+                string filePath = Path.Combine(uploadsFolder, fileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await inputModel.Image.CopyToAsync(fileStream);
+                }
+
+                inputModel.ImageUrl = "/images/upload/categories/" + fileName;
+
                 await this.categoryService.AddCategoryManagementAsync(inputModel);
+
                 return this.RedirectToAction(nameof(Index));
             }
-            catch (InvalidOperationException ex) 
+            catch (InvalidOperationException ex)
             {
                 this.ModelState.AddModelError(nameof(inputModel.Name), ex.Message);
                 return this.View(inputModel);
@@ -107,31 +141,58 @@
         [HttpPost]
         public async Task<IActionResult> Edit(CategoryManagementFormInputModel inputModel)
         {
-            if (!this.ModelState.IsValid)
-            {
-                return this.View(inputModel);
-            }
+            if (!ModelState.IsValid)
+                return View(inputModel);
 
             try
             {
-                bool editSuccess = await this.categoryService.EditCategoryAsync(inputModel);
-                if (!editSuccess)
+                if (inputModel.Image != null && inputModel.Image.Length > 0)
                 {
-                    return this.RedirectToAction(nameof(Index));
+                    if (inputModel.Image.Length > 2 * 1024 * 1024)
+                    {
+                        ModelState.AddModelError(nameof(inputModel.Image), "Max size is 2MB");
+                        return View(inputModel);
+                    }
+
+                    string ext = Path.GetExtension(inputModel.Image.FileName).ToLower();
+                    if (ext != ".jpg" && ext != ".jpeg" && ext != ".png")
+                    {
+                        ModelState.AddModelError(nameof(inputModel.Image), "Allowed file formats: jpg, jpeg, png");
+                        return View(inputModel);
+                    }
+
+                    string uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "images/upload/categories");
+                    Directory.CreateDirectory(uploadsFolder);
+                    string fileName = Guid.NewGuid() + ext;
+                    string filePath = Path.Combine(uploadsFolder, fileName);
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await inputModel.Image.CopyToAsync(fileStream);
+                    }
+
+                    inputModel.ImageUrl = "/images/upload/categories/" + fileName;
+                }
+                else
+                {
+                    inputModel.ImageUrl = null; 
                 }
 
-                return this.RedirectToAction(nameof(Details), new { id = inputModel.Id });
+                bool editSuccess = await categoryService.EditCategoryAsync(inputModel);
+                if (!editSuccess)
+                    return RedirectToAction(nameof(Index));
+
+                return RedirectToAction(nameof(Details), new { id = inputModel.Id });
             }
             catch (InvalidOperationException ex)
             {
-                this.ModelState.AddModelError(nameof(inputModel.Name), ex.Message);
-                return this.View(inputModel);
+                ModelState.AddModelError(nameof(inputModel.Name), ex.Message);
+                return View(inputModel);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                this.ModelState.AddModelError(string.Empty, "An unexpected error occurred.");
-                return this.View(inputModel);
+                ModelState.AddModelError(string.Empty, "An unexpected error occurred.");
+                return View(inputModel);
             }
         }
 

@@ -1,5 +1,6 @@
 ﻿namespace HotelApp.Web.ViewModels.Admin.CategoryManagement
 {
+    using Microsoft.AspNetCore.Http;
     using System.ComponentModel.DataAnnotations;
 
     using static HotelApp.Data.Common.EntityConstants.Category;
@@ -29,7 +30,8 @@
 
         public decimal Price { get; set; }
 
-        [MaxLength(ImageUrlMaxLength, ErrorMessage = ImageUrlMaxLengthMessage)]
-        public string ImageUrl { get; set; } = null!;
+        public IFormFile? Image { get; set; } = null!;
+
+        public string? ImageUrl { get; set; }
     }
 }

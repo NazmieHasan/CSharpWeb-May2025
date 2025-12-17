@@ -142,7 +142,11 @@
             editableCat.Description = inputModel.Description;
             editableCat.Price = inputModel.Price;
             editableCat.Beds = inputModel.Beds;
-            editableCat.ImageUrl = inputModel.ImageUrl;
+
+            if (!string.IsNullOrEmpty(inputModel.ImageUrl))
+            {
+                editableCat.ImageUrl = inputModel.ImageUrl;
+            }
 
             bool result = await this.categoryRepository.UpdateAsync(editableCat);
             return result;
