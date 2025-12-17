@@ -17,13 +17,21 @@
                 Status: @Model.Status
                 @if (Model.AllowedOperation == "AddPayment")
                 {
-                    <button class="btn btn-danger fw-bold shadow-sm" id="add">Add Payment</button>
-                    <div id="add_payment"></div>
+                    <button class="btn btn-danger fw-bold shadow-sm"
+                            onclick="AddPayment('@Model.Id')"
+                            id="addPayment">
+                        Add Payment
+                    </button>
+                    <div id="createPayment"></div>
                 }
                 else if (Model.AllowedOperation == "AddStay")
                 {
-                    <button class="btn btn-danger fw-bold shadow-sm" id="create">Add Stay</button>
-                    <div id="add_stay"></div>
+                    <button class="btn btn-danger fw-bold shadow-sm"
+                            onclick="AddStay('@Model.Id')"
+                            id="addStay">
+                        Add Stay
+                    </button>
+                    <div id="createStay"></div>
                 }
             </p>
             @if (@Model.IsDeleted == true)
@@ -169,67 +177,5 @@
     </div>
 </div>
 
-<script>
-    $('#add').click(function () {
-        $('#add_payment').load('/Admin/PaymentManagement/Create?bookingId=@Model.Id', function () {
-            if (typeof ($.validator) !== 'undefined' && typeof ($.validator.unobtrusive) !== 'undefined') {
-                $.validator.unobtrusive.parse($('#add_payment'));
-            }
-            $('#add_payment').toggle();
-        });
-    });
-
-    $(document).on('submit', '#add_payment form', function (e) {
-        e.preventDefault();
-        var $form = $(this);
-
-        $.post($form.attr('action'), $form.serialize())
-            .done(function (result) {
-
-                if (result.success) {
-                    window.location.href = result.redirectUrl;
-                    return;
-                }
-
-                $('#add_payment').html(result);
-                if (typeof ($.validator) !== 'undefined' && typeof ($.validator.unobtrusive) !== 'undefined') {
-                    $.validator.unobtrusive.parse($('#add_payment'));
-                }
-            })
-            .fail(function () {
-                alert('An error occurred while saving the payment. Please try again.');
-            });
-    });
-
-    $('#create').click(function () {
-        $('#add_stay').load('/Admin/StayManagement/Create?bookingId=@Model.Id', function () {
-            if (typeof ($.validator) !== 'undefined' && typeof ($.validator.unobtrusive) !== 'undefined') {
-                $.validator.unobtrusive.parse($('#add_stay'));
-            }
-            $('#add_stay').toggle();
-        });
-    });
-
-    $(document).on('submit', '#add_stay form', function (e) {
-        e.preventDefault();
-        var $form = $(this);
-
-        $.post($form.attr('action'), $form.serialize())
-            .done(function (result) {
-
-                if (result.success) {
-                    window.location.href = result.redirectUrl;
-                    return;
-                }
-
-                $('#add_stay').html(result);
-                if (typeof ($.validator) !== 'undefined' && typeof ($.validator.unobtrusive) !== 'undefined') {
-                    $.validator.unobtrusive.parse($('#add_stay'));
-                }
-            })
-            .fail(function () {
-                alert('An error occurred while saving the stay. Please try again.');
-            });
-    });
-</script>
-
+<script src="~/js/admin/paymentManagement.js" asp-append-version="true"></script>
+<script src="~/js/admin/stayManagement.js" asp-append-version="true"></script>

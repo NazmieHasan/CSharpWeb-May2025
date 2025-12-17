@@ -33,7 +33,6 @@
                     .ThenInclude(r => r.Category)        
                 .Include(b => b.Status)
                 .Include(b => b.Payments)
-                .AsNoTracking()
                 .FirstOrDefaultAsync(b => b.Id == id);
         }
 
@@ -91,7 +90,6 @@
                 .Include(b => b.Status)
                 .Include(b => b.Stays)
                     .ThenInclude(s => s.Guest)
-                .AsNoTracking()
                 .Where(b => b.Id == bookingId)
                 .Select(b => new BookingManagementDetailsViewModel()
                 {

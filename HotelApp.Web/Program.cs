@@ -36,6 +36,12 @@ namespace HotelApp.Web
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<HotelAppDbContext>();
 
+            // 403 AccessDenied; 404 can appear if routing hides the resource
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.AccessDeniedPath = "/Home/Error?statusCode=403"; 
+            });
+
             builder.Services.AddRepositories(typeof(IBookingRepository).Assembly);
             builder.Services.AddUserDefinedServices(typeof(IBookingService).Assembly);
 

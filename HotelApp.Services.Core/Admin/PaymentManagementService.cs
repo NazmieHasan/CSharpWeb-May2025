@@ -77,6 +77,7 @@
             };
 
             await this.paymentRepository.AddAsync(newPayment);
+            await this.paymentRepository.SaveChangesAsync();
 
             var booking = await this.bookingService.FindBookingByIdAsync(inputModel.BookingId);
 
@@ -89,9 +90,8 @@
                 if (paidAmount == totalAmount)
                 {
                     booking.StatusId = 3;  // For Implementation
+                    await this.bookingRepository.SaveChangesAsync();
                 }
-
-                await this.bookingRepository.SaveChangesAsync();
             }
         }
 
