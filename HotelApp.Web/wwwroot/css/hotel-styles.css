@@ -96,52 +96,28 @@ a:focus {
         margin-bottom: 0;
     }
 
-        .search-room .form-group .col-md-2, .search-room .form-group .col-md-4, .search-room .form-group .col-sm-12 {
-            padding-right: 5px;
-            padding-left: 5px;
-        }
-
-        .search-room .form-group .col-title {
-            padding: 1rem 0;
-        }
-
         .search-room .form-group span, .form-group .form-submit {
             font-weight: bold;
             word-spacing: 5px;
         }
-
         .search-room .form-group label, .search-room .form-group input {
-            margin-top: 5px;
-            margin-bottom: 5px;
-            padding-right: 8px;
-            padding-left: 8px;
+            padding: 2px 8px;
             border: 1px solid #4f4f4f;
             border-radius: 2px;
         }
-
         .search-room .form-group label {
-            padding-top: 2px;
-            padding-bottom: 2px;
             background: white;
         }
-
-        .search-room .form-group input {
-            padding-top: 1px;
-            padding-bottom: 1px;
+        .search-btn {
+            padding-right: 0px;
+            padding-left: 0px;
         }
-
-        .search-room .form-group .form-submit {
-            margin-top: 5px;
-            margin-bottom: 5px;
-            padding-top: 5px;
-            padding-right: 1.5rem;
-            padding-bottom: 5px;
-            padding-left: 1.5rem;
-            border-radius: 2px;
+        .search-room .form-group .form-submit {  
+            padding: 0.25rem 1.5rem;
         }
 
 .home-container {
-    margin-top: 50px;
+    margin-top: 4rem;
 }
 
     .home-container h2 {
@@ -170,8 +146,8 @@ a:focus {
 .btn-danger {
     background-color: darkred;
     border-color: darkred;
-    margin-top: 15px;
-    margin-bottom: 15px;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
 }
 
     .btn-danger:hover {
