@@ -1,5 +1,8 @@
 ﻿/* html, body */
 body {
+    padding-top: 5.125rem;
+}
+body {
     background: #f0f0f0;
 }
 a {
@@ -13,10 +16,7 @@ a:focus {
 
 /* nav */
 .navbar {
-    padding-top: 17px;
-    padding-right: 15px;
-    padding-bottom: 17px;
-    padding-left: 15px;
+    padding: 1rem;
 }
 
 .bg-dark {
@@ -28,7 +28,7 @@ a:focus {
 }
 
 .navbar-dark .navbar-nav .nav-link {
-    font-size: 17px;
+    font-size: 1rem;
     color: #f8f9fa;
     margin: 0;
 }
@@ -63,10 +63,10 @@ a:focus {
 } 
 
 .home-width {
-    height: 480px;
+    height: 30rem;
 }
 .venues-width, .spa-center-width, .events-width, .offers-width, .contact-width {
-    height: 560px;
+    height: 35rem;
 }
 
 .header {
@@ -77,7 +77,7 @@ a:focus {
 }
 
 .header-title {
-    margin-top: 170px;
+    margin-top: 10.625rem;
     font-size: 3.5rem;
     letter-spacing: 5px;
     word-spacing: 10px;
@@ -89,8 +89,7 @@ a:focus {
 .search-room {
     font-size: 20px;
     background: #dce0df;
-    padding-top: 15px;
-    padding-bottom: 15px;
+    padding: 1rem 0;
 }
 
     .search-room .form-group {
@@ -103,8 +102,7 @@ a:focus {
         }
 
         .search-room .form-group .col-title {
-            padding-top: 5px;
-            padding-bottom: 5px;
+            padding: 1rem 0;
         }
 
         .search-room .form-group span, .form-group .form-submit {
@@ -136,9 +134,9 @@ a:focus {
             margin-top: 5px;
             margin-bottom: 5px;
             padding-top: 5px;
-            padding-right: 25px;
+            padding-right: 1.5rem;
             padding-bottom: 5px;
-            padding-left: 25px;
+            padding-left: 1.5rem;
             border-radius: 2px;
         }
 
@@ -147,7 +145,7 @@ a:focus {
 }
 
     .home-container h2 {
-        margin-bottom: 40px;
+        margin-bottom: 2.5rem;
         text-align: center;
     }
 
@@ -319,7 +317,7 @@ a:focus {
 .cont-venues {
     background: url('../images/cont-venues.jpg');
     width: 100%;
-    height: 600px;
+    height: 37.5rem;
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
@@ -327,7 +325,7 @@ a:focus {
 }
 
     .cont-venues h1 {
-        padding-top: 230px;
+        padding-top: 14rem;
         text-align: center;
         color: white;
         font-size: 5rem;
@@ -337,7 +335,7 @@ a:focus {
 .cont-spa {
     background: url('../images/cont-spa-center.jpg');
     width: 100%;
-    height: 600px;
+    height: 37.5rem;
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
@@ -608,10 +606,14 @@ a:focus {
 /* contact page end */
 
 /* footer */
-.footer-p {
-    padding: 50px;
+.footer {
+    padding: 2rem 0;
     text-align: center;
+    font-size: 14px;
     color: #f8f9fa;
     background-color: #262627;
+}
+.footer i {
+    cursor: pointer;
 }
 /* footer end */

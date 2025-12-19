@@ -25,7 +25,7 @@
 <body>
     <header>
         <partial name="_NotificationsPartial" />
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-lg">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-lg fixed-top">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
                     <img src="~/images/logo.png" alt="Logo" style="height:40px;">
@@ -146,8 +146,27 @@
     </div>
 
     <footer class="footer">
-        <div class="footer-p">
-            <p>&copy; @footerNote Hotel & SPA | Rooms And Apartmants For You</p>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-sm-12 mb-3">
+                    <h5>Call us</h5>
+                    <p>Info <i class="bi bi-telephone"></i> (+359) 000 000 001</p>
+                    <p>Reservations <i class="bi bi-telephone"></i> (+359) 000 000 002</p>
+                </div>
+                <div class="col-md-4 col-sm-12 mb-3">
+                    <h5>Write us</h5>
+                    <p>Info: <i class="bi bi-envelope"></i> info@example.com</p>
+                    <p>Reservations: <i class="bi bi-envelope"></i> reservations@example.com</p>
+                </div>
+                <div class="col-md-4 col-sm-12 mb-3">
+                    <h5>Follow us</h5>
+                    <i class="fab fa-facebook-f text-white fs-2 me-2"></i>
+                    <i class="fab fa-instagram text-white fs-2 me-2"></i>
+                    <i class="fab fa-twitter text-white fs-2"></i>
+                </div>
+            </div>
+            <hr />
+            <p class="small">&copy; @footerNote Hotel & SPA. All Rights Reserved.</p>
         </div>
     </footer>
 
@@ -157,4 +176,3 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
-
