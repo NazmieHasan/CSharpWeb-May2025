@@ -32,12 +32,16 @@
                 return NotFound();
             }
 
+            var daysCount = (dateDeparture.ToDateTime(TimeOnly.MinValue) - dateArrival.ToDateTime(TimeOnly.MinValue)).Days;
+
             var model = new AddBookingInputModel
             {
                 RoomId = Guid.Parse(roomId),
                 DateArrival = dateArrival,
                 DateDeparture = dateDeparture,
-                MaxGuests = roomDetails.CategoryBeds 
+                MaxGuests = roomDetails.CategoryBeds,
+                RoomCategoryName = roomDetails.CategoryName,
+                TotalPrice = roomDetails.CategoryPrice * daysCount
             };
 
             return View(model);
@@ -53,11 +57,9 @@
             }
 
             inputModel.MaxGuests = roomDetails.CategoryBeds;
-
-            if (!ModelState.IsValid)
-            {
-                return this.View(inputModel);
-            }
+            var daysCount = (inputModel.DateDeparture.ToDateTime(TimeOnly.MinValue) - inputModel.DateArrival.ToDateTime(TimeOnly.MinValue)).Days;
+            inputModel.RoomCategoryName = roomDetails.CategoryName;
+            inputModel.TotalPrice = roomDetails.CategoryPrice * daysCount;
 
             if (inputModel.DateArrival < DateOnly.FromDateTime(DateTime.UtcNow))
             {
@@ -69,6 +71,11 @@
             {
                 ModelState.AddModelError(nameof(inputModel.DateDeparture), ValidationMessages.Booking.DateDepartureBeforeArrivalMessage);
                 return View(inputModel);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return this.View(inputModel);
             }
 
             try

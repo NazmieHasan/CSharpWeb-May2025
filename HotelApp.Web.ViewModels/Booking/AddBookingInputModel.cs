@@ -27,5 +27,9 @@
         public int BabyCount { get; set; }
 
         public int MaxGuests { get; set; }
+
+        public string? RoomCategoryName { get; set; }
+
+        public decimal TotalPrice { get; set; }
     }
 }

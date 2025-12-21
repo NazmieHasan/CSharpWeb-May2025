@@ -1,14 +1,17 @@
 namespace HotelApp.Web.Controllers
 {
     using System.Diagnostics;
-    using HotelApp.Services.Core.Interfaces;
-    using HotelApp.Web.ViewModels;
-    using HotelApp.Web.ViewModels.Room;
-    using HotelApp.Web.ViewModels.Category;
+
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
+    using Services.Core.Interfaces;
+    using Web.ViewModels;
+    using Web.ViewModels.Room;
+    using Web.ViewModels.Category;
+    
     using static GCommon.ApplicationConstants;
+    using static Web.ViewModels.ValidationMessages;
 
     public class HomeController : BaseController
     {
@@ -61,6 +64,13 @@ namespace HotelApp.Web.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
+            var daysBooked = (inputModel.DateDeparture.DayNumber - inputModel.DateArrival.DayNumber);
+            if (daysBooked > 100)
+            {
+                TempData["ErrorMessage"] = Booking.AllowedMaxDaysCount;
+                return RedirectToAction(nameof(Index));
+            }
+
             var rooms = await this.roomService.FindRoomByDateArrivaleAndDateDepartureAsync(inputModel);
 
             var resultModel = new FindRoomResultViewModel
@@ -70,7 +80,7 @@ namespace HotelApp.Web.Controllers
                 Rooms = rooms.ToList()
             };
 
-            return View("FindRoom", resultModel);
+            return View("FindRoomResult", resultModel);
         }
 
         [HttpGet]
@@ -122,6 +132,13 @@ namespace HotelApp.Web.Controllers
                 return View("FindRoomByCategory", inputModel);
             }
 
+            var daysBooked = (inputModel.DateDeparture.DayNumber - inputModel.DateArrival.DayNumber);
+            if (daysBooked > 100)
+            {
+                TempData["ErrorMessage"] = Booking.AllowedMaxDaysCount;
+                return View("FindRoomByCategory", inputModel);
+            }
+
             var room = await this.roomService
                 .FindRoomByDateArrivaleDateDepartureAndCategoryAsync(inputModel);
 
@@ -136,7 +153,7 @@ namespace HotelApp.Web.Controllers
                 Rooms = room != null ? new List<AllRoomsIndexViewModel> { room } : new List<AllRoomsIndexViewModel>()
             };
 
-            return View("FindRoom", resultModel);
+            return View("FindRoomResult", resultModel);
         }
 
         public IActionResult Privacy()

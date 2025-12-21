@@ -43,7 +43,8 @@
                     {
                         Id = r.Id.ToString(),
                         Name = r.Name,
-                        Category = r.Category.Name,
+                        CategoryName = r.Category.Name,
+                        CategoryPrice = r.Category.Price,
                         CategoryBeds = r.Category.Beds
                     })
                     .SingleOrDefaultAsync();
