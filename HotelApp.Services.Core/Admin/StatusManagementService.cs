@@ -8,6 +8,7 @@
 
     using HotelApp.Web.ViewModels.Admin.StatusManagement;
     using HotelApp.Web.ViewModels.Admin.BookingManagement;
+    using HotelApp.Web.ViewModels;
 
 
     public class StatusManagementService : IStatusManagementService
@@ -57,6 +58,16 @@
 
         public async Task AddStatusManagementAsync(StatusManagementFormInputModel inputModel)
         {
+            var existingStatus = await this.statusRepository
+                .GetAllAttached()
+                .AsNoTracking()
+                .FirstOrDefaultAsync(s => s.Name.ToLower() == inputModel.Name.ToLower());
+
+            if (existingStatus != null)
+            {
+                throw new InvalidOperationException(ValidationMessages.Status.NameAlreadyExistsMessage);
+            }
+
             Status newStatus = new Status()
             {
                 Name = inputModel.Name

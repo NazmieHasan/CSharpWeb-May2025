@@ -31,6 +31,7 @@
             public const string NameRequiredMessage = "Name is required.";
             public const string NameMinLengthMessage = "Name must be at least 1 character.";
             public const string NameMaxLengthMessage = "Name cannot exceed 5 characters.";
+            public const string NameAlreadyExistsMessage = "A room with this name already exists.";
 
             public const string CategoryRequiredMessage = "Please select a category.";
 
@@ -60,6 +61,8 @@
             public const string NameRequiredMessage = "Name is required.";
             public const string NameMinLengthMessage = "Name must be at least 3 characters.";
             public const string NameMaxLengthMessage = "Name cannot exceed 30 characters.";
+            public const string NameAlreadyExistsMessage = "A status with this name already exists.";
+
             public const string ServiceCreateError =
                 "Fatal error occurred while adding your status! Please try again later!";
         }
@@ -70,6 +73,7 @@
             public const string NameRequiredMessage = "Name is required.";
             public const string NameMinLengthMessage = "Name must be at least 3 characters.";
             public const string NameMaxLengthMessage = "Name cannot exceed 30 characters.";
+            public const string NameAlreadyExistsMessage = "A payment method with this name already exists.";
             public const string ServiceCreateError =
                 "Fatal error occurred while adding your payment method! Please try again later!";
         }
@@ -83,11 +87,20 @@
             public const string PaymentMethodRequiredMessage = "Please select a payment method.";
         }
 
+        public static class Guest
+        {
+            public const string GuestEmailRequiredMessage = "Guest email is required.";
+            public const string GuestEmailInvalidMessage = "Please enter a valid email address.";
+            public const string GuestExistMessage = "Guest with this email exists.";
+            public const string GuestCreateUnexpectedErrorMessage = "Unexpected error occurred while guest! Please try again.";
+        }
+
         public static class Stay
         {
             public const string GuestEmailRequiredMessage = "Guest email is required.";
             public const string GuestEmailInvalidMessage = "Please enter a valid email address.";
             public const string GuestEmailNotFoundMessage = "Guest with this email was not found.";
+            public const string GuestEmailExistMessage = "Guest with this email exists in the current booking room.";
         }
 
         public static class Manager

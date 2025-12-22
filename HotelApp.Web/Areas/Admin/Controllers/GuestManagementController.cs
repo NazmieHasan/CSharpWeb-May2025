@@ -47,6 +47,11 @@
 
                 return this.RedirectToAction(nameof(Index));
             }
+            catch (InvalidOperationException ex)
+            {
+                this.ModelState.AddModelError(nameof(inputModel.Email), ex.Message);
+                return this.View(inputModel);
+            }
             catch (Exception e)
             {
                 // TODO: Implement it with the ILogger
@@ -116,6 +121,11 @@
                     TempData[SuccessMessageKey] = "Guest updated successfully!";
                     return this.RedirectToAction(nameof(Index));
                 }
+            }
+            catch (InvalidOperationException ex)
+            {
+                this.ModelState.AddModelError(nameof(inputModel.Email), ex.Message);
+                return this.View(inputModel);
             }
             catch (Exception e)
             {

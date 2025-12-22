@@ -10,7 +10,7 @@
     using Web.ViewModels.Admin.BookingManagement;
 
     using static GCommon.ApplicationConstants;
-    using static HotelApp.Web.ViewModels.ValidationMessages.Room;
+    using HotelApp.Web.ViewModels;
     using HotelApp.GCommon;
 
     public class RoomManagementService : IRoomManagementService
@@ -28,6 +28,16 @@
         public async Task<bool> AddRoomManagementAsync(AddRoomManagementInputModel inputModel)
         {
             bool opRes = false;
+
+            var existingRoom = await this.roomRepository
+                .GetAllAttached()
+                .AsNoTracking()
+                .FirstOrDefaultAsync(r => r.Name.ToLower() == inputModel.Name.ToLower());
+
+            if (existingRoom != null)
+            {
+                throw new InvalidOperationException(ValidationMessages.Room.NameAlreadyExistsMessage);
+            }
 
             Category? catRef = await this.categoryRepository
                 .GetAllAttached()
@@ -150,6 +160,18 @@
             if (editableRoom == null)
             {
                 return false;
+            }
+
+            var existingRoom = await this.roomRepository
+                .GetAllAttached()
+                .AsNoTracking()
+                .FirstOrDefaultAsync(r =>
+                    r.Name.ToLower() == inputModel.Name.ToLower() &&
+                    r.Id.ToString() != inputModel.Id);
+
+            if (existingRoom != null)
+            {
+                throw new InvalidOperationException(ValidationMessages.Room.NameAlreadyExistsMessage);
             }
 
             editableRoom.Name = inputModel.Name;

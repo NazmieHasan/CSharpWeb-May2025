@@ -74,11 +74,13 @@
         {
             try
             {
+                inputModel.Categories = await this.categoryService.GetCategoriesDropDownDataAsync();
+
                 if (!this.ModelState.IsValid)
                 {
                     return this.View(inputModel);
                 }
-
+                
                 bool addResult = await this.roomService
                     .AddRoomManagementAsync(inputModel);
 
@@ -88,6 +90,11 @@
                 }
 
                 return this.RedirectToAction(nameof(Index));
+            }
+            catch (InvalidOperationException ex)
+            {
+                this.ModelState.AddModelError(nameof(inputModel.Name), ex.Message);
+                return this.View(inputModel);
             }
             catch (Exception e)
             {
@@ -152,6 +159,8 @@
         {
             try
             {
+                inputModel.Categories = await this.categoryService.GetCategoriesDropDownDataAsync();
+
                 if (!this.ModelState.IsValid)
                 {
                     return this.View(inputModel);
@@ -167,6 +176,11 @@
                 }
 
                 return this.RedirectToAction(nameof(Details), new { id = inputModel.Id });
+            }
+            catch (InvalidOperationException ex)
+            {
+                this.ModelState.AddModelError(nameof(inputModel.Name), ex.Message);
+                return this.View(inputModel);
             }
             catch (Exception e)
             {

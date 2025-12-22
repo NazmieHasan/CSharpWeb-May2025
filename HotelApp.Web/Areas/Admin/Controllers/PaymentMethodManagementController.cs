@@ -48,6 +48,11 @@
 
                 return this.RedirectToAction(nameof(Index));
             }
+            catch (InvalidOperationException ex)
+            {
+                this.ModelState.AddModelError(nameof(inputModel.Name), ex.Message);
+                return this.View(inputModel);
+            }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
@@ -96,6 +101,11 @@
                 }
 
                 return this.RedirectToAction(nameof(Index));
+            }
+            catch (InvalidOperationException ex)
+            {
+                ModelState.AddModelError(nameof(inputModel.Name), ex.Message);
+                return View(inputModel);
             }
             catch (Exception e)
             {

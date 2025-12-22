@@ -125,7 +125,8 @@
                     Stays = b.Stays.Select(s => new StayManagementDetailsViewModel
                     {
                         Id = s.Id,
-                        GuestEmail = s.Guest.Email,
+                        GuestFirstName = s.Guest.FirstName,
+                        GuestFamilyName = s.Guest.FamilyName,
                         CreatedOn = s.CreatedOn,
                         CheckoutOn = s.CheckoutOn,
                         IsDeleted = s.IsDeleted

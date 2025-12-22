@@ -84,6 +84,11 @@
                     redirectUrl = Url.Action("Details", "BookingManagement", new { id = inputModel.BookingId })
                 });
             }
+            catch (InvalidOperationException ex)
+            {
+                this.ModelState.AddModelError(nameof(inputModel.GuestEmail), ex.Message);
+                return PartialView("_Create", inputModel);
+            }
             catch (Exception e)
             {
                 ModelState.AddModelError(nameof(inputModel.GuestEmail), e.Message);

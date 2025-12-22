@@ -56,6 +56,16 @@
                 throw new ArgumentException(ValidationMessages.Stay.GuestEmailNotFoundMessage);
             }
 
+            bool guestAlreadyInBooking = await this.stayRepository
+                .GetAllAttached()
+                .AnyAsync(s => s.BookingId == inputModel.BookingId
+                       && s.GuestId == guest.Id);
+
+            if (guestAlreadyInBooking)
+            {
+                throw new InvalidOperationException(ValidationMessages.Stay.GuestEmailExistMessage);
+            }
+
             var newStay = new Stay
             {
                 BookingId = inputModel.BookingId,

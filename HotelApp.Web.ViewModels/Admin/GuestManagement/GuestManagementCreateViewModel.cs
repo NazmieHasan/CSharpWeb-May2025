@@ -16,7 +16,8 @@
         [Display(Name = "Phone Number")]
         public string PhoneNumber { get; set; } = null!;
 
-        [Required]
+        [Required(ErrorMessage = ValidationMessages.Guest.GuestEmailRequiredMessage)]
+        [EmailAddress(ErrorMessage = ValidationMessages.Guest.GuestEmailInvalidMessage)]
         public string Email { get; set; } = null!;
 
         [Required]

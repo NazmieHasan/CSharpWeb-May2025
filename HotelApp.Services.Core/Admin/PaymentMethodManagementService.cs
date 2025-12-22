@@ -9,7 +9,7 @@
     using HotelApp.Web.ViewModels.Admin.PaymentMethodManagement;
     using HotelApp.Web.ViewModels.Admin.PaymentManagement;
     using System;
-    using HotelApp.Web.ViewModels.Admin.CategoryManagement;
+    using HotelApp.Web.ViewModels;
 
     public class PaymentMethodManagementService : IPaymentMethodManagementService
     {
@@ -58,6 +58,16 @@
 
         public async Task AddPaymentMethodManagementAsync(PaymentMethodManagementFormInputModel inputModel)
         {
+            var existingPaymentMethod = await this.paymentMethodRepository
+                .GetAllAttached()
+                .AsNoTracking()
+                .FirstOrDefaultAsync(p => p.Name.ToLower() == inputModel.Name.ToLower());
+
+            if (existingPaymentMethod != null)
+            {
+                throw new InvalidOperationException(ValidationMessages.PaymentMethod.NameAlreadyExistsMessage);
+            }
+
             PaymentMethod newPaymentMethod = new PaymentMethod()
             {
                 Name = inputModel.Name
@@ -95,6 +105,18 @@
             if (editablePaymentMethod == null)
             {
                 return false;
+            }
+
+            var existingPaymentMethod = await this.paymentMethodRepository
+                .GetAllAttached()
+                .AsNoTracking()
+                .FirstOrDefaultAsync(p =>
+                    p.Name.ToLower() == inputModel.Name.ToLower() &&
+                    p.Id != inputModel.Id);
+
+            if (existingPaymentMethod != null)
+            {
+                throw new InvalidOperationException(ValidationMessages.PaymentMethod.NameAlreadyExistsMessage);
             }
 
             editablePaymentMethod.Name = inputModel.Name;

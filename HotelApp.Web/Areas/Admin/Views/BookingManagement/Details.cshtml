@@ -69,11 +69,11 @@
             </div>
 
 
-            <h4 class="mt-4 fw-bold text-secondary">Payment History</h4>
+            <h4 class="mt-5 fw-bold text-secondary">Payment History</h4>
 
             @if (Model.Payments != null && Model.Payments.Any())
             {
-                <table class="table table-dark table-striped mt-3">
+                <table class="table table-dark table-striped mt-3 mb-5">
                     <thead>
                         <tr>
                             <th>Date</th>
@@ -101,7 +101,7 @@
                                     <a asp-controller="PaymentManagement"
                                        asp-action="Details"
                                        asp-route-id="@payment.Id"
-                                       class="text-info fw-bold">
+                                       class="text-info fw-bold" target="_blank">
                                         Details
                                     </a>
                                 </td>
@@ -116,14 +116,14 @@
             }
 
 
-            <h4 class="mt-4 fw-bold text-secondary">Stay History</h4>
+            <h4 class="mt-5 fw-bold text-secondary">Stay History</h4>
 
             @if (Model.Stays != null && Model.Stays.Any())
             {
-                <table class="table table-dark table-striped mt-3">
+                <table class="table table-dark table-striped mt-3 mb-5">
                     <thead>
                         <tr>
-                            <th>Guest Email</th>
+                            <th>Guest Name and Family</th>
                             <th>Created On</th>
                             <th>Is Completed</th>
                             <th>Is Deleted</th>
@@ -134,7 +134,7 @@
                         @foreach (var stay in Model.Stays)
                         {
                             <tr>
-                                <td>@stay.GuestEmail</td>
+                                <td>@stay.GuestFirstName @stay.GuestFamilyName</td>
                                 <td>@stay.CreatedOn.ToString("yyyy-MM-dd HH:mm")</td>
                                 <td>
                                     @if (stay.CheckoutOn == null)
@@ -143,7 +143,7 @@
                                         <form method="post" asp-action="Edit" asp-controller="StayManagement" class="d-inline">
                                             <input type="hidden" name="Id" value="@stay.Id" />
                                             <input type="hidden" name="BookingId" value="@Guid.Parse(Model.Id)" />
-                                            <button type="submit" class="btn btn-danger btn-sm fw-bold ms-2">Check Out</button>
+                                            <button type="submit" class="btn btn-danger btn-sm m-0 fw-bold ms-2">Check Out</button>
                                         </form>
                                     }
                                     else
@@ -159,7 +159,7 @@
                                     <a asp-controller="StayManagement"
                                        asp-action="Details"
                                        asp-route-id="@stay.Id"
-                                       class="text-info fw-bold">
+                                       class="text-info fw-bold" target="_blank">
                                         Details
                                     </a>
                                 </td>

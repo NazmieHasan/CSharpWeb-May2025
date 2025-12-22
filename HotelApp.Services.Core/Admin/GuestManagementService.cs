@@ -7,7 +7,7 @@
     using Interfaces;
     using Web.ViewModels.Admin.GuestManagement;
     using HotelApp.Web.ViewModels.Admin.StayManagement;
-    using HotelApp.Web.ViewModels.Admin.BookingManagement;
+    using HotelApp.Web.ViewModels;
 
     public class GuestManagementService : IGuestManagementService
     {
@@ -20,6 +20,15 @@
 
         public async Task AddGuestManagementAsync(GuestManagementCreateViewModel inputModel)
         {
+            var guest = await this.guestRepository
+                .GetAllAttached()
+                .FirstOrDefaultAsync(g => g.Email == inputModel.Email);
+
+            if (guest != null)
+            {
+                throw new InvalidOperationException(ValidationMessages.Guest.GuestExistMessage);
+            }
+
             Guest newGuest = new Guest()
             {
                 FirstName = inputModel.FirstName,
@@ -123,12 +132,26 @@
         public async Task<bool> EditGuestAsync(GuestManagementEditViewModel? inputModel)
         {
             bool result = false;
+
             if (inputModel != null)
             {
                 Guest? guestToEdit = await this.guestRepository
                         .SingleOrDefaultAsync(g => g.Id.ToString().ToLower() == inputModel.Id.ToLower());
+                
                 if (guestToEdit != null)
                 {
+                    var existingGuest = await this.guestRepository
+                        .GetAllAttached()
+                        .AsNoTracking()
+                        .FirstOrDefaultAsync(g =>
+                            g.Email.ToLower() == inputModel.Email.ToLower() &&
+                            g.Id.ToString() != inputModel.Id);
+
+                    if (existingGuest != null)
+                    {
+                        throw new InvalidOperationException(ValidationMessages.Guest.GuestExistMessage);
+                    }
+
                     guestToEdit.FirstName = inputModel.FirstName;
                     guestToEdit.FamilyName = inputModel.FamilyName;
                     guestToEdit.PhoneNumber = inputModel.PhoneNumber;
@@ -139,6 +162,7 @@
                         .UpdateAsync(guestToEdit);
                 }
             }
+
             return result;
         }
 
