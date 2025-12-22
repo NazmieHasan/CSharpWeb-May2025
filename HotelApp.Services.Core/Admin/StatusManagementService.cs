@@ -14,10 +14,13 @@
     public class StatusManagementService : IStatusManagementService
     {
         private readonly IStatusRepository statusRepository;
+        private readonly IBookingRepository bookingRepository;
 
-        public StatusManagementService(IStatusRepository statusRepository)
+        public StatusManagementService(IStatusRepository statusRepository,
+            IBookingRepository bookingRepository)
         {
             this.statusRepository = statusRepository;
+            this.bookingRepository = bookingRepository;
         }
 
         public async Task<IEnumerable<StatusManagementIndexViewModel>> GetStatusManagementBoardDataAsync()
@@ -54,6 +57,42 @@
                 .ToArrayAsync();
 
             return statusesAsDropDown;
+        }
+
+        public async Task<IEnumerable<AddBookingStatusDropDownModel>> GetAllowedStatusesAsync(int currentStatusId, DateOnly dateDeparture, string bookingIdString)
+        {
+            var allStatuses = await this.GetStatusesDropDownDataAsync();
+            var today = DateOnly.FromDateTime(DateTime.UtcNow);
+
+            if (!Guid.TryParse(bookingIdString, out Guid bookingId))
+            {
+                return Enumerable.Empty<AddBookingStatusDropDownModel>();
+            }
+
+            var booking = await bookingRepository
+                .GetAllAttached()
+                .Include(b => b.Status)
+                .Include(b => b.Stays)
+                .FirstOrDefaultAsync(b => b.Id == bookingId);
+
+            return currentStatusId switch
+            {
+                // Awaiting Payment = 1
+                1 => allStatuses.Where(s => s.Name == "Cancelled"),
+
+                // For Implementation = 3
+                3 => allStatuses.Where(s =>
+                    (s.Name == "Cancelled" && today < dateDeparture) ||
+                    (s.Name == "Done - No Guests" && dateDeparture == today)),
+
+                // In Progress = 4
+                4 => allStatuses.Where(s =>
+                    (s.Name == "Done - Partial Attendance" && dateDeparture == today &&
+                    booking.Stays.Count < (booking.AdultsCount + booking.ChildCount + booking.BabyCount))
+                    || s.Id == currentStatusId),
+
+                _ => allStatuses.Where(s => s.Id == currentStatusId)
+            };
         }
 
         public async Task AddStatusManagementAsync(StatusManagementFormInputModel inputModel)

@@ -1,28 +1,31 @@
 ﻿namespace HotelApp.Services.Core.Admin
 {
-    using Microsoft.AspNetCore.Identity;
-    using Microsoft.EntityFrameworkCore;
-
     using Data.Models;
     using Data.Repository.Interfaces;
+    using HotelApp.GCommon;
+    using HotelApp.Web.ViewModels.Admin.PaymentManagement;
     using Interfaces;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.EntityFrameworkCore;
     using Web.ViewModels.Admin.BookingManagement;
     using Web.ViewModels.Admin.StayManagement;
-    using HotelApp.Web.ViewModels.Admin.PaymentManagement;
-    using HotelApp.GCommon;
 
     public class BookingManagementService : IBookingManagementService
     {
         private readonly IBookingRepository bookingRepository;
         private readonly IManagerRepository managerRepository;
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly IStatusManagementService statusService;
 
         public BookingManagementService(IBookingRepository bookingRepository,
-            IManagerRepository managerRepository, UserManager<ApplicationUser> userManager)
+            IManagerRepository managerRepository,
+            UserManager<ApplicationUser> userManager,
+            IStatusManagementService statusService)
         {
             this.bookingRepository = bookingRepository;
             this.managerRepository = managerRepository;
             this.userManager = userManager;
+            this.statusService = statusService;
         }
 
         public async Task<Booking?> FindBookingByIdAsync(Guid id)
@@ -161,7 +164,6 @@
             return bookingDetails;
         }
 
-
         public async Task<BookingManagementEditFormModel?> GetBookingEditFormModelAsync(string? id)
         {
             BookingManagementEditFormModel? formModel = null;
@@ -182,6 +184,7 @@
                         AdultsCount = bookingToEdit.AdultsCount,
                         ChildCount = bookingToEdit.ChildCount,
                         BabyCount = bookingToEdit.BabyCount,
+                        DateDeparture = bookingToEdit.DateDeparture,
                         ManagerEmail = bookingToEdit.Manager != null ?
                             bookingToEdit.Manager.User.Email ?? string.Empty : string.Empty,
                         StatusId = bookingToEdit.StatusId
@@ -204,11 +207,21 @@
                     Manager? manager = await this.managerRepository
                         .GetAllAttached()
                         .SingleOrDefaultAsync(m => m.UserId.ToLower() == managerUser.Id.ToLower());
+
                     Booking? bookingToEdit = await this.bookingRepository
-                        .SingleOrDefaultAsync(c => c.Id.ToString().ToLower() == inputModel.Id.ToLower());
+                        .SingleOrDefaultAsync(b => b.Id.ToString().ToLower() == inputModel.Id.ToLower());
+                    
                     if (manager != null &&
                         bookingToEdit != null)
                     {
+                        var allowedStatuses = await this.statusService
+                            .GetAllowedStatusesAsync(bookingToEdit.StatusId, bookingToEdit.DateDeparture, bookingToEdit.Id.ToString());
+
+                        if (!allowedStatuses.Any(s => s.Id == inputModel.StatusId))
+                        {
+                            return false;
+                        }
+
                         bookingToEdit.AdultsCount = inputModel.AdultsCount;
                         bookingToEdit.ChildCount = inputModel.ChildCount;
                         bookingToEdit.BabyCount = inputModel.BabyCount;

@@ -89,7 +89,7 @@
             editFormModel.AppManagerEmails = await this.userService
                 .GetManagerEmailsAsync();
 
-            editFormModel.Statuses = await this.statusService.GetStatusesDropDownDataAsync();
+            editFormModel.Statuses = await this.statusService.GetAllowedStatusesAsync(editFormModel.StatusId, editFormModel.DateDeparture, editFormModel.Id);
 
             return this.View(editFormModel);
         }
@@ -97,6 +97,20 @@
         [HttpPost]
         public async Task<IActionResult> Edit(BookingManagementEditFormModel inputModel)
         {
+            BookingManagementEditFormModel? booking = await this.bookingService
+                .GetBookingEditFormModelAsync(inputModel.Id);
+
+            if (booking == null)
+            {
+                TempData[ErrorMessageKey] = "Selected Booking does not exist!";
+                return RedirectToAction(nameof(Index));
+            }
+
+            inputModel.AppManagerEmails = await this.userService.GetManagerEmailsAsync();
+
+            inputModel.Statuses = await this.statusService
+                .GetAllowedStatusesAsync(booking.StatusId, booking.DateDeparture, booking.Id);
+
             if (!ModelState.IsValid)
             {
                 return this.View(inputModel);
@@ -106,8 +120,14 @@
             {
                 if (string.IsNullOrWhiteSpace(inputModel.ManagerEmail))
                 {
-                    TempData[ErrorMessageKey] = "Please select a manager!";
-                    return this.RedirectToAction(nameof(Edit));
+                    ModelState.AddModelError(nameof(inputModel.ManagerEmail), "Please select a manager!");
+                    return View(inputModel);
+                }
+
+                if (!inputModel.Statuses.Any(s => s.Id == inputModel.StatusId))
+                {
+                    ModelState.AddModelError(nameof(inputModel.StatusId), "Selected status is not allowed for the current booking state.");
+                    return View(inputModel);
                 }
 
                 bool success = await this.bookingService
@@ -115,12 +135,12 @@
                 if (!success)
                 {
                     TempData[ErrorMessageKey] = "Error occurred while updating the booking! Ensure to select a valid manager!";
-                    return this.RedirectToAction(nameof(Edit));
+                    return RedirectToAction(nameof(Edit), new { id = inputModel.Id });
                 }
                 else
                 {
                     TempData[SuccessMessageKey] = "Booking updated successfully!";
-                    return this.RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(Details), new { id = inputModel.Id });
                 }
             }
             catch (Exception e)

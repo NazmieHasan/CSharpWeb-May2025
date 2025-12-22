@@ -23,6 +23,8 @@
 
         public string? ManagerEmail { get; set; }
 
+        public DateOnly DateDeparture { get; set; }
+
         [Required(ErrorMessage = StatusRequiredMessage)]
         [Display(Name = "Status")]
         public int StatusId { get; set; }

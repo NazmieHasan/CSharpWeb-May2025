@@ -7,6 +7,8 @@
     {
         Task<IEnumerable<StatusManagementIndexViewModel>> GetStatusManagementBoardDataAsync();
 
+        Task<IEnumerable<AddBookingStatusDropDownModel>> GetAllowedStatusesAsync(int currentStatusId, DateOnly dateDeparture, string bookingIdString);
+
         Task AddStatusManagementAsync(StatusManagementFormInputModel inputModel);
 
         Task<IEnumerable<AddBookingStatusDropDownModel>> GetStatusesDropDownDataAsync();
