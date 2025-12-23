@@ -179,8 +179,21 @@
             }
             catch (InvalidOperationException ex)
             {
-                this.ModelState.AddModelError(nameof(inputModel.Name), ex.Message);
-                return this.View(inputModel);
+                if (ex.Message == ValidationMessages.Room.CategoryRequiredMessage ||
+                    ex.Message == ValidationMessages.Room.CategoryCannotBeChangedMessage)
+                {
+                    ModelState.AddModelError(nameof(inputModel.CategoryId), ex.Message);
+                }
+                else if (ex.Message == ValidationMessages.Room.NameAlreadyExistsMessage)
+                {
+                    ModelState.AddModelError(nameof(inputModel.Name), ex.Message);
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                }
+
+                return View(inputModel);
             }
             catch (Exception e)
             {

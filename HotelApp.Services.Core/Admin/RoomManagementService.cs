@@ -17,12 +17,15 @@
     {
         private readonly IRoomRepository roomRepository;
         private readonly ICategoryRepository categoryRepository;
+        private readonly IBookingRepository bookingRepository;
 
         public RoomManagementService(IRoomRepository roomRepository, 
-            ICategoryRepository categoryRepository)
+            ICategoryRepository categoryRepository,
+            IBookingRepository bookingRepository)
         {
             this.roomRepository = roomRepository;
             this.categoryRepository = categoryRepository;
+            this.bookingRepository = bookingRepository;
         }
 
         public async Task<bool> AddRoomManagementAsync(AddRoomManagementInputModel inputModel)
@@ -174,8 +177,32 @@
                 throw new InvalidOperationException(ValidationMessages.Room.NameAlreadyExistsMessage);
             }
 
+            if (editableRoom.CategoryId != inputModel.CategoryId)
+            {
+                var newCategory = await this.categoryRepository
+                    .GetAllAttached()
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(c => c.Id == inputModel.CategoryId);
+
+                if (newCategory == null)
+                {
+                    throw new InvalidOperationException(ValidationMessages.Room.CategoryRequiredMessage);
+                }
+
+                bool hasConflictingBookings = await this.bookingRepository
+                    .GetAllAttached()
+                    .Where(b => b.RoomId == editableRoom.Id)
+                    .AnyAsync(b => (b.AdultsCount + b.ChildCount + b.BabyCount) > newCategory.Beds + 1);
+
+                if (hasConflictingBookings)
+                {
+                    throw new InvalidOperationException(ValidationMessages.Room.CategoryCannotBeChangedMessage);
+                }
+
+                editableRoom.CategoryId = inputModel.CategoryId;
+            }
+
             editableRoom.Name = inputModel.Name;
-            editableRoom.CategoryId = inputModel.CategoryId;
 
             await this.roomRepository.UpdateAsync(editableRoom);
 

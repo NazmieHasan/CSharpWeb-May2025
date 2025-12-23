@@ -35,6 +35,7 @@
             public const string NameAlreadyExistsMessage = "A room with this name already exists.";
 
             public const string CategoryRequiredMessage = "Please select a category.";
+            public const string CategoryCannotBeChangedMessage = "Cannot change the room category because existing bookings exceed the new category bed count.";
 
             public const string ServiceCreateError =
                 "Fatal error occurred while adding your category! Please try again later!";
