@@ -14,10 +14,12 @@
     public class CategoryManagementService : ICategoryManagementService
     {
         private readonly ICategoryRepository categoryRepository;
+        private readonly IBookingRepository bookingRepository;
 
-        public CategoryManagementService(ICategoryRepository categoryRepository)
+        public CategoryManagementService(ICategoryRepository categoryRepository, IBookingRepository bookingRepository)
         {
             this.categoryRepository = categoryRepository;
+            this.bookingRepository = bookingRepository;
         }
 
         public async Task<IEnumerable<CategoryManagementIndexViewModel>> GetCategoryManagementBoardDataAsync()
@@ -136,6 +138,20 @@
             if (existingCategory != null)
             {
                 throw new InvalidOperationException(ValidationMessages.Category.NameAlreadyExistsMessage);
+            }
+
+            if (inputModel.Beds < editableCat.Beds)
+            {
+                bool hasConflictingBookings = await this.bookingRepository
+                    .GetAllAttached()
+                    .Include(b => b.Room) 
+                        .Where(b => b.Room.CategoryId == editableCat.Id)
+                        .AnyAsync(b => (b.AdultsCount + b.ChildCount + b.BabyCount) > inputModel.Beds + 1);
+
+                if (hasConflictingBookings)
+                {
+                    throw new InvalidOperationException(ValidationMessages.Category.BedsCannotBeReducedMessage);
+                }
             }
 
             editableCat.Name = inputModel.Name;

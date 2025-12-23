@@ -11,6 +11,7 @@
 
     using static ViewModels.ValidationMessages.Category;
     using static GCommon.ApplicationConstants;
+    using HotelApp.Web.ViewModels;
 
     public class CategoryManagementController : BaseAdminController
     {
@@ -185,7 +186,19 @@
             }
             catch (InvalidOperationException ex)
             {
-                ModelState.AddModelError(nameof(inputModel.Name), ex.Message);
+                if (ex.Message == ValidationMessages.Category.NameAlreadyExistsMessage)
+                {
+                    ModelState.AddModelError(nameof(inputModel.Name), ex.Message);
+                }
+                else if (ex.Message == ValidationMessages.Category.BedsCannotBeReducedMessage)
+                {
+                    ModelState.AddModelError(nameof(inputModel.Beds), ex.Message);
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                }
+
                 return View(inputModel);
             }
             catch (Exception e)

@@ -18,6 +18,7 @@
 
             public const string BedsRequiredMessage = "Beds count is required.";
             public const string BedsRangeMessage = "Beds count must be between 1 and 10.";
+            public const string BedsCannotBeReducedMessage = "Cannot reduce the number of beds below existing bookings' occupancy.";
 
             public const string ImageUrlMaxLengthMessage = "Image URL cannot exceed 2048 characters.";
 
