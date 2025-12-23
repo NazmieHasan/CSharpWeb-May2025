@@ -16,7 +16,6 @@
         public DateOnly DateDeparture { get; set; }
 
         [Required(ErrorMessage = AdultRequiredMessage)]
-        [Range(1, 4, ErrorMessage = AdultsMinCountMessage)]
         [Display(Name = "Number of Adults")]
         public int AdultsCount { get; set; }
 

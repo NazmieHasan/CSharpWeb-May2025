@@ -9,7 +9,6 @@
         public string Id { get; set; } = null!;
 
         [Required(ErrorMessage = AdultRequiredMessage)]
-        [Range(1, 4, ErrorMessage = AdultsMinCountMessage)]
         [Display(Name = "Number of Adults")]
         public int AdultsCount { get; set; }
 
@@ -31,5 +30,7 @@
 
         public IEnumerable<AddBookingStatusDropDownModel> Statuses { get; set; } =
             new List<AddBookingStatusDropDownModel>();
+
+        public int MaxGuests { get; set; }
     }
 }

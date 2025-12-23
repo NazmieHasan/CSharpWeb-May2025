@@ -111,6 +111,8 @@
             inputModel.Statuses = await this.statusService
                 .GetAllowedStatusesAsync(booking.StatusId, booking.DateDeparture, booking.Id);
 
+            inputModel.MaxGuests = booking.MaxGuests;
+
             if (!ModelState.IsValid)
             {
                 return this.View(inputModel);

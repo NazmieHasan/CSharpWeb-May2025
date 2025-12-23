@@ -171,8 +171,10 @@
             {
                 Booking? bookingToEdit = await this.bookingRepository
                     .GetAllAttached()
+                    .Include(b => b.Room)         
+                        .ThenInclude(r => r.Category)
                     .Include(b => b.Manager)
-                    .ThenInclude(m => m.User)
+                        .ThenInclude(m => m.User)
                     .IgnoreQueryFilters()
                     .AsNoTracking()
                     .SingleOrDefaultAsync(b => b.Id.ToString().ToLower() == id.ToLower());
@@ -187,7 +189,8 @@
                         DateDeparture = bookingToEdit.DateDeparture,
                         ManagerEmail = bookingToEdit.Manager != null ?
                             bookingToEdit.Manager.User.Email ?? string.Empty : string.Empty,
-                        StatusId = bookingToEdit.StatusId
+                        StatusId = bookingToEdit.StatusId,
+                        MaxGuests = bookingToEdit.Room.Category.Beds
                     };
                 }
             }

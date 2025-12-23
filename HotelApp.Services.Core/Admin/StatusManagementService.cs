@@ -78,12 +78,15 @@
             return currentStatusId switch
             {
                 // Awaiting Payment = 1
-                1 => allStatuses.Where(s => s.Name == "Cancelled"),
+                1 => allStatuses.Where(s => 
+                    (s.Name == "Cancelled")
+                    || s.Id == currentStatusId),
 
                 // For Implementation = 3
                 3 => allStatuses.Where(s =>
                     (s.Name == "Cancelled" && today < dateDeparture) ||
-                    (s.Name == "Done - No Guests" && dateDeparture == today)),
+                    (s.Name == "Done - No Guests" && dateDeparture == today)
+                    || s.Id == currentStatusId),
 
                 // In Progress = 4
                 4 => allStatuses.Where(s =>
