@@ -593,3 +593,13 @@ a:focus {
     cursor: pointer;
 }
 /* footer end */
+
+/* admin panel */
+.btn-success, .btn-primary, .btn-secondary {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+.table-dark {
+    margin-bottom: 0;
+}
+/* admin panel end */

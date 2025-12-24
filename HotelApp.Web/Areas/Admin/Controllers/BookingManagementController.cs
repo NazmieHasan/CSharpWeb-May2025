@@ -2,6 +2,7 @@
 {
     using HotelApp.GCommon;
     using HotelApp.Web.ViewModels.Admin.BookingManagement;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     using Services.Core.Admin.Interfaces;
@@ -174,6 +175,32 @@
             }
 
             return this.RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Search()
+        {
+            var model = new BookingManagementSearchViewModel
+            {
+                Search =
+                {
+                    Statuses = await statusService.GetStatusesDropDownDataAsync(),
+                },
+                HasSearched = false
+            }; 
+
+            return View(model);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> SearchResult(BookingManagementSearchViewModel model)
+        {
+            model.Results = await bookingService.SearchBookingAsync(model.Search);
+            model.Search.Statuses = await statusService.GetStatusesDropDownDataAsync();
+            model.HasSearched = true;
+
+            return View("Search", model);
         }
 
     }

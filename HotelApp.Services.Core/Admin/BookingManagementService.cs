@@ -266,5 +266,75 @@
 
             return new Tuple<bool, bool>(result, isRestored);
         }
+
+        public async Task<IEnumerable<BookingManagementSearchResultViewModel>> SearchBookingAsync(BookingManagementSearchInputModel inputModel)
+        {
+            var query = bookingRepository
+                .GetAllAttached()
+                .Include(b => b.Status)
+                .IgnoreQueryFilters()
+                .AsNoTracking()
+                .AsQueryable();
+
+            // Booking Id
+            if (!string.IsNullOrWhiteSpace(inputModel.Id)
+                && Guid.TryParse(inputModel.Id, out Guid bookingId))
+            {
+                query = query.Where(b => b.Id == bookingId);
+            }
+
+            // Created On
+            if (inputModel.CreatedOn.HasValue)
+            {
+                var createdDate = inputModel.CreatedOn.Value.Date;
+
+                query = query.Where(b =>
+                    b.CreatedOn.Date == createdDate);
+            }
+
+            // Date Arrival
+            if (inputModel.DateArrival != default)
+            {
+                query = query.Where(b =>
+                    b.DateArrival == inputModel.DateArrival);
+            }
+
+            // Date Departure
+            if (inputModel.DateDeparture != default)
+            {
+                query = query.Where(b =>
+                    b.DateDeparture == inputModel.DateDeparture);
+            }
+
+            // Status
+            if (inputModel.StatusId.HasValue)
+            {
+                query = query.Where(b =>
+                    b.StatusId == inputModel.StatusId.Value);
+            }
+
+            // IsDeleted
+            if (inputModel.IsDeleted.HasValue)
+            {
+                query = query.Where(b =>
+                    b.IsDeleted == inputModel.IsDeleted.Value);
+            }
+
+            var bookings = await query
+                .OrderByDescending(b => b.CreatedOn)
+                .Select(b => new BookingManagementSearchResultViewModel
+                {
+                    Id = b.Id.ToString(),
+                    CreatedOn = b.CreatedOn,
+                    DateArrival = b.DateArrival,
+                    DateDeparture = b.DateDeparture,
+                    Status = b.Status.Name,
+                    IsDeleted = b.IsDeleted
+                })
+                .ToListAsync();
+
+            return bookings;
+        }
+
     }
 }
