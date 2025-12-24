@@ -130,6 +130,7 @@
                         Id = s.Id,
                         GuestFirstName = s.Guest.FirstName,
                         GuestFamilyName = s.Guest.FamilyName,
+                        GuestAge = s.Guest.Age,
                         CreatedOn = s.CreatedOn,
                         CheckoutOn = s.CheckoutOn,
                         IsDeleted = s.IsDeleted

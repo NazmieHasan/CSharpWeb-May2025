@@ -15,5 +15,7 @@
         Task<bool> EditStayAsync(StayManagementEditFormModel? inputModel);
 
         Task<Tuple<bool, bool>> DeleteOrRestoreStayAsync(string? id);
+
+        Task<GuestAgeStatsViewModel> GetGuestAgeStatsAsync();
     }
 }

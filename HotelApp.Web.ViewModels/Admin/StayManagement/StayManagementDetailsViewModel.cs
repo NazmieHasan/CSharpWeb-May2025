@@ -10,6 +10,8 @@
 
         public string GuestFamilyName { get; set; } = null!;
 
+        public int GuestAge { get; set; }
+
         public string GuestEmail { get; set; } = null!;
 
         public DateTime CreatedOn { get; set; }

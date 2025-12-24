@@ -1,6 +1,6 @@
 ﻿namespace HotelApp.Data.Models
 {
-    using Microsoft.EntityFrameworkCore;
+    using System.ComponentModel.DataAnnotations.Schema;
 
     public class Guest
     {
@@ -22,6 +22,25 @@
         public string Email { get; set; } = null!;
 
         public DateOnly? BirthDate { get; set; }
+
+        [NotMapped]
+        public int Age
+        {
+            get
+            {
+                var today = DateOnly.FromDateTime(DateTime.UtcNow);
+                var birth = BirthDate!.Value;
+
+                int age = today.Year - birth.Year;
+
+                if (today < new DateOnly(today.Year, birth.Month, birth.Day))
+                {
+                    age--;
+                }
+
+                return age;
+            }
+        }
 
         public bool IsDeleted { get; set; }
 

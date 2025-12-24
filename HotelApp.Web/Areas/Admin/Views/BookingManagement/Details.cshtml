@@ -124,6 +124,7 @@
                     <thead>
                         <tr>
                             <th>Guest Name and Family</th>
+                            <th>Guest Age</th>
                             <th>Created On</th>
                             <th>Is Completed</th>
                             <th>Is Deleted</th>
@@ -135,6 +136,7 @@
                         {
                             <tr>
                                 <td>@stay.GuestFirstName @stay.GuestFamilyName</td>
+                                <td>@stay.GuestAge</td>
                                 <td>@stay.CreatedOn.ToString("yyyy-MM-dd HH:mm")</td>
                                 <td>
                                     @if (stay.CheckoutOn == null)

@@ -214,5 +214,35 @@
 
             return new Tuple<bool, bool>(result, isRestored);
         }
+
+        public async Task<GuestAgeStatsViewModel> GetGuestAgeStatsAsync()
+        {
+            var stays = await this.stayRepository
+                .GetAllAttached()
+                .Include(s => s.Guest)
+                .Where(s =>
+                    !s.IsDeleted &&
+                    s.CheckoutOn == null && 
+                    s.Guest != null &&
+                    !s.Guest.IsDeleted &&
+                    s.Guest.BirthDate.HasValue
+                )
+                .ToListAsync();
+
+            var uniqueGuests = stays
+                .GroupBy(s => s.Guest!.Id)
+                .Select(g => g.First().Guest!)
+                .ToList();
+
+            var stats = new GuestAgeStatsViewModel
+            {
+                Babies = uniqueGuests.Count(g => g.Age <= 3),
+                Children = uniqueGuests.Count(g => g.Age >= 4 && g.Age <= 17),
+                Adults = uniqueGuests.Count(g => g.Age >= 18)
+            };
+
+            return stats;
+        }
+
     }
 }

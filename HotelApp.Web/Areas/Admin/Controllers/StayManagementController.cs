@@ -27,10 +27,16 @@
 
         public async Task<IActionResult> Index()
         {
-            IEnumerable<StayManagementIndexViewModel> allStays = await this.stayService
-                .GetStayManagementBoardDataAsync();
+            var allStays = await this.stayService.GetStayManagementBoardDataAsync();
+            var guestStats = await this.stayService.GetGuestAgeStatsAsync();
 
-            return View(allStays);
+            var viewModel = new StayManagementIndexPageViewModel
+            {
+                Stays = allStays,
+                GuestAgeStats = guestStats
+            };
+
+            return View(viewModel);
         }
 
         [HttpGet]
