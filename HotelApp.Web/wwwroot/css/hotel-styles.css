@@ -599,7 +599,10 @@ a:focus {
     margin-top: 1rem;
     margin-bottom: 1rem;
 }
-.table-dark {
+.table-dark, .table-default {
     margin-bottom: 0;
+}
+.table-w50 {
+    width: 50%;
 }
 /* admin panel end */

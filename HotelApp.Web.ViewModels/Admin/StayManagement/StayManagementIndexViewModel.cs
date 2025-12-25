@@ -4,6 +4,8 @@
     {
         public Guid Id { get; set; }
 
+        public string GuestNames { get; set; } = null!;
+
         public DateTime CreatedOn { get; set; }
 
         public bool IsDeleted { get; set; }

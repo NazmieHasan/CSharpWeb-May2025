@@ -17,5 +17,7 @@
         Task<Tuple<bool, bool>> DeleteOrRestoreStayAsync(string? id);
 
         Task<GuestAgeStatsViewModel> GetGuestAgeStatsAsync();
+
+        Task<MealGuestAgeStatsViewModel> GetMealGuestAgeStatsAsync();
     }
 }

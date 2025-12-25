@@ -12,47 +12,106 @@
         </a>
     </div>
 
-    <h2>Guest Stats Today</h2>
-    <ul>
-        <li>Adults: @Model.GuestAgeStats.Adults</li>
-        <li>Children: @Model.GuestAgeStats.Children</li>
-        <li>Babies: @Model.GuestAgeStats.Babies</li>
-        <li>Total: @Model.GuestAgeStats.TotalGuests</li>
-    </ul>
-
+    <h4>Guest Stats Today</h4>
     <div class="table-responsive">
-        <table class="table table-dark table-hover shadow-lg rounded-3">
+        <table class="table table-default table-hover shadow-lg rounded-3 table-w50">
             <thead class="thead-dark">
-                <tr class="text-warning">
-                    <th>#</th>
-                    <th>Created On</th>
-                    <th>Is Deleted</th>
-                    <th class="text-center">Actions</th>
+                <tr>
+                    <th>Adults</th>
+                    <th>Children</th>
+                    <th>Babies</th>
+                    <th>Total</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var stay in Model.Stays)
-                {
-                    <tr>
-                        <td class="align-middle">@stay.Id</td>
-                        <td class="align-middle">@stay.CreatedOn.ToString("yyyy-MM-dd HH:mm")</td>
-                        <td class="align-middle">@stay.IsDeleted</td>
-                        <td>
-                            <div class="d-flex justify-content-center gap-2">
-                                <a asp-action="Details" asp-route-id="@stay.Id" class="btn btn-success btn-sm fw-bold">
-                                    <i class="bi bi-eye square"></i>Details
-                                </a>
-                                <a asp-action="ToggleDelete" asp-route-id="@stay.Id" class="btn @(stay.IsDeleted ? "btn-warning" : "btn-danger") btn-sm fw-bold">
-                                    <i class="bi @(stay.IsDeleted ? "bi-arrow-clockwise" : "bi-trash")"></i>
-                                    @(stay.IsDeleted ? "Restore" : "Delete")
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                }
+                <tr class="text-dark">
+                    <td>@Model.GuestAgeStats.Adults</td>
+                    <td>@Model.GuestAgeStats.Children</td>
+                    <td>@Model.GuestAgeStats.Babies</td>
+                    <td>@Model.GuestAgeStats.TotalGuests</td>
+                </tr>
             </tbody>
         </table>
     </div>
+
+    <h4 class="mt-5">Guest Stats Meal Today</h4>
+    <div class="table-responsive">
+        <table class="table table-default table-hover shadow-lg rounded-3 table-w50">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Meal</th>
+                    <th>Adults</th>
+                    <th>Children</th>
+                    <th>Babies</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="text-dark">
+                    <td>Breakfast</td>
+                    <td>@Model.MealGuestAgeStats.BreakfastAdults</td>
+                    <td>@Model.MealGuestAgeStats.BreakfastChildren</td>
+                    <td>@Model.MealGuestAgeStats.BreakfastBabies</td>
+                    <td>@Model.MealGuestAgeStats.BreakfastGuest</td>
+                </tr>
+                <tr class="text-dark">
+                    <td>Lunch</td>
+                    <td>@Model.MealGuestAgeStats.LunchAdults</td>
+                    <td>@Model.MealGuestAgeStats.LunchChildren</td>
+                    <td>@Model.MealGuestAgeStats.LunchBabies</td>
+                    <td>@Model.MealGuestAgeStats.LunchGuest</td>
+                </tr>
+                <tr class="text-dark">
+                    <td>Dinner</td>
+                    <td>@Model.MealGuestAgeStats.DinnerAdults</td>
+                    <td>@Model.MealGuestAgeStats.DinnerChildren</td>
+                    <td>@Model.MealGuestAgeStats.DinnerBabies</td>
+                    <td>@Model.MealGuestAgeStats.DinnerGuest</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    @if (Model.Stays == null || !Model.Stays.Any())
+    {
+        <div class="mt-5 text-center">
+            <h3 class="mt-3 mb-3">Stays list is empty!</h3>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive mt-5">
+            <table class="table table-dark table-hover shadow-lg rounded-3 mt-5">
+                <thead class="thead-dark">
+                    <tr class="text-warning">
+                        <th>Guest Names</th>
+                        <th>Created On</th>
+                        <th>Is Deleted</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var stay in Model.Stays)
+                    {
+                        <tr>
+                            <td class="align-middle">@stay.GuestNames</td>
+                            <td class="align-middle">@stay.CreatedOn.ToString("yyyy-MM-dd HH:mm")</td>
+                            <td class="align-middle">@stay.IsDeleted</td>
+                            <td>
+                                <div class="d-flex justify-content-center gap-2">
+                                    <a asp-action="Details" asp-route-id="@stay.Id" class="btn btn-success btn-sm fw-bold">
+                                        <i class="bi bi-eye square"></i>Details
+                                    </a>
+                                    <a asp-action="ToggleDelete" asp-route-id="@stay.Id" class="btn @(stay.IsDeleted ? "btn-warning" : "btn-danger") btn-sm fw-bold">
+                                        <i class="bi @(stay.IsDeleted ? "bi-arrow-clockwise" : "bi-trash")"></i>
+                                        @(stay.IsDeleted ? "Restore" : "Delete")
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
 </div>
-
-

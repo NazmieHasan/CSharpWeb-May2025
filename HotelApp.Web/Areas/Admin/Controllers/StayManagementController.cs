@@ -29,11 +29,13 @@
         {
             var allStays = await this.stayService.GetStayManagementBoardDataAsync();
             var guestStats = await this.stayService.GetGuestAgeStatsAsync();
+            var guestMealStats = await this.stayService.GetMealGuestAgeStatsAsync();
 
             var viewModel = new StayManagementIndexPageViewModel
             {
                 Stays = allStays,
-                GuestAgeStats = guestStats
+                GuestAgeStats = guestStats,
+                MealGuestAgeStats = guestMealStats
             };
 
             return View(viewModel);
