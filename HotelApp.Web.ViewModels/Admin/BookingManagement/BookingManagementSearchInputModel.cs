@@ -6,6 +6,8 @@
     {
         public string? Id { get; set; }
 
+        public string? Owner { get; set; }
+
         public DateTime? CreatedOn { get; set; }
 
         public DateOnly? DateArrival { get; set; }

@@ -106,6 +106,8 @@
                     ChildCount = b.ChildCount,
                     BabyCount = b.BabyCount,
                     UserEmail = b.User.Email,
+                    Owner = b.Owner,
+                    IsForAnotherPerson = b.IsForAnotherPerson,
                     ManagerEmail = b.Manager != null ? b.Manager.User.UserName : null,
                     RoomId = b.Room.Id.ToString(),
                     Room = b.Room.Name,
@@ -282,6 +284,12 @@
                 && Guid.TryParse(inputModel.Id, out Guid bookingId))
             {
                 query = query.Where(b => b.Id == bookingId);
+            }
+
+            // Booking Owner
+            if (!string.IsNullOrWhiteSpace(inputModel.Owner))
+            {
+                query = query.Where(b => b.Owner == inputModel.Owner);
             }
 
             // Created On

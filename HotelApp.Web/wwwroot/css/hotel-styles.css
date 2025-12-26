@@ -115,6 +115,10 @@ a:focus {
         .search-room .form-group .form-submit {  
             padding: 0.25rem 1.5rem;
         }
+.form-control-readonly {
+    background-color: #f0f0f0; /* disabled input in create booking */
+    cursor: default;
+}
 
 .home-container {
     margin-top: 4rem;

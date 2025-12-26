@@ -15,7 +15,7 @@
                 <div class="mb-3">
                     <label asp-for="AdultsCount" class="form-label"></label>
                     <select asp-for="AdultsCount" class="form-control">
-                        <option value="0" selected>Please Select</option>
+                        <option value="0">Please Select</option>
                         @for (int i = 1; i <= Model.MaxGuests; i++)
                         {
                             <option value="@i">@i</option>
@@ -27,7 +27,7 @@
                 <div class="mb-3">
                     <label asp-for="ChildCount" class="form-label"></label>
                     <select asp-for="ChildCount" class="form-control" id="childCountSelect">
-                        <option value="0" selected>Please Select</option>
+                        <option value="0">Please Select</option>
                         @for (int i = 0; i <= Model.MaxGuests - Model.AdultsCount; i++)
                         {
                             <option value="@i">@i</option>
@@ -39,7 +39,7 @@
                 <div class="mb-3">
                     <label asp-for="BabyCount" class="form-label"></label>
                     <select asp-for="BabyCount" class="form-control" id="babyCountSelect">
-                        <option value="0" selected>Please Select</option>
+                        <option value="0">Please Select</option>
                         @for (int i = 1; i <= Model.MaxGuests - Model.AdultsCount - Model.ChildCount + 1; i++)
                         {
                             <option value="@i">@i</option>
@@ -92,8 +92,8 @@
 </div>
 
 @section Scripts {
-    <script src="~/js/booking.js"></script>
+    <script src="~/js/admin/bookingManagement.js"></script>
     <script>
-        initBookingGuestSelectors(@Model.MaxGuests);
+        initBookingGuestSelectorsEdit(@Model.MaxGuests, @Model.AdultsCount, @Model.ChildCount, @Model.BabyCount);
     </script>
 }

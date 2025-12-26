@@ -16,6 +16,7 @@
         public DateOnly DateDeparture { get; set; }
 
         [Required(ErrorMessage = AdultRequiredMessage)]
+        [Range(1, 4, ErrorMessage = AdultsMinCountMessage)]
         [Display(Name = "Number of Adults")]
         public int AdultsCount { get; set; }
 
@@ -30,5 +31,12 @@
         public string? RoomCategoryName { get; set; }
 
         public decimal TotalPrice { get; set; }
+
+        [Required(ErrorMessage = OwnerRequiredMessage)]
+        [Display(Name = "Owner Name and Family")]
+        public string Owner { get; set; } = null!;
+
+        [Display(Name = "Booking for another person?")]
+        public bool IsForAnotherPerson { get; set; }
     }
 }

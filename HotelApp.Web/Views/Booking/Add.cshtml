@@ -8,18 +8,42 @@
 <div class="container mt-5 mb-5">
     <div class="row col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
         <div class="mb-3 text-center">
-            <h2 class="mb-1">@ViewData["Title"]</h2>
-            <h5 class="mb-1">@Model.RoomCategoryName</h5>
-            <h5 class="mb-1">@Model.DateArrival – @Model.DateDeparture</h5>
-            <h5>Total Amount: $@Model.TotalPrice.ToString("0.00")</h5>
+            <h2>@ViewData["Title"] @Model.RoomCategoryName</h2>
         </div>
 
         <form asp-controller="Booking" asp-action="Add" method="post">
+            <input type="hidden" asp-for="RoomId" />
+            <input type="hidden" asp-for="DateArrival" />
+            <input type="hidden" asp-for="DateDeparture" />
+
+            <div class="row mt-3 mb-3">
+                <div class="col-md-6">
+                    <label asp-for="DateArrival" class="form-label">Date Arrival</label>
+                    <div class="form-control form-control-readonly">
+                        @Model.DateArrival.ToString("yyyy-MM-dd")
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="DateDeparture" class="form-label">Date Departure</label>
+                    <div class="form-control form-control-readonly">
+                        @Model.DateDeparture.ToString("yyyy-MM-dd")
+                    </div>
+                </div>
+            </div>
+            
             <div class="row">
 
-                <input type="hidden" asp-for="RoomId" />
-                <input type="hidden" asp-for="DateArrival" />
-                <input type="hidden" asp-for="DateDeparture" />
+                <div class="mb-3">
+                    <label asp-for="Owner" class="form-label"></label>
+                    <input asp-for="Owner" class="form-control" placeholder="Enter booking owner name and family" id="owner" />
+                    <span asp-validation-for="Owner" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <input asp-for="IsForAnotherPerson" class="form-check-input" type="checkbox" id="isForAnotherPersonCheck" />
+                    <label asp-for="IsForAnotherPerson" class="form-check-label"></label>
+                </div>
 
                 <div class="mb-3">
                     <label asp-for="AdultsCount" class="form-label"></label>
@@ -56,13 +80,16 @@
                     </select>
                     <span asp-validation-for="BabyCount" class="text-danger"></span>
                 </div>
-                
-            </div>
 
-            <div class="mb-2">
-                <button class="btn btn-danger w-100 py-2 fw-bold rounded" type="submit">
-                    <i class="fas fa-save"></i> Save
-                </button>
+                <div class="mb-2 d-flex align-items-center">
+                    <span class="fw-bold me-4">
+                        Total Amount: $@Model.TotalPrice.ToString("0.00")
+                    </span>
+                    <button type="submit" class="btn btn-danger fw-bold rounded flex-grow-1">
+                        Save
+                    </button>
+                </div>
+                
             </div>
         </form>
     </div>

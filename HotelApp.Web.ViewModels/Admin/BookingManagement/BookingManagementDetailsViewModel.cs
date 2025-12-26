@@ -7,6 +7,10 @@
     {
         public string UserEmail { get; set; } = null!;
 
+        public string Owner { get; set; } = null!;
+
+        public bool IsForAnotherPerson { get; set; }
+
         public string? ManagerEmail { get; set; }
 
         public string RoomId { get; set; } = null!;

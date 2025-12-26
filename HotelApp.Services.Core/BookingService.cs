@@ -53,7 +53,9 @@
                 ChildCount = inputModel.ChildCount,
                 BabyCount = inputModel.BabyCount,
                 UserId = userId,
-                RoomId = inputModel.RoomId
+                RoomId = inputModel.RoomId,
+                Owner = inputModel.Owner,
+                IsForAnotherPerson = inputModel.IsForAnotherPerson
             };
 
             await this.bookingRepository.AddAsync(newBooking);

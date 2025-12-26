@@ -36,6 +36,12 @@
 
         public string UserId { get; set; } = null!;
 
+        [Comment("Owner name of the booking")]
+        public string Owner { get; set; } = null!;
+
+        [Comment("Indicates whether the booking is for another person")]
+        public bool IsForAnotherPerson { get; set; }
+
         public virtual ApplicationUser User { get; set; } = null!;
 
         [Comment("Booking's manager")]

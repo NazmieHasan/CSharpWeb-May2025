@@ -39,6 +39,8 @@
                 <p class="text-danger fw-bold">Add payment, add stay are not allowed. This booking has been deleted.</p>
             }
             <p>Created By: @Model.UserEmail</p>
+            <p>Owner: @Model.Owner</p>
+            <p>Booking for another person: @(Model.IsForAnotherPerson ? "Yes" : "No")</p>
             <p>Manager: @Model.ManagerEmail</p>
             <p>Arrival Date: @Model.DateArrival.ToString("yyyy-MM-dd")</p>
             <p>Departure Date: @Model.DateDeparture.ToString("yyyy-MM-dd")</p>
