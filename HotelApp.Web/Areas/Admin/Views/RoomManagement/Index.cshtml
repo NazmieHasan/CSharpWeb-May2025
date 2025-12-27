@@ -9,6 +9,8 @@
 
     int currentPage = ViewBag.PageNumber ?? 1;
     int totalPages = ViewBag.TotalPages ?? 1;
+    int pageSize = ViewBag.PageSize ?? 10;
+    int roomCounter = ((currentPage - 1) * pageSize) + 1;
 }
 
 <div class="container mt-5">
@@ -44,7 +46,7 @@
                 @foreach (var room in Model)
                 {
                     <tr>
-                        <td class="align-middle">@room.Id</td>
+                        <td class="align-middle">@roomCounter</td>
                         <td class="align-middle">@room.Name</td>
                         <td class="align-middle">@room.IsDeleted</td>
                         <td>
@@ -65,6 +67,7 @@
                             </div>
                         </td>
                     </tr>
+                    roomCounter++;
                 }
             </tbody>
         </table>

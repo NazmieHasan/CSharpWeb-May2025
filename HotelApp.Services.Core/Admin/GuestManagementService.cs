@@ -8,6 +8,7 @@
     using Web.ViewModels.Admin.GuestManagement;
     using HotelApp.Web.ViewModels.Admin.StayManagement;
     using HotelApp.Web.ViewModels;
+    using HotelApp.GCommon;
 
     public class GuestManagementService : IGuestManagementService
     {
@@ -41,9 +42,9 @@
             await this.guestRepository.AddAsync(newGuest);
         }
 
-        public async Task<IEnumerable<GuestManagementIndexViewModel>> GetGuestManagementBoardDataAsync()
+        public async Task<IEnumerable<GuestManagementIndexViewModel>> GetGuestManagementBoardDataAsync(int pageNumber = 1, int pageSize = ApplicationConstants.AdminPaginationPageSize)
         {
-            return await guestRepository
+            var query = this.guestRepository
                 .GetAllAttached()
                 .IgnoreQueryFilters()
                 .AsNoTracking()
@@ -55,9 +56,21 @@
                     FamilyName = g.FamilyName,
                     PhoneNumber = g.PhoneNumber,
                     IsDeleted = g.IsDeleted
-                })
-                .ToListAsync()
-                ?? Enumerable.Empty<GuestManagementIndexViewModel>();
+                });
+
+
+            return await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+        }
+
+        public async Task<int> GetTotalGuestsCountAsync()
+        {
+            return await guestRepository
+                .GetAllAttached()
+                .IgnoreQueryFilters()
+                .CountAsync();
         }
 
         public async Task<GuestManagementDetailsViewModel?> GetGuestManagementDetailsByIdAsync(string? id)
@@ -85,7 +98,7 @@
                         FamilyName = g.FamilyName,
                         PhoneNumber = g.PhoneNumber,
                         Email = g.Email,
-                        BirthDate = g.BirthDate.Value,
+                        BirthDate = g.BirthDate!.Value,
                         IsDeleted = g.IsDeleted,
                         Stays = g.Stays.Select(s => new StayManagementDetailsViewModelInGuestDetails
                         {

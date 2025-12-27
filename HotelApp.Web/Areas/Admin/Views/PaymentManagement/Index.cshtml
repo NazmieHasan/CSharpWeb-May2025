@@ -4,6 +4,15 @@
 
 @inject RoleManager<IdentityRole> roleManager;
 
+@{
+    ViewData["Title"] = "Payment Management";
+
+    int currentPage = ViewBag.PageNumber ?? 1;
+    int totalPages = ViewBag.TotalPages ?? 1;
+    int pageSize = ViewBag.PageSize ?? 10;
+    int paymentCounter = ((currentPage - 1) * pageSize) + 1;
+}
+
 <div class="container mt-5">
     <h1 class="text-center mb-4 text-warning fw-bold">Payment Management</h1>
 
@@ -28,13 +37,13 @@
                 @foreach (var payment in Model)
                 {
                     <tr>
-                        <td class="align-middle">@payment.Id</td>
+                        <td class="align-middle">@paymentCounter</td>
                         <td class="align-middle">@payment.CreatedOn.ToString("yyyy-MM-dd HH:mm")</td>
                         <td class="align-middle">@payment.PaymentUserFullName</td>
                         <td class="align-middle">@payment.IsDeleted</td>
                         <td>
                             <div class="d-flex justify-content-center gap-2">
-                                <a asp-action="Details" asp-route-id="@payment.Id" class="btn btn-success btn-sm fw-bold">
+                                <a asp-action="Details" asp-route-id="@payment.Id" class="btn btn-success btn-sm fw-bold" target="_blank">
                                     <i class="bi bi-eye square"></i>Details
                                 </a>
                                 <a asp-action="ToggleDelete" asp-route-id="@payment.Id" class="btn @(payment.IsDeleted ? "btn-warning" : "btn-danger") btn-sm fw-bold">
@@ -44,9 +53,14 @@
                             </div>
                         </td>
                     </tr>
+                    paymentCounter++;
                 }
             </tbody>
         </table>
     </div>
+
+    @await Html.PartialAsync("_PaginationPartial", (currentPage, totalPages, "Index", "PaymentManagement"))
+    <p class="text-center mt-2">Page @currentPage of @totalPages</p>
+
 </div>
 

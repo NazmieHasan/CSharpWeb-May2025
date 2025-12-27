@@ -1,10 +1,13 @@
 ﻿namespace HotelApp.Services.Core.Admin.Interfaces
 {
+    using HotelApp.GCommon;
     using HotelApp.Web.ViewModels.Admin.GuestManagement;
 
     public interface IGuestManagementService
     {
-        Task<IEnumerable<GuestManagementIndexViewModel>> GetGuestManagementBoardDataAsync();
+        Task<IEnumerable<GuestManagementIndexViewModel>> GetGuestManagementBoardDataAsync(int pageNumber = 1, int pageSize = ApplicationConstants.AdminPaginationPageSize);
+
+        Task<int> GetTotalGuestsCountAsync();
 
         Task AddGuestManagementAsync(GuestManagementCreateViewModel inputModel);
 

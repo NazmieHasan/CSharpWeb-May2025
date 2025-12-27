@@ -1,5 +1,6 @@
 ﻿namespace HotelApp.Web.Areas.Admin.Controllers
 {
+    using HotelApp.GCommon;
     using HotelApp.Web.ViewModels;
     using HotelApp.Web.ViewModels.Admin.PaymentManagement;
     using Microsoft.AspNetCore.Mvc;
@@ -25,12 +26,28 @@
             this.bookingService = bookingService;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int pageNumber = 1)
         {
-            IEnumerable<PaymentManagementIndexViewModel> allPayments = await this.paymentService
-                .GetPaymentManagementBoardDataAsync();
+            try
+            {
+                int pageSize = ApplicationConstants.AdminPaginationPageSize;
 
-            return View(allPayments);
+                var pagedPayments = await paymentService
+                    .GetPaymentManagementBoardDataAsync(pageNumber, pageSize);
+
+                int totalPayments = await paymentService.GetTotalPaymentsCountAsync();
+
+                ViewBag.PageNumber = pageNumber;
+                ViewBag.PageSize = pageSize;
+                ViewBag.TotalPages = (int)Math.Ceiling((double)totalPayments / pageSize);
+
+                return View(pagedPayments);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return this.RedirectToAction(nameof(Index), "Home");
+            }
         }
 
         [HttpGet]

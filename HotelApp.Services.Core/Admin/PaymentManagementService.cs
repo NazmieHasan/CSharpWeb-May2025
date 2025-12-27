@@ -9,6 +9,7 @@
     using HotelApp.Web.ViewModels.Admin.PaymentManagement;
     using HotelApp.Web.ViewModels.Admin.GuestManagement;
     using HotelApp.Web.ViewModels.Admin.StayManagement;
+    using HotelApp.GCommon;
 
     public class PaymentManagementService : IPaymentManagementService
     {
@@ -28,9 +29,9 @@
             this.bookingService = bookingService;
         }
 
-        public async Task<IEnumerable<PaymentManagementIndexViewModel>> GetPaymentManagementBoardDataAsync()
+        public async Task<IEnumerable<PaymentManagementIndexViewModel>> GetPaymentManagementBoardDataAsync(int pageNumber = 1, int pageSize = ApplicationConstants.AdminPaginationPageSize)
         {
-            return await paymentRepository
+            var query = this.paymentRepository
                 .GetAllAttached()
                 .IgnoreQueryFilters()
                 .AsNoTracking()
@@ -41,9 +42,20 @@
                     CreatedOn = p.CreatedOn,
                     PaymentUserFullName = p.PaymentUserFullName,
                     IsDeleted = p.IsDeleted,
-                })
-                .ToListAsync()
-                ?? Enumerable.Empty<PaymentManagementIndexViewModel>();
+                });
+
+            return await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+        }
+
+        public async Task<int> GetTotalPaymentsCountAsync()
+        {
+            return await paymentRepository
+                .GetAllAttached()
+                .IgnoreQueryFilters()
+                .CountAsync();
         }
 
         public async Task AddPaymentManagementAsync(PaymentManagementCreateViewModel inputModel)

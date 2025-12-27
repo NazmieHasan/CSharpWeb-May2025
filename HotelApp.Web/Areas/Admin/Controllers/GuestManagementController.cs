@@ -6,6 +6,7 @@
     using Services.Core.Admin.Interfaces;
 
     using static GCommon.ApplicationConstants;
+    using HotelApp.GCommon;
 
     using System.Collections.Generic;
     using HotelApp.Web.ViewModels.Admin.BookingManagement;
@@ -19,12 +20,28 @@
             this.guestService = guestService;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int pageNumber = 1)
         {
-            IEnumerable<GuestManagementIndexViewModel> allGuests = await this.guestService
-                .GetGuestManagementBoardDataAsync();
+            try
+            {
+                int pageSize = ApplicationConstants.AdminPaginationPageSize;
 
-            return View(allGuests);
+                var pagedGuests = await this.guestService
+                .GetGuestManagementBoardDataAsync(pageNumber, pageSize);
+
+                int totalGuests = await this.guestService.GetTotalGuestsCountAsync();
+
+                ViewBag.PageNumber = pageNumber;
+                ViewBag.PageSize = pageSize;
+                ViewBag.TotalPages = (int)Math.Ceiling((double)totalGuests / pageSize);
+
+                return View(pagedGuests);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return this.RedirectToAction(nameof(Index), "Home");
+            }
         }
 
         [HttpGet]
