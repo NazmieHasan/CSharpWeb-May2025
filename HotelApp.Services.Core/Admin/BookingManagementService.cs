@@ -10,6 +10,8 @@
     using Web.ViewModels.Admin.BookingManagement;
     using Web.ViewModels.Admin.StayManagement;
 
+    using static HotelApp.Services.Core.DateTimeExtensions;
+
     public class BookingManagementService : IBookingManagementService
     {
         private readonly IBookingRepository bookingRepository;
@@ -50,7 +52,7 @@
                 .Select(b => new BookingManagementIndexViewModel
                 {
                     Id = b.Id.ToString(),
-                    CreatedOn = b.CreatedOn,
+                    CreatedOn = b.CreatedOn.ToHotelTime(),
                     DateArrival = b.DateArrival,
                     DateDeparture = b.DateDeparture,
                     Status = b.Status.Name,
@@ -97,7 +99,7 @@
                 .Select(b => new BookingManagementDetailsViewModel()
                 {
                     Id = b.Id.ToString(),
-                    CreatedOn = b.CreatedOn,
+                    CreatedOn = b.CreatedOn.ToHotelTime(),
                     Status = b.Status.Name,
                     DateArrival = b.DateArrival,
                     DateDeparture = b.DateDeparture,
@@ -120,7 +122,7 @@
                     Payments = b.Payments.Select(p => new PaymentManagementDetailsViewModel
                     {
                         Id = p.Id,
-                        CreatedOn = p.CreatedOn,
+                        CreatedOn = p.CreatedOn.ToHotelTime(),
                         Amount = p.Amount,
                         PaymentUserFullName = p.PaymentUserFullName,
                         PaymentUserPhoneNumber = p.PaymentUserPhoneNumber,
@@ -133,8 +135,10 @@
                         GuestFirstName = s.Guest.FirstName,
                         GuestFamilyName = s.Guest.FamilyName,
                         GuestAge = s.Guest.Age,
-                        CreatedOn = s.CreatedOn,
-                        CheckoutOn = s.CheckoutOn,
+                        CreatedOn = s.CreatedOn.ToHotelTime(),
+                        CheckoutOn = s.CheckoutOn.HasValue
+                            ? s.CheckoutOn.Value.ToHotelTime()
+                            : null,
                         IsDeleted = s.IsDeleted
                     }).ToList()
                 })

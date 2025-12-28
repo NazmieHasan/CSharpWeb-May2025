@@ -13,6 +13,7 @@
     using HotelApp.Web.ViewModels.Manager;
 
     using static GCommon.ApplicationConstants;
+    using static HotelApp.Services.Core.DateTimeExtensions;
     using HotelApp.GCommon;
 
     public class BookingService : IBookingService
@@ -76,7 +77,7 @@
                 .Select(b => new MyBookingsViewModel()
                 {
                     Id = b.Id.ToString(),
-                    CreatedOn = b.CreatedOn,
+                    CreatedOn = b.CreatedOn.ToHotelTime(),
                     DateArrival = b.DateArrival,
                     DateDeparture = b.DateDeparture,
                     AdultsCount = b.AdultsCount,

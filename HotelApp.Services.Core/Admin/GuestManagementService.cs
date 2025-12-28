@@ -10,6 +10,8 @@
     using HotelApp.Web.ViewModels;
     using HotelApp.GCommon;
 
+    using static HotelApp.Services.Core.DateTimeExtensions;
+
     public class GuestManagementService : IGuestManagementService
     {
         private readonly IGuestRepository guestRepository;
@@ -93,7 +95,7 @@
                     .Select(g => new GuestManagementDetailsViewModel()
                     {
                         Id = g.Id,
-                        CreatedOn = g.CreatedOn,
+                        CreatedOn = g.CreatedOn.ToHotelTime(),
                         FirstName = g.FirstName,
                         FamilyName = g.FamilyName,
                         PhoneNumber = g.PhoneNumber,
@@ -103,8 +105,10 @@
                         Stays = g.Stays.Select(s => new StayManagementDetailsViewModelInGuestDetails
                         {
                             Id = s.Id,
-                            CreatedOn = s.CreatedOn,
-                            CheckoutOn = s.CheckoutOn,
+                            CreatedOn = s.CreatedOn.ToHotelTime(),
+                            CheckoutOn = s.CheckoutOn.HasValue
+                            ? s.CheckoutOn.Value.ToHotelTime()
+                            : null,
                             IsDeleted = s.IsDeleted,
                             BookingId = s.BookingId,
                         })

@@ -9,6 +9,8 @@
     using HotelApp.Data.Models;
     using HotelApp.Web.ViewModels;
 
+    using static HotelApp.Services.Core.DateTimeExtensions;
+
     public class StayManagementService : IStayManagementService
     {
         private readonly IStayRepository stayRepository;
@@ -39,7 +41,7 @@
                 {
                     Id = s.Id,
                     GuestNames = s.Guest.FirstName + " " + s.Guest.FamilyName,
-                    CreatedOn = s.CreatedOn,
+                    CreatedOn = s.CreatedOn.ToHotelTime(),
                     IsDeleted = s.IsDeleted
                 })
                 .ToListAsync()
@@ -104,8 +106,10 @@
                         GuestFirstName = s.Guest.FirstName,
                         GuestFamilyName = s.Guest.FamilyName,
                         GuestEmail = s.Guest.Email,
-                        CreatedOn = s.CreatedOn,
-                        CheckoutOn = s.CheckoutOn,
+                        CreatedOn = s.CreatedOn.ToHotelTime(),
+                        CheckoutOn = s.CheckoutOn.HasValue
+                            ? s.CheckoutOn.Value.ToHotelTime()
+                            : null,
                         IsDeleted = s.IsDeleted
                     })
                     .SingleOrDefaultAsync();
@@ -247,7 +251,12 @@
 
         public async Task<MealGuestAgeStatsViewModel> GetMealGuestAgeStatsAsync()
         {
-            DateOnly today = DateOnly.FromDateTime(DateTime.UtcNow);
+            DateTime nowLocal = DateTime.UtcNow.ToHotelTime();
+            DateOnly today = DateOnly.FromDateTime(nowLocal);
+
+            DateTime breakfastStart = today.ToDateTime(new TimeOnly(7, 30));
+            DateTime lunchStart = today.ToDateTime(new TimeOnly(12, 30));
+            DateTime dinnerStart = today.ToDateTime(new TimeOnly(18, 0));
 
             var stays = await this.stayRepository
                 .GetAllAttached()
@@ -255,7 +264,6 @@
                 .Include(s => s.Booking)
                 .Where(s =>
                     !s.IsDeleted &&
-                    s.CheckoutOn == null &&
                     s.Guest != null &&
                     !s.Guest.IsDeleted &&
                     s.Guest.BirthDate.HasValue
@@ -266,10 +274,28 @@
 
             var breakfastGuests = stays
                 .Where(s =>
-                    s.Booking.DateDeparture == today ||                
-                    (s.Booking.DateArrival < today &&
-                     s.Booking.DateDeparture > today)                   
-                )
+                {
+                    DateTime? checkoutLocal = s.CheckoutOn.ToHotelTime();
+
+                    bool stillStaying =
+                        s.Booking.DateArrival < today &&
+                        s.Booking.DateDeparture > today &&
+                        checkoutLocal == null;
+
+                    bool departureTodayAndStillStaying =
+                        s.Booking.DateDeparture == today &&
+                        checkoutLocal == null;
+
+                    bool departureTodayAndCheckoutAfterBreakfastStart =
+                        s.Booking.DateDeparture == today &&
+                        checkoutLocal != null &&
+                        checkoutLocal >= breakfastStart;
+
+                    return
+                        stillStaying ||
+                        departureTodayAndStillStaying ||
+                        departureTodayAndCheckoutAfterBreakfastStart;
+                })
                 .GroupBy(s => s.Guest!.Id)
                 .Select(g => g.First().Guest!)
                 .ToList();
@@ -280,9 +306,24 @@
 
             var lunchGuests = stays
                 .Where(s =>
-                    s.Booking.DateArrival < today &&
-                    s.Booking.DateDeparture > today                        
-                )
+                {
+                    DateTime? checkoutLocal = s.CheckoutOn.ToHotelTime();
+
+                    bool stillStaying =
+                        s.Booking.DateArrival < today &&
+                        s.Booking.DateDeparture > today &&
+                        checkoutLocal == null;
+
+                    bool checkoutAfterLunchStart =
+                        s.Booking.DateArrival < today &&
+                        s.Booking.DateDeparture > today &&
+                        checkoutLocal != null &&
+                        checkoutLocal >= lunchStart;
+
+                    return
+                        stillStaying ||
+                        checkoutAfterLunchStart;
+                })
                 .GroupBy(s => s.Guest!.Id)
                 .Select(g => g.First().Guest!)
                 .ToList();
@@ -293,10 +334,28 @@
 
             var dinnerGuests = stays
                 .Where(s =>
-                    s.Booking.DateArrival == today ||                     
-                    (s.Booking.DateArrival < today &&
-                     s.Booking.DateDeparture > today)                       
-                )
+                {
+                    DateTime? checkoutLocal = s.CheckoutOn.ToHotelTime();
+
+                    bool stillStaying =
+                        s.Booking.DateArrival < today &&
+                        s.Booking.DateDeparture > today &&
+                        checkoutLocal == null;
+
+                    bool arrivedTodayAndStillStaying =
+                        s.Booking.DateArrival == today &&
+                        checkoutLocal == null;
+
+                    bool arrivedTodayAndCheckoutAfterDinnerStart =
+                        s.Booking.DateArrival == today &&
+                        checkoutLocal != null &&
+                        checkoutLocal >= dinnerStart;
+
+                    return
+                        stillStaying ||
+                        arrivedTodayAndStillStaying ||
+                        arrivedTodayAndCheckoutAfterDinnerStart;
+                })
                 .GroupBy(s => s.Guest!.Id)
                 .Select(g => g.First().Guest!)
                 .ToList();

@@ -125,7 +125,7 @@
                 <table class="table table-dark table-striped mt-3 mb-5">
                     <thead>
                         <tr>
-                            <th>Guest Name and Family</th>
+                            <th>Guest Names</th>
                             <th>Guest Age</th>
                             <th>Created On</th>
                             <th>Is Completed</th>
@@ -152,7 +152,8 @@
                                     }
                                     else
                                     {
-                                        <span>Yes (@stay.CheckoutOn.Value.ToString("yyyy-MM-dd HH:mm"))</span>
+                                        <span class="text-danger">Yes</span>
+                                        <p>@stay.CheckoutOn.Value.ToString("yyyy-MM-dd HH:mm")</p>
                                     }
                                 </td>
 

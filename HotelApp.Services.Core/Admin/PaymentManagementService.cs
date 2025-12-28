@@ -11,6 +11,8 @@
     using HotelApp.Web.ViewModels.Admin.StayManagement;
     using HotelApp.GCommon;
 
+    using static HotelApp.Services.Core.DateTimeExtensions;
+
     public class PaymentManagementService : IPaymentManagementService
     {
         private readonly IPaymentRepository paymentRepository;
@@ -39,7 +41,7 @@
                 .Select(p => new PaymentManagementIndexViewModel
                 {
                     Id = p.Id,
-                    CreatedOn = p.CreatedOn,
+                    CreatedOn = p.CreatedOn.ToHotelTime(),
                     PaymentUserFullName = p.PaymentUserFullName,
                     IsDeleted = p.IsDeleted,
                 });
@@ -123,7 +125,7 @@
                     .Select(p => new PaymentManagementDetailsViewModel()
                     {
                         Id = p.Id,
-                        CreatedOn = p.CreatedOn,
+                        CreatedOn = p.CreatedOn.ToHotelTime(),
                         Amount = p.Amount,
                         PaymentUserFullName = p.PaymentUserFullName,
                         PaymentUserPhoneNumber = p.PaymentUserPhoneNumber,
