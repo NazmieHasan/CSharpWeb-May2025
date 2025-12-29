@@ -1,0 +1,119 @@
+﻿@using HotelApp.Web.ViewModels.Admin.BookingManagement.Report
+@model BookingManagementReportGuestCountSearchViewModel
+@using System.Globalization
+
+@{
+    ViewData["Title"] = "Booking Guest Count Report";
+    var currentYear = DateTime.UtcNow.Year;
+    var currentMonth = DateTime.UtcNow.Month;
+}
+
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center mb-5">
+        <div class="col-sm-12 col-lg-8 col-xl-6">
+            <a asp-action="Index" class="btn btn-secondary fw-bold mb-3">
+                <i class="bi bi-arrow-left"></i> Back to List
+            </a>
+
+            <h3 class="text-center mb-4">@ViewData["Title"]</h3>
+
+            <form asp-controller="BookingManagement" asp-action="ReportGuestCountResult" method="get">
+                <div class="mb-3">
+                    <label asp-for="ReportSearch.Year" class="form-label">Year</label>
+                    <select asp-for="ReportSearch.Year" class="form-select">
+                        @for (int y = currentYear - 5; y <= currentYear + 2; y++)
+                        {
+                            <option value="@y" selected="@(Model.ReportSearch.Year == y ? "selected" : null)">
+                                @y
+                            </option>
+                        }
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="ReportSearch.Month" class="form-label">Month</label>
+                    <select asp-for="ReportSearch.Month" class="form-select">
+                        @for (int m = 1; m <= 12; m++)
+                        {
+                            <option value="@m" selected="@(Model.ReportSearch.Month == m || (Model.ReportSearch.Month == 0 && m == currentMonth) ? "selected" : null)">
+                                @CultureInfo.GetCultureInfo("en-US").DateTimeFormat.GetMonthName(m)
+                            </option>
+                        }
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-danger w-100 py-2 fw-bold rounded">
+                    Report
+                </button>
+            </form>
+        </div>
+    </div>
+
+    @if (Model.ReportResults.Any())
+    {
+        <h4 class="mt-5 mb-2 text-center">@ViewData["Title"]</h4>
+        <h4 class="mb-5 text-center">
+            @CultureInfo.GetCultureInfo("en-US").DateTimeFormat.GetMonthName(Model.ReportSearch.Month) @Model.ReportSearch.Year
+        </h4>
+        <div class="table-responsive">
+            <table class="table table-dark table-hover shadow-lg rounded-3 w-75 mx-auto">
+                <thead class="thead-dark">
+                    <tr class="text-warning">
+                        <th>Day</th>
+                        <th>Meal</th>
+                        <th>Adults</th>
+                        <th>Children</th>
+                        <th>Babies</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int d = 1; d <= DateTime.DaysInMonth(Model.ReportSearch.Year, Model.ReportSearch.Month); d++)
+                    {
+                        var dayDate = new DateOnly(Model.ReportSearch.Year, Model.ReportSearch.Month, d);
+                        var dayReport = Model.ReportResults.FirstOrDefault(r => r.DayOfMonth == dayDate);
+
+                        if (dayReport != null)
+                        {
+                            <tr>
+                                <td class="align-middle">@dayReport.DayOfMonth.ToString("yyyy-MM-dd")</td>
+                                <td class="align-middle">Breakfast</td>
+                                <td class="align-middle">@dayReport.BreakfastAdults</td>
+                                <td class="align-middle">@dayReport.BreakfastChildren</td>
+                                <td class="align-middle">@dayReport.BreakfastBabies</td>
+                                <td class="align-middle">@dayReport.BreakfastGuest</td>
+                            </tr>
+                            <tr>
+                                <td class="align-middle">@dayReport.DayOfMonth.ToString("yyyy-MM-dd")</td>
+                                <td class="align-middle">Lunch</td>
+                                <td class="align-middle">@dayReport.LunchAdults</td>
+                                <td class="align-middle">@dayReport.LunchChildren</td>
+                                <td class="align-middle">@dayReport.LunchBabies</td>
+                                <td class="align-middle">@dayReport.LunchGuest</td>
+                            </tr>
+                            <tr>
+                                <td class="align-middle">@dayReport.DayOfMonth.ToString("yyyy-MM-dd")</td>
+                                <td class="align-middle">Dinner</td>
+                                <td class="align-middle">@dayReport.DinnerAdults</td>
+                                <td class="align-middle">@dayReport.DinnerChildren</td>
+                                <td class="align-middle">@dayReport.DinnerBabies</td>
+                                <td class="align-middle">@dayReport.DinnerGuest</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr>
+                                <td class="align-middle">@dayDate.ToString("yyyy-MM-dd")</td>
+                                <td colspan="5" class="text-center">No bookings found</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else if (Model.HasReportSearched)
+    {
+        <div class="mt-4 text-center">
+            Sorry, no bookings found.
+        </div>
+    }
+</div>

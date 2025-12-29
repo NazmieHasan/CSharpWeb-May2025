@@ -3,6 +3,8 @@
     using Data.Models;
     using Data.Repository.Interfaces;
     using HotelApp.GCommon;
+    using HotelApp.Web.ViewModels.Admin.BookingManagement.Report;
+    using HotelApp.Web.ViewModels.Admin.BookingManagement.Search;
     using HotelApp.Web.ViewModels.Admin.PaymentManagement;
     using Interfaces;
     using Microsoft.AspNetCore.Identity;
@@ -347,6 +349,114 @@
                 .ToListAsync();
 
             return bookings;
+        }
+
+        public async Task<IEnumerable<BookingManagementReportRevenueSearchResultViewModel>> ReportBookingRevenueAsync(BookingManagementReportSearchInputModel inputModel)
+        {
+            var bookings = await bookingRepository
+                .GetAllAttached()
+                .IgnoreQueryFilters()
+                .AsNoTracking()
+                .Include(b => b.Status)
+                .Include(b => b.Payments)
+                .Where(b =>
+                    b.CreatedOn.Year == inputModel.Year &&
+                    b.CreatedOn.Month == inputModel.Month &&
+                    b.StatusId != 1 &&
+                    b.Payments.Any(p => p.Amount > 0))
+                .OrderBy(b => b.CreatedOn)
+                .Select(b => new BookingManagementReportRevenueSearchResultViewModel
+                {
+                    Id = b.Id.ToString(),
+                    CreatedOn = b.CreatedOn,
+                    DateArrival = b.DateArrival,
+                    DateDeparture = b.DateDeparture,
+                    Status = b.Status.Name,
+                    PaidAmount = b.Payments.Sum(p => p.Amount)
+                })
+                .ToListAsync();
+
+            return bookings;
+        }
+
+        public async Task<IEnumerable<BookingManagementReportGuestCountSearchResultViewModel>> ReportBookingGuestCountAsync(BookingManagementReportSearchInputModel inputModel)
+        {
+            var monthStart = new DateOnly(inputModel.Year, inputModel.Month, 1);
+            var monthEnd = monthStart.AddMonths(1).AddDays(-1);
+
+            var bookings = await bookingRepository
+                .GetAllAttached()
+                .AsNoTracking()
+                .Include(b => b.Status)
+                .Where(b =>
+                    b.StatusId != 1 &&
+                    b.StatusId != 2 &&
+                    b.DateArrival <= monthEnd &&
+                    b.DateDeparture >= monthStart
+                )
+                .ToListAsync();
+
+            var results = new List<BookingManagementReportGuestCountSearchResultViewModel>();
+
+            for (var day = monthStart; day <= monthEnd; day = day.AddDays(1))
+            {
+                int breakfastAdults = 0, breakfastChildren = 0, breakfastBabies = 0;
+                int lunchAdults = 0, lunchChildren = 0, lunchBabies = 0;
+                int dinnerAdults = 0, dinnerChildren = 0, dinnerBabies = 0;
+
+                foreach (var b in bookings)
+                {
+                    if (day == b.DateArrival)
+                    {
+                        dinnerAdults += b.AdultsCount;
+                        dinnerChildren += b.ChildCount;
+                        dinnerBabies += b.BabyCount;
+                    }
+                    else if (day == b.DateDeparture)
+                    {
+                        breakfastAdults += b.AdultsCount;
+                        breakfastChildren += b.ChildCount;
+                        breakfastBabies += b.BabyCount;
+                    }
+                    else if (day > b.DateArrival && day < b.DateDeparture)
+                    {
+                        breakfastAdults += b.AdultsCount;
+                        breakfastChildren += b.ChildCount;
+                        breakfastBabies += b.BabyCount;
+
+                        lunchAdults += b.AdultsCount;
+                        lunchChildren += b.ChildCount;
+                        lunchBabies += b.BabyCount;
+
+                        dinnerAdults += b.AdultsCount;
+                        dinnerChildren += b.ChildCount;
+                        dinnerBabies += b.BabyCount;
+                    }
+                }
+
+                if (breakfastAdults + breakfastChildren + breakfastBabies +
+                    lunchAdults + lunchChildren + lunchBabies +
+                    dinnerAdults + dinnerChildren + dinnerBabies == 0)
+                {
+                    continue; 
+                }
+
+                results.Add(new BookingManagementReportGuestCountSearchResultViewModel
+                {
+                    DayOfMonth = day,
+                    BreakfastAdults = breakfastAdults,
+                    BreakfastChildren = breakfastChildren,
+                    BreakfastBabies = breakfastBabies,
+                    LunchAdults = lunchAdults,
+                    LunchChildren = lunchChildren,
+                    LunchBabies = lunchBabies,
+                    DinnerAdults = dinnerAdults,
+                    DinnerChildren = dinnerChildren,
+                    DinnerBabies = dinnerBabies
+                });
+            }
+
+            return results.OrderBy(r => r.DayOfMonth).ToList();
         }
 
     }

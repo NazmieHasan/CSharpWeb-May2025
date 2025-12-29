@@ -2,12 +2,12 @@
 {
     using HotelApp.GCommon;
     using HotelApp.Web.ViewModels.Admin.BookingManagement;
+    using HotelApp.Web.ViewModels.Admin.BookingManagement.Report;
+    using HotelApp.Web.ViewModels.Admin.BookingManagement.Search;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     using Services.Core.Admin.Interfaces;
-
-    using System.Collections.Generic;
 
     using static GCommon.ApplicationConstants;
 
@@ -201,6 +201,51 @@
             model.HasSearched = true;
 
             return View("Search", model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ReportRevenue()
+        {
+            var model = new BookingManagementReportRevenueSearchViewModel
+            {
+                HasReportSearched = false
+            };
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ReportRevenueResult(BookingManagementReportRevenueSearchViewModel model)
+        {
+            var bookings = await bookingService.ReportBookingRevenueAsync(model.ReportSearch);
+
+            model.TotalRevenue = bookings.Sum(b => b.Status == "Cancelled" ? b.PaidAmount / 2 : b.PaidAmount);
+            model.ReportResults = bookings;
+            model.HasReportSearched = true;
+
+            return View("ReportRevenue", model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ReportGuestCount()
+        {
+            var model = new BookingManagementReportGuestCountSearchViewModel
+            {
+                HasReportSearched = false
+            };
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ReportGuestCountResult(BookingManagementReportGuestCountSearchViewModel model)
+        {
+            var bookings = await bookingService.ReportBookingGuestCountAsync(model.ReportSearch);
+
+            model.ReportResults = bookings;
+            model.HasReportSearched = true;
+
+            return View("ReportGuestCount", model);
         }
 
     }

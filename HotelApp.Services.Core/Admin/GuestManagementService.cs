@@ -102,7 +102,9 @@
                         Email = g.Email,
                         BirthDate = g.BirthDate!.Value,
                         IsDeleted = g.IsDeleted,
-                        Stays = g.Stays.Select(s => new StayManagementDetailsViewModelInGuestDetails
+                        Stays = g.Stays
+                        .OrderByDescending(s => s.CreatedOn)
+                        .Select(s => new StayManagementDetailsViewModelInGuestDetails
                         {
                             Id = s.Id,
                             CreatedOn = s.CreatedOn.ToHotelTime(),

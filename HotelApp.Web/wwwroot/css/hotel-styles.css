@@ -599,7 +599,7 @@ a:focus {
 /* footer end */
 
 /* admin panel */
-.btn-success, .btn-primary, .btn-secondary {
+.btn-success, .btn-primary, .btn-secondary, .btn-warning {
     margin-top: 1rem;
     margin-bottom: 1rem;
 }

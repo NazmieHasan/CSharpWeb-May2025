@@ -115,6 +115,7 @@
                         CategoryBeds = r.Category.Beds,
                         IsDeleted = r.IsDeleted,
                         Bookings = r.Bookings
+                            .OrderByDescending(b => b.DateArrival)
                             .Select(b => new BookingInfoViewModel
                             {
                                 BookingId = b.Id.ToString(),

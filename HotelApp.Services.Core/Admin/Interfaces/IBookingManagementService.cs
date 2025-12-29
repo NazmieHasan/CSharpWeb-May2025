@@ -3,6 +3,8 @@
     using HotelApp.Data.Models;
     using HotelApp.GCommon;
     using HotelApp.Web.ViewModels.Admin.BookingManagement;
+    using HotelApp.Web.ViewModels.Admin.BookingManagement.Report;
+    using HotelApp.Web.ViewModels.Admin.BookingManagement.Search;
     using HotelApp.Web.ViewModels.Room;
 
     public interface IBookingManagementService
@@ -22,5 +24,9 @@
         Task<Tuple<bool, bool>> DeleteOrRestoreBookingAsync(string? id);
 
         Task<IEnumerable<BookingManagementSearchResultViewModel>> SearchBookingAsync(BookingManagementSearchInputModel inputModel);
+
+        Task<IEnumerable<BookingManagementReportRevenueSearchResultViewModel>> ReportBookingRevenueAsync(BookingManagementReportSearchInputModel inputModel);
+        
+        Task<IEnumerable<BookingManagementReportGuestCountSearchResultViewModel>> ReportBookingGuestCountAsync(BookingManagementReportSearchInputModel inputModel);
     }
 }

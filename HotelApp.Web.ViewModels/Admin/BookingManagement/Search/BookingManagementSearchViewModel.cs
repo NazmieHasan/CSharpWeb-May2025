@@ -1,4 +1,4 @@
-﻿namespace HotelApp.Web.ViewModels.Admin.BookingManagement
+﻿namespace HotelApp.Web.ViewModels.Admin.BookingManagement.Search
 {
     public class BookingManagementSearchViewModel
     {
