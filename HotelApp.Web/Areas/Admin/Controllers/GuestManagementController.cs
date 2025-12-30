@@ -1,15 +1,13 @@
 ﻿namespace HotelApp.Web.Areas.Admin.Controllers
 {
     using HotelApp.Web.ViewModels.Admin.GuestManagement;
+    using HotelApp.Web.ViewModels.Admin.GuestManagement.Search;
     using Microsoft.AspNetCore.Mvc;
 
     using Services.Core.Admin.Interfaces;
 
     using static GCommon.ApplicationConstants;
     using HotelApp.GCommon;
-
-    using System.Collections.Generic;
-    using HotelApp.Web.ViewModels.Admin.BookingManagement;
 
     public class GuestManagementController : BaseAdminController
     {
@@ -174,5 +172,26 @@
 
             return this.RedirectToAction(nameof(Index));
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Search()
+        {
+            var model = new GuestManagementSearchViewModel
+            {
+                HasSearched = false
+            };
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> SearchResult(GuestManagementSearchViewModel model)
+        {
+            model.Results = await guestService.SearchGuestAsync(model.Search);
+            model.HasSearched = true;
+
+            return View("Search", model);
+        }
+
     }
 }

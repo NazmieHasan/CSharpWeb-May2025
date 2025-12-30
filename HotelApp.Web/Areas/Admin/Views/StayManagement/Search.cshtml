@@ -1,8 +1,8 @@
-﻿@using HotelApp.Web.ViewModels.Admin.BookingManagement.Search
-@model BookingManagementSearchViewModel 
+﻿@using HotelApp.Web.ViewModels.Admin.StayManagement.Search
+@model StayManagementSearchViewModel
 
-@{ 
-    ViewData["Title"] = "Search Bookings"; 
+@{
+    ViewData["Title"] = "Search Stays";
 }
 
 <div class="container mt-5 mb-5">
@@ -14,33 +14,29 @@
 
             <h3 class="text-center mb-4">@ViewData["Title"]</h3>
 
-            <form asp-controller="BookingManagement" asp-action="SearchResult" method="get">
+            <form asp-controller="StayManagement" asp-action="SearchResult" method="get">
                 <div class="mb-3">
-                    <label asp-for="Search.Id" class="form-label">Booking ID</label>
-                    <input asp-for="Search.Id" class="form-control" placeholder="Enter Booking ID" />
-                </div>
-                <div class="mb-3">
-                    <label asp-for="Search.Owner" class="form-label">Booking Owner</label>
-                    <input asp-for="Search.Owner" class="form-control" placeholder="Enter Booking Owner Name and Family" />
+                    <label asp-for="Search.Id" class="form-label">Stay ID</label>
+                    <input asp-for="Search.Id" class="form-control" placeholder="Enter Stay ID" />
                 </div>
                 <div class="mb-3">
                     <label asp-for="Search.CreatedOn" class="form-label">Created On</label>
                     <input asp-for="Search.CreatedOn" class="form-control" type="date" />
                 </div>
                 <div class="mb-3">
-                    <label asp-for="Search.DateArrival" class="form-label">Date Arrival</label>
-                    <input asp-for="Search.DateArrival" class="form-control" type="date" />
+                    <label asp-for="Search.BookingId" class="form-label">Booking ID</label>
+                    <input asp-for="Search.BookingId" class="form-control" placeholder="Enter Booking ID" />
                 </div>
                 <div class="mb-3">
-                    <label asp-for="Search.DateDeparture" class="form-label">Date Departure</label>
-                    <input asp-for="Search.DateDeparture" class="form-control" type="date" />
+                    <label asp-for="Search.GuestId" class="form-label">Guest ID</label>
+                    <input asp-for="Search.GuestId" class="form-control" placeholder="Enter Guest ID" />
                 </div>
                 <div class="mb-3">
-                    <label asp-for="Search.StatusId" class="form-label">Select Status</label>
-                    <select asp-for="Search.StatusId" class="form-select"
-                            asp-items="@(new SelectList(Model.Search.Statuses, "Id", "Name"))">
-                        <option value="">-- All --</option>
-                    </select>
+                    <label asp-for="Search.CheckoutOn" class="form-label">Checkout On</label>
+                    <input asp-for="Search.CheckoutOn" class="form-control" type="date" />
+                    <small class="text-muted">
+                        Leave empty to show all stays
+                    </small>
                 </div>
                 <div class="mb-4">
                     <label asp-for="Search.IsDeleted" class="form-label">Deleted</label>
@@ -65,24 +61,26 @@
                 <thead class="thead-dark">
                     <tr class="text-warning">
                         <th>Created On</th>
-                        <th>Arrival Date</th>
-                        <th>Departure Date</th>
-                        <th>Status</th>
+                        <th>Booking Id</th>
+                        <th>Checkout On</th>
                         <th>Is Deleted</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var b in Model.Results)
+                    @foreach (var s in Model.Results)
                     {
                         <tr>
-                            <td class="align-middle">@b.CreatedOn.ToString("yyyy-MM-dd")</td>
-                            <td class="align-middle">@b.DateArrival.ToString("yyyy-MM-dd")</td>
-                            <td class="align-middle">@b.DateDeparture.ToString("yyyy-MM-dd")</td>
-                            <td class="align-middle">@b.Status</td>
-                            <td class="align-middle">@b.IsDeleted</td>
+                            <td class="align-middle">@s.CreatedOn.ToString("yyyy-MM-dd")</td>
                             <td class="align-middle">
-                                <a asp-action="Details" asp-route-id="@b.Id" class="btn btn-success" target="_blank">
+                                <a asp-controller="BookingManagement" asp-action="Details" asp-route-id="@s.BookingId" class="text-light" target="_blank">
+                                    View Booking
+                                </a>
+                            </td>
+                            <td class="align-middle">@s.CheckoutOn</td>
+                            <td class="align-middle">@s.IsDeleted</td>
+                            <td class="align-middle">
+                                <a asp-action="Details" asp-route-id="@s.Id" class="btn btn-success" target="_blank">
                                     <i class="bi bi-eye square"></i> Details
                                 </a>
                             </td>
@@ -95,7 +93,7 @@
     else if (Model.HasSearched)
     {
         <div class="mt-4 text-center">
-            Sorry, no bookings found.
+            Sorry, no stays found.
         </div>
     }
-</div> 
+</div>

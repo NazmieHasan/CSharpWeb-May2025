@@ -1,6 +1,7 @@
 ﻿namespace HotelApp.Services.Core.Admin.Interfaces
 {
     using HotelApp.Web.ViewModels.Admin.StayManagement;
+    using HotelApp.Web.ViewModels.Admin.StayManagement.Search;
 
     public interface IStayManagementService
     {
@@ -19,5 +20,7 @@
         Task<GuestAgeStatsViewModel> GetGuestAgeStatsAsync();
 
         Task<MealGuestAgeStatsViewModel> GetMealGuestAgeStatsAsync();
+
+        Task<IEnumerable<StayManagementSearchResultViewModel>> SearchStayAsync(StayManagementSearchInputModel inputModel);
     }
 }

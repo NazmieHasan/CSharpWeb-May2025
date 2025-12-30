@@ -2,6 +2,7 @@
 {
     using HotelApp.GCommon;
     using HotelApp.Web.ViewModels.Admin.PaymentManagement;
+    using HotelApp.Web.ViewModels.Admin.PaymentManagement.Search;
 
     public interface IPaymentManagementService
     {
@@ -14,5 +15,7 @@
         Task<PaymentManagementDetailsViewModel?> GetPaymentManagementDetailsByIdAsync(string? id);
 
         Task<Tuple<bool, bool>> DeleteOrRestorePaymentAsync(string? id);
+
+        Task<IEnumerable<PaymentManagementSearchResultViewModel>> SearchPaymentAsync(PaymentManagementSearchInputModel inputModel);
     }
 }

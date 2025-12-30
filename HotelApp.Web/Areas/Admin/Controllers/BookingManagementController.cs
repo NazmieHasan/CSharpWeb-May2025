@@ -193,7 +193,6 @@
         }
 
         [HttpGet]
-        [AllowAnonymous]
         public async Task<IActionResult> SearchResult(BookingManagementSearchViewModel model)
         {
             model.Results = await bookingService.SearchBookingAsync(model.Search);

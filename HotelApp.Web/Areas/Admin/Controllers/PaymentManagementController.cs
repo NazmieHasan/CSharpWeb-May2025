@@ -3,6 +3,7 @@
     using HotelApp.GCommon;
     using HotelApp.Web.ViewModels;
     using HotelApp.Web.ViewModels.Admin.PaymentManagement;
+    using HotelApp.Web.ViewModels.Admin.PaymentManagement.Search;
     using Microsoft.AspNetCore.Mvc;
 
     using Services.Core.Admin.Interfaces;
@@ -168,6 +169,31 @@
             }
 
             return this.RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Search()
+        {
+            var model = new PaymentManagementSearchViewModel
+            {
+                Search =
+                {
+                    PaymentMethods = await paymentMethodService.GetPaymentMethodsDropDownDataAsync(),
+                },
+                HasSearched = false
+            };
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> SearchResult(PaymentManagementSearchViewModel model)
+        {
+            model.Results = await paymentService.SearchPaymentAsync(model.Search);
+            model.Search.PaymentMethods = await paymentMethodService.GetPaymentMethodsDropDownDataAsync();
+            model.HasSearched = true;
+
+            return View("Search", model);
         }
 
     }

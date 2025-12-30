@@ -6,6 +6,7 @@
     using Data.Repository.Interfaces;
     using Interfaces;
     using Web.ViewModels.Admin.GuestManagement;
+    using Web.ViewModels.Admin.GuestManagement.Search;
     using HotelApp.Web.ViewModels.Admin.StayManagement;
     using HotelApp.Web.ViewModels;
     using HotelApp.GCommon;
@@ -210,6 +211,77 @@
             }
 
             return new Tuple<bool, bool>(result, isRestored);
+        }
+
+        public async Task<IEnumerable<GuestManagementSearchResultViewModel>> SearchGuestAsync(GuestManagementSearchInputModel inputModel)
+        {
+            var query = guestRepository
+                .GetAllAttached()
+                .IgnoreQueryFilters()
+                .AsNoTracking()
+                .AsQueryable();
+
+            // Guest Id
+            if (!string.IsNullOrWhiteSpace(inputModel.Id))
+            {
+                if (!Guid.TryParse(inputModel.Id, out Guid guestId))
+                {
+                    return new List<GuestManagementSearchResultViewModel>();
+                }
+                query = query.Where(g => g.Id == guestId);
+            }
+
+            // Created On
+            if (inputModel.CreatedOn.HasValue)
+            {
+                var createdDate = inputModel.CreatedOn.Value.Date;
+
+                query = query.Where(g =>
+                    g.CreatedOn.Date == createdDate);
+            }
+
+            // First Name
+            if (!string.IsNullOrWhiteSpace(inputModel.FirstName))
+            {
+                query = query.Where(g =>
+                    g.FirstName.Contains(inputModel.FirstName));
+            }
+
+            // Family Name
+            if (!string.IsNullOrWhiteSpace(inputModel.FamilyName))
+            {
+                query = query.Where(g =>
+                    g.FamilyName.Contains(inputModel.FamilyName));
+            }
+
+            // Birth Date
+            if (inputModel.BirthDate.HasValue)
+            {
+                query = query.Where(g =>
+                    g.BirthDate == inputModel.BirthDate.Value);
+            }
+
+            // IsDeleted
+            if (inputModel.IsDeleted.HasValue)
+            {
+                query = query.Where(g =>
+                    g.IsDeleted == inputModel.IsDeleted.Value);
+            }
+
+            var guests = await query
+                .OrderByDescending(g => g.CreatedOn)
+                .Select(g => new GuestManagementSearchResultViewModel
+                {
+                    Id = g.Id.ToString(),
+                    CreatedOn = g.CreatedOn,
+                    FirstName = g.FirstName,
+                    FamilyName = g.FamilyName,
+                    PhoneNumber = g.PhoneNumber,
+                    IsDeleted = g.IsDeleted
+                })
+                .ToListAsync();
+
+            return guests;
         }
 
     } 

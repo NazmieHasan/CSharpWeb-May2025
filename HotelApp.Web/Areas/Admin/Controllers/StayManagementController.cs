@@ -2,6 +2,7 @@
 {
     using HotelApp.Web.ViewModels;
     using HotelApp.Web.ViewModels.Admin.StayManagement;
+    using HotelApp.Web.ViewModels.Admin.StayManagement.Search;
 
     using Microsoft.AspNetCore.Mvc;
 
@@ -180,6 +181,26 @@
             }
 
             return this.RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Search()
+        {
+            var model = new StayManagementSearchViewModel
+            {
+                HasSearched = false
+            };
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> SearchResult(StayManagementSearchViewModel model)
+        {
+            model.Results = await stayService.SearchStayAsync(model.Search);
+            model.HasSearched = true;
+
+            return View("Search", model);
         }
     }
 }

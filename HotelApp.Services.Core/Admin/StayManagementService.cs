@@ -6,6 +6,7 @@
     using Interfaces;
 
     using HotelApp.Web.ViewModels.Admin.StayManagement;
+    using HotelApp.Web.ViewModels.Admin.StayManagement.Search;
     using HotelApp.Data.Models;
     using HotelApp.Web.ViewModels;
 
@@ -365,6 +366,84 @@
             statsMeal.DinnerAdults = dinnerGuests.Count(g => g.Age >= 18);
 
             return statsMeal;
+        }
+
+        public async Task<IEnumerable<StayManagementSearchResultViewModel>> SearchStayAsync(StayManagementSearchInputModel inputModel)
+        {
+            var query = stayRepository
+                .GetAllAttached()
+                .IgnoreQueryFilters()
+                .AsNoTracking()
+                .AsQueryable();
+
+            // Stay Id
+            if (!string.IsNullOrWhiteSpace(inputModel.Id))
+            {
+                if (!Guid.TryParse(inputModel.Id, out Guid stayId))
+                {
+                    return new List<StayManagementSearchResultViewModel>();
+                }
+                query = query.Where(s => s.Id == stayId);
+            }
+
+            // Booking Id
+            if (!string.IsNullOrWhiteSpace(inputModel.BookingId))
+            {
+                if (!Guid.TryParse(inputModel.BookingId, out Guid bookingId))
+                {
+                    return new List<StayManagementSearchResultViewModel>();
+                }
+                query = query.Where(s => s.BookingId == bookingId);
+            }
+
+            // Guest Id
+            if (!string.IsNullOrWhiteSpace(inputModel.GuestId))
+            {
+                if (!Guid.TryParse(inputModel.GuestId, out Guid guestId))
+                {
+                    return new List<StayManagementSearchResultViewModel>();
+                }
+                query = query.Where(s => s.GuestId == guestId);
+            }
+
+            // Created On
+            if (inputModel.CreatedOn.HasValue)
+            {
+                var createdDate = inputModel.CreatedOn.Value.Date;
+
+                query = query.Where(s =>
+                    s.CreatedOn.Date == createdDate);
+            }
+
+            if (inputModel.CheckoutOn.HasValue)
+            {
+                DateTime checkoutDate = inputModel.CheckoutOn.Value.Date;
+
+                query = query.Where(s =>
+                    s.CheckoutOn.HasValue &&
+                    s.CheckoutOn.Value.Date == checkoutDate);
+            }
+
+            // IsDeleted
+            if (inputModel.IsDeleted.HasValue)
+            {
+                query = query.Where(s =>
+                    s.IsDeleted == inputModel.IsDeleted.Value);
+            }
+
+            var stays = await query
+                .OrderByDescending(s => s.CreatedOn)
+                .Select(s => new StayManagementSearchResultViewModel
+                {
+                    Id = s.Id.ToString(),
+                    CreatedOn = s.CreatedOn,
+                    BookingId = s.BookingId.ToString(),
+                    CheckoutOn = s.CheckoutOn.HasValue ? s.CheckoutOn.Value.ToString("yyyy-MM-dd") : "-",
+                    IsDeleted = s.IsDeleted
+                })
+                .ToListAsync();
+
+            return stays;
         }
 
     }

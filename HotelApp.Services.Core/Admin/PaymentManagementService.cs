@@ -7,8 +7,7 @@
     using Interfaces;
 
     using HotelApp.Web.ViewModels.Admin.PaymentManagement;
-    using HotelApp.Web.ViewModels.Admin.GuestManagement;
-    using HotelApp.Web.ViewModels.Admin.StayManagement;
+    using HotelApp.Web.ViewModels.Admin.PaymentManagement.Search;
     using HotelApp.GCommon;
 
     using HotelApp.Services.Common.Extensions;
@@ -164,6 +163,81 @@
             }
 
             return new Tuple<bool, bool>(result, isRestored);
+        }
+
+        public async Task<IEnumerable<PaymentManagementSearchResultViewModel>> SearchPaymentAsync(PaymentManagementSearchInputModel inputModel)
+        {
+            var query = paymentRepository
+                .GetAllAttached()
+                .Include(p => p.PaymentMethod)
+                .IgnoreQueryFilters()
+                .AsNoTracking()
+                .AsQueryable();
+
+            // Payment Id
+            if (!string.IsNullOrWhiteSpace(inputModel.Id))
+            {
+                if (!Guid.TryParse(inputModel.Id, out Guid paymentId))
+                {
+                    return new List<PaymentManagementSearchResultViewModel>();
+                }
+                query = query.Where(p => p.Id == paymentId);
+            }
+
+            // Created On
+            if (inputModel.CreatedOn.HasValue)
+            {
+                var createdDate = inputModel.CreatedOn.Value.Date;
+
+                query = query.Where(p =>
+                    p.CreatedOn.Date == createdDate);
+            }
+
+            // Booking Id
+            if (!string.IsNullOrWhiteSpace(inputModel.BookingId))
+            {
+                if (!Guid.TryParse(inputModel.BookingId, out Guid bookingId))
+                {
+                    return new List<PaymentManagementSearchResultViewModel>();
+                }
+                query = query.Where(p => p.BookingId == bookingId);
+            }
+
+            // Payment User Full Name
+            if (!string.IsNullOrWhiteSpace(inputModel.PaymentUserFullName))
+            {
+                query = query.Where(p =>
+                    p.PaymentUserFullName == inputModel.PaymentUserFullName);
+            }
+
+            // Payment Method
+            if (inputModel.PaymentMethodId.HasValue)
+            {
+                query = query.Where(p =>
+                    p.PaymentMethodId == inputModel.PaymentMethodId.Value);
+            }
+
+            // IsDeleted
+            if (inputModel.IsDeleted.HasValue)
+            {
+                query = query.Where(p =>
+                    p.IsDeleted == inputModel.IsDeleted.Value);
+            }
+
+            var payments = await query
+                .OrderByDescending(p => p.CreatedOn)
+                .Select(p => new PaymentManagementSearchResultViewModel
+                {
+                    Id = p.Id.ToString(),
+                    CreatedOn = p.CreatedOn,
+                    BookingId = p.BookingId.ToString(),
+                    PaymentUserFullName = p.PaymentUserFullName,
+                    PaymentMethod = p.PaymentMethod.Name,
+                    IsDeleted = p.IsDeleted
+                })
+                .ToListAsync();
+
+            return payments;
         }
 
     }

@@ -286,9 +286,12 @@
                 .AsQueryable();
 
             // Booking Id
-            if (!string.IsNullOrWhiteSpace(inputModel.Id)
-                && Guid.TryParse(inputModel.Id, out Guid bookingId))
+            if (!string.IsNullOrWhiteSpace(inputModel.Id))
             {
+                if (!Guid.TryParse(inputModel.Id, out Guid bookingId))
+                {
+                    return new List<BookingManagementSearchResultViewModel>();
+                }
                 query = query.Where(b => b.Id == bookingId);
             }
 
