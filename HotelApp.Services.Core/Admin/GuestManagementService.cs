@@ -10,7 +10,7 @@
     using HotelApp.Web.ViewModels;
     using HotelApp.GCommon;
 
-    using static HotelApp.Services.Core.DateTimeExtensions;
+    using HotelApp.Services.Common.Extensions;
 
     public class GuestManagementService : IGuestManagementService
     {

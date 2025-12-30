@@ -4,6 +4,6 @@
 
     public class BookingManagementReportGuestCountSearchResultViewModel : MealGuestAgeStatsViewModel
     {
-        public DateOnly DayOfMonth;
+        public DateOnly DayOfMonth { get; set; }
     }
 }

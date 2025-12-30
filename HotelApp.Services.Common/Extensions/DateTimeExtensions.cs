@@ -1,4 +1,4 @@
-﻿namespace HotelApp.Services.Core
+﻿namespace HotelApp.Services.Common.Extensions
 {
     public static class DateTimeExtensions
     {

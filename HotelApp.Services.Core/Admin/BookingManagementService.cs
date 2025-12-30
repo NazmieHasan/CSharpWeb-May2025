@@ -12,7 +12,7 @@
     using Web.ViewModels.Admin.BookingManagement;
     using Web.ViewModels.Admin.StayManagement;
 
-    using static HotelApp.Services.Core.DateTimeExtensions;
+    using HotelApp.Services.Common.Extensions;
 
     public class BookingManagementService : IBookingManagementService
     {
@@ -400,12 +400,14 @@
 
             for (var day = monthStart; day <= monthEnd; day = day.AddDays(1))
             {
-                int breakfastAdults = 0, breakfastChildren = 0, breakfastBabies = 0;
-                int lunchAdults = 0, lunchChildren = 0, lunchBabies = 0;
-                int dinnerAdults = 0, dinnerChildren = 0, dinnerBabies = 0;
+                int breakfastAdults = 0; int breakfastChildren = 0; int breakfastBabies = 0;
+                int lunchAdults = 0;     int lunchChildren = 0;     int lunchBabies = 0;
+                int dinnerAdults = 0;    int dinnerChildren = 0;    int dinnerBabies = 0;
 
-                foreach (var b in bookings)
+                for (int i = bookings.Count - 1; i >= 0; i--)
                 {
+                    var b = bookings[i];
+
                     if (day == b.DateArrival)
                     {
                         dinnerAdults += b.AdultsCount;
@@ -432,6 +434,11 @@
                         dinnerChildren += b.ChildCount;
                         dinnerBabies += b.BabyCount;
                     }
+
+                    if (b.DateDeparture <= day)
+                    {
+                        bookings.RemoveAt(i);
+                    }
                 }
 
                 if (breakfastAdults + breakfastChildren + breakfastBabies +
@@ -456,7 +463,7 @@
                 });
             }
 
-            return results.OrderBy(r => r.DayOfMonth).ToList();
+            return results;
         }
 
     }

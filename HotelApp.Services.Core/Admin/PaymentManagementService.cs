@@ -11,7 +11,7 @@
     using HotelApp.Web.ViewModels.Admin.StayManagement;
     using HotelApp.GCommon;
 
-    using static HotelApp.Services.Core.DateTimeExtensions;
+    using HotelApp.Services.Common.Extensions;
 
     public class PaymentManagementService : IPaymentManagementService
     {

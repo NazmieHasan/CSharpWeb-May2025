@@ -9,7 +9,7 @@
     using HotelApp.Data.Models;
     using HotelApp.Web.ViewModels;
 
-    using static HotelApp.Services.Core.DateTimeExtensions;
+    using HotelApp.Services.Common.Extensions;
 
     public class StayManagementService : IStayManagementService
     {

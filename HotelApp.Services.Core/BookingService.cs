@@ -13,7 +13,7 @@
     using HotelApp.Web.ViewModels.Manager;
 
     using static GCommon.ApplicationConstants;
-    using static HotelApp.Services.Core.DateTimeExtensions;
+    using HotelApp.Services.Common.Extensions;
     using HotelApp.GCommon;
 
     public class BookingService : IBookingService
