@@ -4,15 +4,13 @@
     ViewData["Title"] = "Add New Stay";
 }
 
-<div class="container mt-5">
+<div class="container mt-2 mb-5">
     <h2 class="text-center text-danger fw-bold">Add a New Stay</h2>
-    <hr class="mb-4">
-
     <div class="row justify-content-center">
         <div class="col-md-12">
             <form asp-action="Create" method="post" class="bg-dark text-light p-4 rounded shadow-lg">
-                <!-- Hidden BookingId -->
-                <input type="hidden" asp-for="BookingId" />
+                <!-- Hidden BookingRoomId -->
+                <input type="hidden" asp-for="BookingRoomId" />
 
                 <div class="mb-3">
                     <label asp-for="GuestEmail" class="form-label fw-bold">Guest Email</label>

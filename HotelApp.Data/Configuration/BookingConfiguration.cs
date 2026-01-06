@@ -51,12 +51,6 @@
                 .HasDefaultValue(false);
 
             entity
-                .HasOne(r => r.Room)
-                .WithMany(b => b.Bookings)
-                .HasForeignKey(r => r.RoomId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            entity
                 .HasOne(s => s.Status)
                 .WithMany(b => b.Bookings)
                 .HasForeignKey(s => s.StatusId)

@@ -18,16 +18,22 @@
         private readonly IGuestRepository guestRepository;
         private readonly IBookingRepository bookingRepository;
         private readonly IBookingManagementService bookingService;
+        private readonly IBookingRoomRepository bookingRoomRepository;
+        private readonly IBookingRoomManagementService bookingRoomService;
 
         public StayManagementService(IStayRepository stayRepository,
             IGuestRepository guestRepository,
             IBookingRepository bookingRepository,
-            IBookingManagementService bookingService)
+            IBookingManagementService bookingService,
+            IBookingRoomRepository bookingRoomRepository,
+            IBookingRoomManagementService bookingRoomService)
         {
             this.stayRepository = stayRepository;
             this.guestRepository = guestRepository;
             this.bookingRepository = bookingRepository;
             this.bookingService = bookingService;
+            this.bookingRoomRepository = bookingRoomRepository;
+            this.bookingRoomService = bookingRoomService;
         }
 
         public async Task<IEnumerable<StayManagementIndexViewModel>> GetStayManagementBoardDataAsync()
@@ -60,31 +66,61 @@
                 throw new ArgumentException(ValidationMessages.Stay.GuestEmailNotFoundMessage);
             }
 
-            bool guestAlreadyInBooking = await this.stayRepository
+            bool guestAlreadyInBookingRoom = await this.stayRepository
                 .GetAllAttached()
-                .AnyAsync(s => s.BookingId == inputModel.BookingId
+                .AnyAsync(s => s.BookingRoomId == inputModel.BookingRoomId
                        && s.GuestId == guest.Id);
 
-            if (guestAlreadyInBooking)
+            if (guestAlreadyInBookingRoom)
             {
                 throw new InvalidOperationException(ValidationMessages.Stay.GuestEmailExistMessage);
             }
 
+            var bookingRoom = await this.bookingRoomRepository
+                .GetAllAttached()
+                .Include(br => br.Booking)
+                .Include(br => br.Stays)
+                .FirstOrDefaultAsync(br => br.Id == inputModel.BookingRoomId);
+
+            if (bookingRoom == null)
+            {
+                throw new InvalidOperationException("BookingRoom not found.");
+            }
+
+            var totalGuestsInRoom = bookingRoom.AdultsCount + bookingRoom.ChildCount + bookingRoom.BabyCount;
+            var hotelNow = DateTime.UtcNow.ToHotelTime(); 
+            var departureLimit = bookingRoom.Booking.DateDeparture.ToDateTime(new TimeOnly(11, 0));
+
+            bool isAllowedAddStay =
+                (bookingRoom.Status.Name == "For Implementation"
+                    && DateOnly.FromDateTime(hotelNow) >= bookingRoom.Booking.DateArrival
+                    && hotelNow < departureLimit)
+                || (bookingRoom.Status.Name == "In Progress"
+                    && totalGuestsInRoom > bookingRoom.Stays.Count);
+
+            if (!isAllowedAddStay)
+            {
+                throw new InvalidOperationException("Cannot add stay for this room at the current time or status.");
+            }
+
             var newStay = new Stay
             {
-                BookingId = inputModel.BookingId,
+                BookingRoomId = inputModel.BookingRoomId,
                 GuestId = guest.Id,
             };
-
             await this.stayRepository.AddAsync(newStay);
 
-            var booking = await this.bookingService.FindBookingByIdAsync(inputModel.BookingId);
-
-            if (booking != null && booking.StatusId == 3)
+            if (bookingRoom.Booking.StatusId == 3) // For Implementation
             {
-                booking.StatusId = 4;  // In Progress
-                await this.bookingRepository.SaveChangesAsync();
+                bookingRoom.Booking.StatusId = 4; // In Progress
             }
+
+            if (bookingRoom.StatusId == 3) // For Implementation
+            {
+                bookingRoom.StatusId = 4; // In Progress
+            }
+
+            await this.bookingRepository.SaveChangesAsync();
         }
 
         public async Task<StayManagementDetailsViewModel?> GetStayManagementDetailsByIdAsync(string? id)
@@ -134,7 +170,7 @@
                     {
                         Id = stayToEdit.Id.ToString(),
                         CheckoutOn = stayToEdit.CheckoutOn,
-                        BookingId = stayToEdit.BookingId,
+                        BookingRoomId = stayToEdit.BookingRoomId,
                     };
                 }
             }
@@ -144,52 +180,66 @@
 
         public async Task<bool> EditStayAsync(StayManagementEditFormModel? inputModel)
         {
-            if (inputModel == null) 
-            {
-                return false;
-            }
+            if (inputModel == null) return false;
 
-            var stayToEdit = await this.stayRepository
+            var stay = await this.stayRepository
                 .GetAllAttached()
-                .SingleOrDefaultAsync(s => s.Id.ToString().ToLower() == inputModel.Id.ToLower());
+                .Include(s => s.BookingRoom)
+                    .ThenInclude(br => br.Booking)
+                        .ThenInclude(b => b.Status)
+                .Include(s => s.BookingRoom)
+                    .ThenInclude(status => status.Status)
+                .SingleOrDefaultAsync(s => s.Id.ToString() == inputModel.Id);
 
-            if (stayToEdit == null)
+            if (stay == null) 
             {
                 return false;
             }
 
-            stayToEdit.CheckoutOn = DateTime.UtcNow;
-            var stayUpdated = await this.stayRepository.UpdateAsync(stayToEdit);
+            stay.CheckoutOn = DateTime.UtcNow;
 
-            if (!stayUpdated)
+            var bookingRoom = stay.BookingRoom;
+            if (bookingRoom == null)
             {
                 return false;
             }
 
-            var booking = await this.bookingService.FindBookingByIdAsync(inputModel.BookingId);
-
-            if (booking != null)
+            var booking = bookingRoom.Booking;
+            if (booking == null)
             {
-                var allStays = await this.stayRepository
-                    .GetAllAttached()
-                    .Where(s => s.BookingId == booking.Id && !s.IsDeleted)
-                    .ToListAsync();
-
-                var remainingStays = allStays.Where(s => s.CheckoutOn == null).ToList();
-                var expectedGuests = booking.AdultsCount + booking.ChildCount + booking.BabyCount;
-
-                if (!remainingStays.Any() && allStays.Count == expectedGuests)
-                {
-                    var lastCheckout = allStays.Max(s => s.CheckoutOn!.Value);
-                    var lastCheckoutDate = DateOnly.FromDateTime(lastCheckout);
-
-                    booking.StatusId = lastCheckoutDate < booking.DateDeparture
-                        ? 6 // Done - Early Check Out
-                        : 5; // Done
-
-                    await this.bookingRepository.UpdateAsync(booking);
-                }
+                return false;
             }
+
+            var allStaysForRoom = await this.stayRepository
+                .GetAllAttached()
+                .Where(s => s.BookingRoomId == bookingRoom.Id && !s.IsDeleted)
+                .ToListAsync();
+
+            var remainingStays = allStaysForRoom.Where(s => s.CheckoutOn == null).ToList();
+            var expectedGuests = bookingRoom.AdultsCount + bookingRoom.ChildCount + bookingRoom.BabyCount;
+
+            if (!remainingStays.Any() && allStaysForRoom.Count == expectedGuests)
+            {
+                var lastCheckout = allStaysForRoom.Max(s => s.CheckoutOn!.Value);
+                var lastCheckoutDate = DateOnly.FromDateTime(lastCheckout);
+
+                bookingRoom.StatusId =
+                    lastCheckoutDate < booking.DateDeparture
+                        ? 6  // Done - Early Check Out
+                        : 5; // Done - On Time
+            }
+
+            var allBookingRooms = await this.bookingRoomRepository
+                .GetAllAttached()
+                .Where(br => br.BookingId == booking.Id && !br.IsDeleted)
+                .ToListAsync();
+
+            if (allBookingRooms.All(br => br.StatusId >= 5 && br.StatusId <= 9))
+            {
+                booking.StatusId = 9; // Done
+            }
+
+            await this.bookingRepository.SaveChangesAsync();
 
             return true;
         }
@@ -262,7 +312,8 @@
             var stays = await this.stayRepository
                 .GetAllAttached()
                 .Include(s => s.Guest)
-                .Include(s => s.Booking)
+                .Include(s => s.BookingRoom)
+                    .ThenInclude(br => br.Booking)
                 .Where(s =>
                     !s.IsDeleted &&
                     s.Guest != null &&
@@ -279,16 +330,16 @@
                     DateTime? checkoutLocal = s.CheckoutOn.ToHotelTime();
 
                     bool stillStaying =
-                        s.Booking.DateArrival < today &&
-                        s.Booking.DateDeparture > today &&
+                        s.BookingRoom.Booking.DateArrival < today &&
+                        s.BookingRoom.Booking.DateDeparture > today &&
                         checkoutLocal == null;
 
                     bool departureTodayAndStillStaying =
-                        s.Booking.DateDeparture == today &&
+                        s.BookingRoom.Booking.DateDeparture == today &&
                         checkoutLocal == null;
 
                     bool departureTodayAndCheckoutAfterBreakfastStart =
-                        s.Booking.DateDeparture == today &&
+                        s.BookingRoom.Booking.DateDeparture == today &&
                         checkoutLocal != null &&
                         checkoutLocal >= breakfastStart;
 
@@ -311,13 +362,13 @@
                     DateTime? checkoutLocal = s.CheckoutOn.ToHotelTime();
 
                     bool stillStaying =
-                        s.Booking.DateArrival < today &&
-                        s.Booking.DateDeparture > today &&
+                        s.BookingRoom.Booking.DateArrival < today &&
+                        s.BookingRoom.Booking.DateDeparture > today &&
                         checkoutLocal == null;
 
                     bool checkoutAfterLunchStart =
-                        s.Booking.DateArrival < today &&
-                        s.Booking.DateDeparture > today &&
+                        s.BookingRoom.Booking.DateArrival < today &&
+                        s.BookingRoom.Booking.DateDeparture > today &&
                         checkoutLocal != null &&
                         checkoutLocal >= lunchStart;
 
@@ -339,16 +390,16 @@
                     DateTime? checkoutLocal = s.CheckoutOn.ToHotelTime();
 
                     bool stillStaying =
-                        s.Booking.DateArrival < today &&
-                        s.Booking.DateDeparture > today &&
+                        s.BookingRoom.Booking.DateArrival < today &&
+                        s.BookingRoom.Booking.DateDeparture > today &&
                         checkoutLocal == null;
 
                     bool arrivedTodayAndStillStaying =
-                        s.Booking.DateArrival == today &&
+                        s.BookingRoom.Booking.DateArrival == today &&
                         checkoutLocal == null;
 
                     bool arrivedTodayAndCheckoutAfterDinnerStart =
-                        s.Booking.DateArrival == today &&
+                        s.BookingRoom.Booking.DateArrival == today &&
                         checkoutLocal != null &&
                         checkoutLocal >= dinnerStart;
 
@@ -393,7 +444,7 @@
                 {
                     return new List<StayManagementSearchResultViewModel>();
                 }
-                query = query.Where(s => s.BookingId == bookingId);
+                query = query.Where(s => s.BookingRoom.BookingId == bookingId);
             }
 
             // Guest Id
@@ -437,7 +488,7 @@
                 {
                     Id = s.Id.ToString(),
                     CreatedOn = s.CreatedOn,
-                    BookingId = s.BookingId.ToString(),
+                    BookingId = s.BookingRoom.BookingId.ToString(),
                     CheckoutOn = s.CheckoutOn.HasValue ? s.CheckoutOn.Value.ToString("yyyy-MM-dd") : "-",
                     IsDeleted = s.IsDeleted
                 })

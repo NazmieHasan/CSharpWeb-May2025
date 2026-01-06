@@ -16,9 +16,9 @@
 
         public DateTime? CheckoutOn { get; set; }
 
-        public Guid BookingId { get; set; }
+        public Guid BookingRoomId { get; set; }
 
-        public Booking Booking { get; set; } = null!;
+        public BookingRoom BookingRoom { get; set; } = null!;
 
         public Guid GuestId { get; set; }
 

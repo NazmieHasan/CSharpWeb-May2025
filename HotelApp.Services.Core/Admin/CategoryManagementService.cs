@@ -14,12 +14,12 @@
     public class CategoryManagementService : ICategoryManagementService
     {
         private readonly ICategoryRepository categoryRepository;
-        private readonly IBookingRepository bookingRepository;
+        private readonly IBookingRoomRepository bookingRoomRepository;
 
         public CategoryManagementService(ICategoryRepository categoryRepository, IBookingRepository bookingRepository)
         {
             this.categoryRepository = categoryRepository;
-            this.bookingRepository = bookingRepository;
+            this.bookingRoomRepository = bookingRoomRepository;
         }
 
         public async Task<IEnumerable<CategoryManagementIndexViewModel>> GetCategoryManagementBoardDataAsync()
@@ -142,11 +142,11 @@
 
             if (inputModel.Beds < editableCat.Beds)
             {
-                bool hasConflictingBookings = await this.bookingRepository
+                bool hasConflictingBookings = await this.bookingRoomRepository
                     .GetAllAttached()
-                    .Include(b => b.Room) 
-                        .Where(b => b.Room.CategoryId == editableCat.Id)
-                        .AnyAsync(b => (b.AdultsCount + b.ChildCount + b.BabyCount) > inputModel.Beds + 1);
+                    .Include(br => br.Room) 
+                        .Where(br => br.Room.CategoryId == editableCat.Id)
+                        .AnyAsync(br => (br.AdultsCount + br.ChildCount + br.BabyCount) > inputModel.Beds + 1);
 
                 if (hasConflictingBookings)
                 {

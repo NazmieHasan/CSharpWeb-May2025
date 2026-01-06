@@ -6,11 +6,11 @@
 
 <div class="container mt-5">
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-2">
         </div>
-        <div class="col-md-8">
+        <div class="col-md-10">
             <h2 class="fw-bold text-primary mb-3">Booking Details</h2>
-            <h6 class="card-title">Booking @Model.Id</h6>
+            <h6 class="card-title">Booking @Model.Id, Is Deleted: @Model.IsDeleted</h6>
             <hr />
             <p>Created On: @Model.CreatedOn.ToString("yyyy-MM-dd HH:mm:ss")</p>
             <p>
@@ -24,15 +24,6 @@
                     </button>
                     <div id="createPayment"></div>
                 }
-                else if (Model.AllowedOperation == "AddStay")
-                {
-                    <button class="btn btn-danger fw-bold shadow-sm"
-                            onclick="AddStay('@Model.Id')"
-                            id="addStay">
-                        Add Stay
-                    </button>
-                    <div id="createStay"></div>
-                }
             </p>
             @if (@Model.IsDeleted == true)
             {
@@ -45,32 +36,81 @@
             <p>Arrival Date: @Model.DateArrival.ToString("yyyy-MM-dd")</p>
             <p>Departure Date: @Model.DateDeparture.ToString("yyyy-MM-dd")</p>
             <p>Day(s): @Model.DaysCount</p>
-            <p>
-                Room: 
-                <a asp-area="Admin"
-                    asp-controller="RoomManagement"
-                    asp-action="Details"
-                    asp-route-id="@Model.RoomId"
-                    class="link-danger text-decoration-none"
-                    target="_blank">
-                    @Model.Room
-                </a>
-            </p>
-            <p>Category: @Model.RoomCategory</p>
+            <h6>Rooms:</h6>
+            <ul>
+                @foreach (var room in Model.Rooms)
+                {
+                    <li>
+                        <a asp-area="Admin"
+                           asp-controller="RoomManagement" asp-action="Details"
+                           asp-route-id="@room.RoomId" class="link-danger" target="_blank">
+                           @room.RoomName (@room.RoomCategory)
+                        </a>
+                        @if (room.IsAllowedAddStay && !Model.IsDeleted)
+                        {
+                            <button class="btn btn-danger fw-bold shadow-sm ms-2"
+                                    onclick="AddStay('@room.BookingRoomId')">
+                                Add Stay
+                            </button>
+                            <div id="createStay-@room.BookingRoomId"></div>
+                        }
+                    </li>
+                }
+            </ul>
             <p>Total Amount $@Model.TotalAmount.ToString("0.00")</p>
             <p>Paid Amount $@Model.PaidAmount.ToString("0.00")</p>
             <p>Remaining Amount $@Model.RemainingAmount.ToString("0.00")</p>
-            <p>Adults: @Model.AdultsCount</p>
-            <p>Children: @Model.ChildCount</p>
-            <p>Babies: @Model.BabyCount</p>
-            <p>Is Deleted: @Model.IsDeleted</p>
             <div class="mt-4 mb-5">
                 <a asp-action="Index" class="btn btn-outline-primary ms-2">
                     <i class="bi bi-arrow-left"></i> Back to List
                 </a>
             </div>
 
-
+            <h6>Rooms:</h6>
+            <table class="table table-dark table-striped mt-3 mb-5">
+                <thead>
+                    <tr>
+                        <th>BookingRoomId</th>
+                        <th>Room Status</th>
+                        <th>Room</th>
+                        <th>Adults</th>
+                        <th>Children</th>
+                        <th>Babies</th>
+                    </tr>     
+                </thead>
+                <tbody>
+                    @foreach (var room in Model.Rooms)
+                    {
+                        <tr>
+                            <td class="align-middle">
+                                <a asp-area="Admin" class="link-light"
+                                    asp-controller="BookingRoomManagement" asp-action="Details"
+                                    asp-route-id="@room.BookingRoomId" target="_blank">
+                                        View BookingRoom
+                                 </a>
+                            </td>
+                            <td class="align-middle">@room.RoomStatus</td>
+                            <td class="align-middle">
+                                <a asp-area="Admin" asp-controller="RoomManagement"
+                                   asp-action="Details" asp-route-id="@room.RoomId"
+                                   class="link-danger" target="_blank">
+                                    @room.RoomName
+                                </a>
+                            </td>
+                            <td class="align-middle">@room.AdultsCountPerRoom</td>
+                            <td class="align-middle">@room.ChildCountPerRoom</td>
+                            <td class="align-middle">@room.BabyCountPerRoom</td>
+                        </tr>
+                    }
+                    <tr>
+                        <td  colspan="3" class="text-end fw-bold">Total:</td>
+                        <td class="align-middle">@Model.AdultsCount</td>
+                        <td class="align-middle">@Model.ChildCount</td>
+                        <td class="align-middle">@Model.BabyCount</td>
+                    </tr>
+                </tbody>
+            </table>
+            
             <h4 class="mt-5 fw-bold text-secondary">Payment History</h4>
 
             @if (Model.Payments != null && Model.Payments.Any())
@@ -125,8 +165,10 @@
                 <table class="table table-dark table-striped mt-3 mb-5">
                     <thead>
                         <tr>
+                            <th>Room</th>
+                            <th>BookingRoom</th>
                             <th>Guest Names</th>
-                            <th>Guest Age</th>
+                            <th>Age</th>
                             <th>Created On</th>
                             <th>Is Completed</th>
                             <th>Is Deleted</th>
@@ -137,6 +179,14 @@
                         @foreach (var stay in Model.Stays)
                         {
                             <tr>
+                                <td>@stay.RoomName</td>
+                                <td>
+                                    <a asp-area="Admin" class="link-light"
+                                    asp-controller="BookingRoomManagement" asp-action="Details"
+                                    asp-route-id="@stay.BookingRoomId" target="_blank">
+                                        View BookingRoom
+                                 </a>
+                                </td>
                                 <td>@stay.GuestFirstName @stay.GuestFamilyName</td>
                                 <td>@stay.GuestAge</td>
                                 <td>@stay.CreatedOn.ToString("yyyy-MM-dd HH:mm")</td>
@@ -146,7 +196,7 @@
                                         <span>No</span>
                                         <form method="post" asp-action="Edit" asp-controller="StayManagement" class="d-inline">
                                             <input type="hidden" name="Id" value="@stay.Id" />
-                                            <input type="hidden" name="BookingId" value="@Guid.Parse(Model.Id)" />
+                                            <input type="hidden" name="BookingRoomId" value="@stay.BookingRoomId" />
                                             <button type="submit" class="btn btn-danger btn-sm m-0 fw-bold ms-2">Check Out</button>
                                         </form>
                                     }

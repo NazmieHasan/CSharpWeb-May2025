@@ -21,17 +21,20 @@
         private readonly IBookingRepository bookingRepository;
         private readonly IManagerRepository managerRepository;
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly IBookingRoomRepository bookingRoomRepository;
 
         public BookingService(IBookingRepository bookingRepository,
             IManagerRepository managerRepository,
-            UserManager<ApplicationUser> userManager)
+            UserManager<ApplicationUser> userManager,
+            IBookingRoomRepository bookingRoomRepository)
         {
             this.bookingRepository = bookingRepository;
             this.managerRepository = managerRepository;
             this.userManager = userManager;
+            this.bookingRoomRepository = bookingRoomRepository;
         }
 
-        public async Task<bool> AddBookingAsync(string userId, AddBookingInputModel inputModel)
+        public async Task<bool> AddBookingWithRoomsAsync(string userId, AddBookingInputModel inputModel)
         {
             if (inputModel.DateArrival < DateOnly.FromDateTime(DateTime.UtcNow) ||
                 inputModel.DateDeparture <= inputModel.DateArrival)
@@ -50,16 +53,23 @@
             {
                 DateArrival = inputModel.DateArrival,
                 DateDeparture = inputModel.DateDeparture,
-                AdultsCount = inputModel.AdultsCount,
-                ChildCount = inputModel.ChildCount,
-                BabyCount = inputModel.BabyCount,
                 UserId = userId,
-                RoomId = inputModel.RoomId,
                 Owner = inputModel.Owner,
                 IsForAnotherPerson = inputModel.IsForAnotherPerson
             };
 
             await this.bookingRepository.AddAsync(newBooking);
+
+            var bookingRoom = new BookingRoom
+            {
+                BookingId = newBooking.Id,
+                RoomId = inputModel.RoomId,
+                AdultsCount = inputModel.AdultsCount,
+                ChildCount = inputModel.ChildCount,
+                BabyCount = inputModel.BabyCount
+            };
+
+            await this.bookingRoomRepository.AddAsync(bookingRoom);
 
             return true;
         }
@@ -68,8 +78,11 @@
         {
             var query = this.bookingRepository
                 .GetAllAttached()
-                .Include(b => b.Room)
-                    .ThenInclude(r => r.Category)
+                .Include(b => b.BookingRooms)
+                    .ThenInclude(br => br.Room)
+                        .ThenInclude(r => r.Category)
+                .Include(b => b.BookingRooms)
+                    .ThenInclude(br => br.Status)
                 .Include(b => b.Status)
                 .AsNoTracking()
                 .Where(b => b.UserId.ToLower() == userId.ToLower())
@@ -80,14 +93,21 @@
                     CreatedOn = b.CreatedOn.ToHotelTime(),
                     DateArrival = b.DateArrival,
                     DateDeparture = b.DateDeparture,
-                    AdultsCount = b.AdultsCount,
-                    ChildCount = b.ChildCount,
-                    BabyCount = b.BabyCount,
+                    AdultsCount = b.BookingRooms.Sum(br => br.AdultsCount),
+                    ChildCount = b.BookingRooms.Sum(br => br.ChildCount),
+                    BabyCount = b.BookingRooms.Sum(br => br.BabyCount),
                     TotalAmount = b.TotalAmount,
                     PaidAmount = b.Payments.Sum(p => p.Amount),
                     RemainingAmount = b.TotalAmount - b.Payments.Sum(p => p.Amount),
-                    Category = b.Room.Category.Name,
                     Status = b.Status.Name,
+                    Rooms = b.BookingRooms.Select(br => new RoomInfoInMyBookingViewModel
+                    {
+                        RoomStatus = br.Status.Name,
+                        CategoryName = br.Room.Category.Name,
+                        AdultsCountPerRoom = br.AdultsCount,
+                        ChildCountPerRoom = br.ChildCount,
+                        BabyCountPerRoom = br.BabyCount
+                    }).ToList()
                 });
 
             return await query
@@ -148,7 +168,6 @@
             {
                 bookingDetails = await this.bookingRepository
                     .GetAllAttached()
-                    .Include(b => b.Room)
                     .AsNoTracking()
                     .Where(b => b.Id == bookingId)
                     .Select(b => new ManagerBookingDetailsViewModel()
@@ -156,11 +175,7 @@
                         Id = b.Id.ToString(),
                         CreatedOn = b.CreatedOn,
                         DateArrival = b.DateArrival,
-                        DateDeparture = b.DateDeparture,
-                        AdultsCount = b.AdultsCount,
-                        ChildCount = b.ChildCount,
-                        BabyCount = b.BabyCount,
-                        Room = b.Room.Name
+                        DateDeparture = b.DateDeparture
                     })
                     .SingleOrDefaultAsync();
             }
@@ -198,11 +213,7 @@
                 {
                     DateArrival = DateOnly.Parse(arrival),
                     DateDeparture = DateOnly.Parse(departure),
-                    AdultsCount = adultsCount,
-                    ChildCount = childCount,
-                    BabyCount = babyCount,
-                    UserId = userId,
-                    RoomId = new Guid("AE50A5AB-9642-466F-B528-3CC61071BB4C")
+                    UserId = userId
                 };
 
                 await this.bookingRepository.AddAsync(newBooking);

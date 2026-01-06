@@ -67,30 +67,20 @@
                         !bookingRepository
                             .GetAllAttached()
                             .Where(b =>
-                                b.RoomId == r.Id &&
                                 !b.IsDeleted &&
-                                b.StatusId != 2 // Status Cancelled
-                            )
-                            .Select(b => new
-                            {
-                                b.DateArrival,
-                                EffectiveDeparture =
-                                    b.StatusId == 6 // Status: Done - Early Check Out
-                                    ? (
+                                b.StatusId != 2 && // Status Cancelled
+                                b.BookingRooms.Any(br =>
+                                    br.RoomId == r.Id &&
+                                    (
+                                        br.StatusId != 6 || // Status Done - Early Check Out
                                         stayRepository.GetAllAttached()
-                                            .Where(s => s.BookingId == b.Id && !s.IsDeleted)
-                                            .Max(s => s.CheckoutOn.HasValue
-                                                ? (DateOnly?)DateOnly.FromDateTime(s.CheckoutOn.Value)
-                                                : null
-                                            )
-                                        ?? b.DateDeparture
-                                      )
-                                    : b.DateDeparture
-                            })
-                            .Any(b =>
-                                b.DateArrival < checkout &&
-                                checkin < b.EffectiveDeparture
+                                            .Where(s => s.BookingRoomId == br.Id && !s.IsDeleted && s.CheckoutOn.HasValue)
+                                            .Max(s => (DateOnly?)DateOnly.FromDateTime(s.CheckoutOn!.Value))
+                                            > checkin
+                                    )
+                                )
                             )
+                            .Any(b => b.DateArrival < checkout)
                     );
 
             var rooms = freeRoomsQuery
@@ -126,30 +116,20 @@
                     !bookingRepository
                         .GetAllAttached()
                         .Where(b =>
-                            b.RoomId == r.Id &&
                             !b.IsDeleted &&
-                            b.StatusId != 2 // Status: Cancelled
-                        )
-                        .Select(b => new
-                        {
-                            b.DateArrival,
-                            EffectiveDeparture =
-                                b.StatusId == 6 // Status: Done - Early Check Out
-                                ? (
+                            b.StatusId != 2 && // Status: Cancelled
+                            b.BookingRooms.Any(br =>
+                                br.RoomId == r.Id &&
+                                (
+                                    br.StatusId != 6 || // Status Done - Early Check Out
                                     stayRepository.GetAllAttached()
-                                        .Where(s => s.BookingId == b.Id && !s.IsDeleted)
-                                        .Max(s => s.CheckoutOn.HasValue
-                                            ? (DateOnly?)DateOnly.FromDateTime(s.CheckoutOn.Value)
-                                            : null
-                                        )
-                                        ?? b.DateDeparture
-                                  )
-                                : b.DateDeparture
-                        })
-                        .Any(b =>
-                            b.DateArrival < checkout &&
-                            checkin < b.EffectiveDeparture
+                                        .Where(s => s.BookingRoomId == br.Id && !s.IsDeleted && s.CheckoutOn.HasValue)
+                                        .Max(s => (DateOnly?)DateOnly.FromDateTime(s.CheckoutOn!.Value))
+                                        > checkin
+                                )
+                            )
                         )
+                        .Any(b => b.DateArrival < checkout)
                 )
                 .OrderBy(r => r.Name)
                 .Select(r => new AllRoomsIndexViewModel

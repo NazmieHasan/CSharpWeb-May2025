@@ -94,17 +94,6 @@ namespace HotelApp.Data.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasComment("Booking identifier");
 
-                    b.Property<int>("AdultsCount")
-                        .HasColumnType("int");
-
-                    b.Property<int>("BabyCount")
-                        .HasColumnType("int")
-                        .HasComment("Baby age is between 0 and 3");
-
-                    b.Property<int>("ChildCount")
-                        .HasColumnType("int")
-                        .HasComment("Child age is between 4 and 17");
-
                     b.Property<DateTime>("CreatedOn")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -135,9 +124,6 @@ namespace HotelApp.Data.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasComment("Owner name of the booking");
 
-                    b.Property<Guid>("RoomId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<int>("StatusId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
@@ -151,8 +137,6 @@ namespace HotelApp.Data.Migrations
 
                     b.HasIndex("ManagerId");
 
-                    b.HasIndex("RoomId");
-
                     b.HasIndex("StatusId");
 
                     b.HasIndex("UserId");
@@ -160,6 +144,58 @@ namespace HotelApp.Data.Migrations
                     b.ToTable("Bookings", t =>
                         {
                             t.HasComment("Booking in the system");
+                        });
+                });
+
+            modelBuilder.Entity("HotelApp.Data.Models.BookingRoom", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasComment("BookingRoom identifier");
+
+                    b.Property<int>("AdultsCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("BabyCount")
+                        .HasColumnType("int")
+                        .HasComment("Baby age is between 0 and 3");
+
+                    b.Property<Guid>("BookingId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasComment("Booking identifier");
+
+                    b.Property<int>("ChildCount")
+                        .HasColumnType("int")
+                        .HasComment("Child age is between 4 and 17");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false)
+                        .HasComment("Shows if booking room is deleted");
+
+                    b.Property<Guid>("RoomId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasComment("Room identifier");
+
+                    b.Property<int>("StatusId")
+                        .HasColumnType("int")
+                        .HasComment("Status of the room reservation");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoomId");
+
+                    b.HasIndex("StatusId");
+
+                    b.HasIndex("BookingId", "RoomId")
+                        .IsUnique()
+                        .HasFilter("[IsDeleted] = 0");
+
+                    b.ToTable("BookingRooms", t =>
+                        {
+                            t.HasComment("Mapping table between Booking and Room");
                         });
                 });
 
@@ -651,7 +687,7 @@ namespace HotelApp.Data.Migrations
                         {
                             Id = 5,
                             IsDeleted = false,
-                            Name = "Done"
+                            Name = "Done - On Time"
                         },
                         new
                         {
@@ -670,6 +706,12 @@ namespace HotelApp.Data.Migrations
                             Id = 8,
                             IsDeleted = false,
                             Name = "Done - Partial Attendance"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            IsDeleted = false,
+                            Name = "Done"
                         });
                 });
 
@@ -679,7 +721,7 @@ namespace HotelApp.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("BookingId")
+                    b.Property<Guid>("BookingRoomId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("CheckoutOn")
@@ -701,9 +743,11 @@ namespace HotelApp.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BookingId");
+                    b.HasIndex("BookingRoomId");
 
-                    b.HasIndex("GuestId");
+                    b.HasIndex("GuestId", "BookingRoomId")
+                        .IsUnique()
+                        .HasFilter("[IsDeleted] = 0");
 
                     b.ToTable("Stays");
                 });
@@ -852,12 +896,6 @@ namespace HotelApp.Data.Migrations
                         .HasForeignKey("ManagerId")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("HotelApp.Data.Models.Room", "Room")
-                        .WithMany("Bookings")
-                        .HasForeignKey("RoomId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("HotelApp.Data.Models.Status", "Status")
                         .WithMany("Bookings")
                         .HasForeignKey("StatusId")
@@ -872,11 +910,36 @@ namespace HotelApp.Data.Migrations
 
                     b.Navigation("Manager");
 
-                    b.Navigation("Room");
-
                     b.Navigation("Status");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("HotelApp.Data.Models.BookingRoom", b =>
+                {
+                    b.HasOne("HotelApp.Data.Models.Booking", "Booking")
+                        .WithMany("BookingRooms")
+                        .HasForeignKey("BookingId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("HotelApp.Data.Models.Room", "Room")
+                        .WithMany("BookingRooms")
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("HotelApp.Data.Models.Status", "Status")
+                        .WithMany("BookingRooms")
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Booking");
+
+                    b.Navigation("Room");
+
+                    b.Navigation("Status");
                 });
 
             modelBuilder.Entity("HotelApp.Data.Models.Manager", b =>
@@ -922,9 +985,9 @@ namespace HotelApp.Data.Migrations
 
             modelBuilder.Entity("HotelApp.Data.Models.Stay", b =>
                 {
-                    b.HasOne("HotelApp.Data.Models.Booking", "Booking")
+                    b.HasOne("HotelApp.Data.Models.BookingRoom", "BookingRoom")
                         .WithMany("Stays")
-                        .HasForeignKey("BookingId")
+                        .HasForeignKey("BookingRoomId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -934,7 +997,7 @@ namespace HotelApp.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Booking");
+                    b.Navigation("BookingRoom");
 
                     b.Navigation("Guest");
                 });
@@ -999,8 +1062,13 @@ namespace HotelApp.Data.Migrations
 
             modelBuilder.Entity("HotelApp.Data.Models.Booking", b =>
                 {
-                    b.Navigation("Payments");
+                    b.Navigation("BookingRooms");
 
+                    b.Navigation("Payments");
+                });
+
+            modelBuilder.Entity("HotelApp.Data.Models.BookingRoom", b =>
+                {
                     b.Navigation("Stays");
                 });
 
@@ -1026,11 +1094,13 @@ namespace HotelApp.Data.Migrations
 
             modelBuilder.Entity("HotelApp.Data.Models.Room", b =>
                 {
-                    b.Navigation("Bookings");
+                    b.Navigation("BookingRooms");
                 });
 
             modelBuilder.Entity("HotelApp.Data.Models.Status", b =>
                 {
+                    b.Navigation("BookingRooms");
+
                     b.Navigation("Bookings");
                 });
 #pragma warning restore 612, 618

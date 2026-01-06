@@ -1,0 +1,39 @@
+﻿@using HotelApp.Web.ViewModels.Admin.BookingRoomManagement
+@model BookingRoomManagementDetailsViewModel
+
+@{
+    ViewData["Title"] = "BookingRoom Details";
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-4">
+        </div>
+        <div class="col-md-8">
+            <h2 class="fw-bold text-primary mb-3">BookingRoom Details</h2>
+            <hr />
+            <p><strong>BookingRoom ID:</strong> @Model.Id</p>
+            <p>
+                <a class="text-dark" asp-controller="BookingManagement" asp-action="Details" asp-route-id="@Model.BookingId" target="_blank">
+                    View Booking
+                </a>
+            </p>
+            <p>Booking Created On: @Model.CreatedOn.ToString("yyyy-MM-dd")</p>
+            <p>
+                <a class="text-dark" asp-controller="RoomManagement" asp-action="Details" asp-route-id="@Model.RoomId" target="_blank">
+                    View Room
+                </a>
+            </p>
+            <p>BookingRoom Status @Model.Status</p>
+            <p>Adults in room @Model.AdultsCountPerRoom</p>
+            <p>Children in room @Model.ChildCountPerRoom</p>
+            <p>Babies in room @Model.BabyCountPerRoom</p>
+            <p><strong>Is Deleted:</strong> @Model.IsDeleted</p>
+            <div class="mt-4 mb-5">
+                <a asp-action="Index" class="btn btn-outline-primary">
+                    <i class="bi bi-arrow-left"></i> Back to List
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

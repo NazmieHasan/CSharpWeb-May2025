@@ -90,7 +90,7 @@
             editFormModel.AppManagerEmails = await this.userService
                 .GetManagerEmailsAsync();
 
-            editFormModel.Statuses = await this.statusService.GetAllowedStatusesAsync(editFormModel.StatusId, editFormModel.DateDeparture, editFormModel.Id);
+            editFormModel.Statuses = await this.statusService.GetAllowedStatusesInBookingEditAsync(editFormModel.StatusId, editFormModel.DateDeparture, editFormModel.Id);
 
             return this.View(editFormModel);
         }
@@ -110,9 +110,7 @@
             inputModel.AppManagerEmails = await this.userService.GetManagerEmailsAsync();
 
             inputModel.Statuses = await this.statusService
-                .GetAllowedStatusesAsync(booking.StatusId, booking.DateDeparture, booking.Id);
-
-            inputModel.MaxGuests = booking.MaxGuests;
+                .GetAllowedStatusesInBookingEditAsync(booking.StatusId, booking.DateDeparture, booking.Id);
 
             if (!ModelState.IsValid)
             {
@@ -184,7 +182,7 @@
             {
                 Search =
                 {
-                    Statuses = await statusService.GetStatusesDropDownDataAsync(),
+                    Statuses = await statusService.GetBookingStatusesDropDownDataAsync(),
                 },
                 HasSearched = false
             }; 
@@ -196,7 +194,7 @@
         public async Task<IActionResult> SearchResult(BookingManagementSearchViewModel model)
         {
             model.Results = await bookingService.SearchBookingAsync(model.Search);
-            model.Search.Statuses = await statusService.GetStatusesDropDownDataAsync();
+            model.Search.Statuses = await statusService.GetBookingStatusesDropDownDataAsync();
             model.HasSearched = true;
 
             return View("Search", model);

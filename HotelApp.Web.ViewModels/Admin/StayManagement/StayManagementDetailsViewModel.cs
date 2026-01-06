@@ -19,5 +19,9 @@
         public DateTime? CheckoutOn { get; set; }
 
         public bool IsDeleted { get; set; }
+
+        public Guid BookingRoomId { get; set; }
+
+        public string RoomName { get; set; }
     }
 }

@@ -74,7 +74,8 @@
                 .Include(m => m.ManagedBookings)
                     .ThenInclude(b => b.Status)
                 .Include(m => m.ManagedBookings)
-                    .ThenInclude(b => b.Room)
+                    .ThenInclude(b => b.BookingRooms)
+                        .ThenInclude(br => br.Room)
                 .FirstOrDefaultAsync();
 
             if (manager == null)

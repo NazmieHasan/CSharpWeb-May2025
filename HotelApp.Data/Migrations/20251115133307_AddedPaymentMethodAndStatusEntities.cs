@@ -61,10 +61,11 @@ namespace HotelApp.Data.Migrations
                     { 2, "Cancelled" },
                     { 3, "For Implementation" },
                     { 4, "In Progress" },
-                    { 5, "Done" },
+                    { 5, "Done - On Time" },
                     { 6, "Done - Early Check Out" },
                     { 7, "Done - No Guests" },
-                    { 8, "Done - Partial Attendance" }
+                    { 8, "Done - Partial Attendance" },
+                    { 9, "Done" }
                 });
         }
 

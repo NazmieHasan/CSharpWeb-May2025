@@ -7,7 +7,7 @@
         public string Id { get; set; } = null!;
 
         [Required]
-        public Guid BookingId { get; set; }
+        public Guid BookingRoomId { get; set; }
 
         public DateTime? CheckoutOn { get; set; }
     }

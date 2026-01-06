@@ -13,17 +13,20 @@
     using static HotelApp.Web.ViewModels.ValidationMessages.Stay;
 
     using static GCommon.ApplicationConstants;
-    using HotelApp.Web.ViewModels.Admin.PaymentManagement;
 
     public class StayManagementController : BaseAdminController
     {
         private readonly IStayManagementService stayService;
         private readonly IBookingManagementService bookingService;
+        private readonly IBookingRoomManagementService bookingRoomService;
 
-        public StayManagementController(IStayManagementService stayService, IBookingManagementService bookingService)
+        public StayManagementController(IStayManagementService stayService, 
+            IBookingManagementService bookingService,
+            IBookingRoomManagementService bookingRoomService)
         {
             this.stayService = stayService;
             this.bookingService = bookingService;
+            this.bookingRoomService = bookingRoomService;
         }
 
         public async Task<IActionResult> Index()
@@ -43,18 +46,18 @@
         }
 
         [HttpGet]
-        public async Task<IActionResult> Create(Guid bookingId)
+        public async Task<IActionResult> Create(Guid bookingRoomId)
         {
-            var booking = await this.bookingService.FindBookingByIdAsync(bookingId);
+            var bookingRoom = await this.bookingRoomService.FindBookingRoomByIdAsync(bookingRoomId);
 
-            if (booking == null)
+            if (bookingRoom == null)
             {
                 return NotFound();
             }
 
             var model = new StayManagementCreateViewModel
             {
-                BookingId = bookingId
+                BookingRoomId = bookingRoomId
             };
 
             return PartialView("_Create", model);
@@ -63,9 +66,9 @@
         [HttpPost]
         public async Task<IActionResult> Create(StayManagementCreateViewModel inputModel)
         {
-            var booking = await this.bookingService.FindBookingByIdAsync(inputModel.BookingId);
+            var bookingRoom = await this.bookingRoomService.FindBookingRoomByIdAsync(inputModel.BookingRoomId);
 
-            if (booking == null)
+            if (bookingRoom == null)
             {
                 return NotFound();
             }
@@ -86,11 +89,12 @@
             try
             {
                 await this.stayService.AddStayManagementAsync(inputModel);
+                var bookingId = bookingRoom.BookingId;
 
                 return Json(new
                 {
                     success = true,
-                    redirectUrl = Url.Action("Details", "BookingManagement", new { id = inputModel.BookingId })
+                    redirectUrl = Url.Action("Details", "BookingManagement", new { id = bookingId })
                 });
             }
             catch (InvalidOperationException ex)
@@ -137,10 +141,13 @@
                 return this.View(inputModel);
             }
 
+            var bookingRoom = await this.bookingRoomService.FindBookingRoomByIdAsync(inputModel.BookingRoomId);
+
             try
             {
-                bool success = await this.stayService
-                    .EditStayAsync(inputModel);
+                bool success = await this.stayService.EditStayAsync(inputModel);
+                var bookingId = bookingRoom.BookingId;
+
                 if (!success)
                 {
                     TempData[ErrorMessageKey] = "Error occurred while updating the stay! Ensure to select a valid data!";
@@ -149,7 +156,7 @@
                 else
                 {
                     TempData[SuccessMessageKey] = "Stay updated successfully!";
-                    return this.RedirectToAction("Details", "BookingManagement", new { id = inputModel.BookingId });
+                    return this.RedirectToAction("Details", "BookingManagement", new { id = bookingId });
                 }
             }
             catch (Exception e)

@@ -13,11 +13,7 @@
 
         public string? ManagerEmail { get; set; }
 
-        public string RoomId { get; set; } = null!;
-
-        public string Room { get; set; } = null!;
-
-        public string RoomCategory { get; set; } = null!;
+        public List<RoomInfoInBookingManagementViewModel> Rooms { get; set; } = new();
 
         public decimal TotalAmount { get; set; }
 

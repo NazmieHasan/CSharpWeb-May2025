@@ -18,16 +18,19 @@
         private readonly IPaymentMethodRepository paymentMethodRepository;
         private readonly IBookingRepository bookingRepository;
         private readonly IBookingManagementService bookingService;
+        private readonly IBookingRoomRepository bookingRoomRepository;
 
         public PaymentManagementService(IPaymentRepository paymentRepository, 
             IPaymentMethodRepository paymentMethodRepository, 
             IBookingRepository bookingRepository,
-            IBookingManagementService bookingService)
+            IBookingManagementService bookingService,
+            IBookingRoomRepository bookingRoomRepository)
         {
             this.paymentRepository = paymentRepository;
             this.paymentMethodRepository = paymentMethodRepository;
             this.bookingRepository = bookingRepository;
             this.bookingService = bookingService;
+            this.bookingRoomRepository = bookingRoomRepository;
         }
 
         public async Task<IEnumerable<PaymentManagementIndexViewModel>> GetPaymentManagementBoardDataAsync(int pageNumber = 1, int pageSize = ApplicationConstants.AdminPaginationPageSize)
@@ -103,6 +106,18 @@
                 if (paidAmount == totalAmount)
                 {
                     booking.StatusId = 3;  // For Implementation
+
+                    var bookingRooms = await this.bookingRoomRepository
+                        .GetAllAttached()
+                        .Where(br => br.BookingId == booking.Id)
+                        .ToListAsync();
+
+                    foreach (var room in bookingRooms)
+                    {
+                        room.StatusId = 3; // For Implementation
+                    }
+
+                    // Save all changes at once (booking + booking rooms);
                     await this.bookingRepository.SaveChangesAsync();
                 }
             }

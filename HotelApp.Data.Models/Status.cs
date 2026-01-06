@@ -18,5 +18,8 @@
 
         public virtual ICollection<Booking> Bookings { get; set; }
             = new HashSet<Booking>();
+
+        public ICollection<BookingRoom> BookingRooms { get; set; }
+            = new HashSet<BookingRoom>();
     }
 }

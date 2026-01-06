@@ -27,7 +27,7 @@
                             <th>Arrival</th>
                             <th>Departure</th>
                             <th>Status</th>
-                            <th>Room</th>
+                            <th>Rooms</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -49,14 +49,19 @@
                                 <td>@booking.CreatedOn.ToString("yyyy-MM-dd")</td>
                                 <td>@booking.Status.Name</td>
                                 <td>
-                                    <a asp-area="Admin"
-                                       asp-controller="RoomManagement"
-                                       asp-action="Details"
-                                       asp-route-id="@booking.Room.Id"
-                                       class="link-primary text-decoration-none"
-                                       target="_blank">
-                                       @booking.Room.Name
-                                    </a>
+                                    @foreach (var br in booking.BookingRooms)
+                                    {
+                                        <div>
+                                            <a asp-area="Admin"
+                                               asp-controller="RoomManagement"
+                                               asp-action="Details"
+                                               asp-route-id="@br.Room.Id"
+                                               class="link-primary text-decoration-none"
+                                               target="_blank">
+                                                @br.Room.Name (@br.Room.Category.Name)
+                                            </a>
+                                        </div>
+                                    }
                                 </td>
                             </tr>
                         }

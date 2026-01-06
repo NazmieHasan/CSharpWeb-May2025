@@ -1,0 +1,76 @@
+﻿@model HotelApp.Web.ViewModels.Admin.BookingRoomManagement.BookingRoomManagementEditFormModel
+
+@{
+    ViewData["Title"] = "Edit Booking Room";
+}
+
+<div class="container mt-5 mb-5">
+    <h2 class="text-center text-warning mb-5 fw-bold">@ViewData["Title"]</h2>
+
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form asp-action="Edit" method="post" class="bg-dark text-light p-4 rounded shadow-lg">
+                <input type="hidden" asp-for="Id" /> 
+
+                <div class="mb-3">
+                    <label asp-for="AdultsCount" class="form-label"></label>
+                    <select asp-for="AdultsCount" class="form-control">
+                        <option value="0">Please Select</option>
+                        @for (int i = 1; i <= Model.MaxGuests; i++)
+                        {
+                            <option value="@i">@i</option>
+                        }
+                    </select>
+                    <span asp-validation-for="AdultsCount" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="ChildCount" class="form-label"></label>
+                    <select asp-for="ChildCount" class="form-control" id="childCountSelect">
+                        <option value="0">Please Select</option>
+                        @for (int i = 0; i <= Model.MaxGuests - Model.AdultsCount; i++)
+                        {
+                            <option value="@i">@i</option>
+                        }
+                    </select>
+                    <span asp-validation-for="ChildCount" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="BabyCount" class="form-label"></label>
+                    <select asp-for="BabyCount" class="form-control" id="babyCountSelect">
+                        <option value="0">Please Select</option>
+                        @for (int i = 1; i <= Model.MaxGuests - Model.AdultsCount - Model.ChildCount + 1; i++)
+                        {
+                            <option value="@i">@i</option>
+                        }
+                    </select>
+                    <span asp-validation-for="BabyCount" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="StatusId" class="form-label-add-edit">Select Status</label>
+                    <select asp-for="StatusId" class="form-control" asp-items="@(new SelectList(Model.Statuses, "Id", "Name"))">
+                        <option value="">Select Statuses</option>
+                    </select>
+                    <span asp-validation-for="StatusId" class="text-danger"></span>
+                </div>
+
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary fw-bold px-4">
+                        <i class="bi bi-pencil-square"></i> Update Booking Room
+                    </button>
+                    <a asp-action="Index" class="btn btn-outline-light ms-2">
+                        <i class="bi bi-arrow-left"></i> Back to List
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/admin/bookingManagement.js"></script>
+    <script>
+        initBookingGuestSelectorsEdit(@Model.MaxGuests, @Model.AdultsCount, @Model.ChildCount, @Model.BabyCount);
+    </script>
+}

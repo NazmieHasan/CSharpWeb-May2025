@@ -5,7 +5,7 @@
     public class StayManagementCreateViewModel
     {
         [Required]
-        public Guid BookingId { get; set; }
+        public Guid BookingRoomId { get; set; }
 
         [Required(ErrorMessage = ValidationMessages.Stay.GuestEmailRequiredMessage)]
         [EmailAddress(ErrorMessage = ValidationMessages.Stay.GuestEmailInvalidMessage)]

@@ -23,15 +23,22 @@
                 .Property(p => p.IsDeleted)
                 .HasDefaultValue(false);
 
-            entity.HasOne(s => s.Booking)
-                  .WithMany(b => b.Stays)
-                  .HasForeignKey(s => s.BookingId)
-                  .OnDelete(DeleteBehavior.Restrict);
+            entity
+                .HasOne(s => s.BookingRoom)
+                .WithMany(br => br.Stays)
+                .HasForeignKey(s => s.BookingRoomId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-            entity.HasOne(s => s.Guest)
-                  .WithMany(g => g.Stays)
-                  .HasForeignKey(s => s.GuestId)
-                  .OnDelete(DeleteBehavior.Restrict);
+            entity
+                .HasOne(s => s.Guest)
+                .WithMany(g => g.Stays)
+                .HasForeignKey(s => s.GuestId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity
+                .HasIndex(s => new { s.GuestId, s.BookingRoomId })
+                .IsUnique()
+                .HasFilter("[IsDeleted] = 0");
 
             // Filter out only the active (non-deleted) entries
             entity

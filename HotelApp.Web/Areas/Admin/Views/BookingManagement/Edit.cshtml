@@ -13,42 +13,6 @@
                 <input type="hidden" asp-for="Id" /> 
 
                 <div class="mb-3">
-                    <label asp-for="AdultsCount" class="form-label"></label>
-                    <select asp-for="AdultsCount" class="form-control">
-                        <option value="0">Please Select</option>
-                        @for (int i = 1; i <= Model.MaxGuests; i++)
-                        {
-                            <option value="@i">@i</option>
-                        }
-                    </select>
-                    <span asp-validation-for="AdultsCount" class="text-danger"></span>
-                </div>
-
-                <div class="mb-3">
-                    <label asp-for="ChildCount" class="form-label"></label>
-                    <select asp-for="ChildCount" class="form-control" id="childCountSelect">
-                        <option value="0">Please Select</option>
-                        @for (int i = 0; i <= Model.MaxGuests - Model.AdultsCount; i++)
-                        {
-                            <option value="@i">@i</option>
-                        }
-                    </select>
-                    <span asp-validation-for="ChildCount" class="text-danger"></span>
-                </div>
-
-                <div class="mb-3">
-                    <label asp-for="BabyCount" class="form-label"></label>
-                    <select asp-for="BabyCount" class="form-control" id="babyCountSelect">
-                        <option value="0">Please Select</option>
-                        @for (int i = 1; i <= Model.MaxGuests - Model.AdultsCount - Model.ChildCount + 1; i++)
-                        {
-                            <option value="@i">@i</option>
-                        }
-                    </select>
-                    <span asp-validation-for="BabyCount" class="text-danger"></span>
-                </div>
-
-                <div class="mb-3">
                     <label asp-for="ManagerEmail" class="form-label fw-bold">Manager</label>
                     <select asp-for="ManagerEmail" class="form-select">
                         <option value="" disabled selected>Select Front Office Manager for the booking</option>
@@ -92,8 +56,5 @@
 </div>
 
 @section Scripts {
-    <script src="~/js/admin/bookingManagement.js"></script>
-    <script>
-        initBookingGuestSelectorsEdit(@Model.MaxGuests, @Model.AdultsCount, @Model.ChildCount, @Model.BabyCount);
-    </script>
+    
 }

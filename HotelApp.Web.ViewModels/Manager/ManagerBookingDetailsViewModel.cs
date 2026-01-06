@@ -9,13 +9,5 @@
         public DateOnly DateArrival { get; set; }
 
         public DateOnly DateDeparture { get; set; }
-
-        public int AdultsCount { get; set; }
-
-        public int ChildCount { get; set; }
-
-        public int BabyCount { get; set; }
-
-        public string Room { get; set; } = null!;
     }
 }

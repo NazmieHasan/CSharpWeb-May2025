@@ -44,16 +44,28 @@
                         Arrival Date: @booking.DateArrival.ToString("yyyy-MM-dd") |
                         Departure Date: @booking.DateDeparture.ToString("yyyy-MM-dd")
                     </p>
-                    <p>Category: @booking.Category</p>
                     <p>
-                        Adults Count: @booking.AdultsCount |
-                        Child Count: @booking.ChildCount |
-                        Babies Count: @booking.BabyCount
+                        Total Adults Count: @booking.AdultsCount |
+                        Total Child Count: @booking.ChildCount |
+                        Total Babies Count: @booking.BabyCount
                     </p>
                     <p>Status: @booking.Status</p>
                     <p>Total Amount $@booking.TotalAmount.ToString("0.00")</p>
                     <p>Paid Amount $@booking.PaidAmount.ToString("0.00")</p>
                     <p>Remaining Amount $@booking.RemainingAmount.ToString("0.00")</p>
+                    <h6>Rooms:</h6>
+                    <ul>
+                        @foreach (var room in booking.Rooms)
+                        {
+                            <li>
+                                Category: @room.CategoryName |
+                                Adults: @room.AdultsCountPerRoom |
+                                Children: @room.ChildCountPerRoom |
+                                Babies: @room.BabyCountPerRoom |
+                                Status: @room.RoomStatus
+                            </li>
+                        }
+                    </ul>
                 </div>
                 <hr />
             }

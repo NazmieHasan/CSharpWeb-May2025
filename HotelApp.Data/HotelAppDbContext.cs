@@ -33,6 +33,8 @@
 
         public virtual DbSet<Status> Statuses { get; set; } = null!;
 
+        public virtual DbSet<BookingRoom> BookingRooms { get; set; } = null!;
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

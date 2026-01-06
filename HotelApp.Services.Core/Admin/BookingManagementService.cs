@@ -36,8 +36,9 @@
         {
             return await this.bookingRepository
                 .GetAllAttached()
-                .Include(b => b.Room)                     
-                    .ThenInclude(r => r.Category)        
+                .Include(b => b.BookingRooms)
+                    .ThenInclude(br => br.Room)
+                        .ThenInclude(r => r.Category)
                 .Include(b => b.Status)
                 .Include(b => b.Payments)
                 .FirstOrDefaultAsync(b => b.Id == id);
@@ -89,14 +90,21 @@
             bookingDetails = await this.bookingRepository
                 .GetAllAttached()
                 .IgnoreQueryFilters()
+                .AsSplitQuery()
                 .Include(b => b.User)
-                .Include(b => b.Room)
-                    .ThenInclude(r => r.Category)
+                .Include(b => b.Manager)
+                    .ThenInclude(m => m.User)
+                .Include(b => b.BookingRooms)
+                    .ThenInclude(br => br.Room)
+                        .ThenInclude(r => r.Category)
+                .Include(b => b.BookingRooms)
+                    .ThenInclude(br => br.Status)
                 .Include(b => b.Payments)
                     .ThenInclude(p => p.PaymentMethod)
                 .Include(b => b.Status)
-                .Include(b => b.Stays)
-                    .ThenInclude(s => s.Guest)
+                .Include(b => b.BookingRooms)
+                    .ThenInclude(br => br.Stays)
+                        .ThenInclude(s => s.Guest)
                 .Where(b => b.Id == bookingId)
                 .Select(b => new BookingManagementDetailsViewModel()
                 {
@@ -113,10 +121,21 @@
                     Owner = b.Owner,
                     IsForAnotherPerson = b.IsForAnotherPerson,
                     ManagerEmail = b.Manager != null ? b.Manager.User.UserName : null,
-                    RoomId = b.Room.Id.ToString(),
-                    Room = b.Room.Name,
-                    RoomCategory = b.Room.Category.Name,
-                    AllowedGuestCount = b.AdultsCount + b.ChildCount + b.BabyCount,
+                    Rooms = b.BookingRooms.Select(br => new RoomInfoInBookingManagementViewModel
+                    {
+                        RoomId = br.Room.Id.ToString(),
+                        RoomName = br.Room.Name,
+                        RoomCategory = br.Room.Category.Name,
+                        AdultsCountPerRoom = br.AdultsCount,
+                        ChildCountPerRoom = br.ChildCount,
+                        BabyCountPerRoom = br.BabyCount,
+                        RoomStatus = br.Status.Name,
+                        BookingRoomId = br.Id,
+                        IsAllowedAddStay = (br.StatusId == 3 && DateOnly.FromDateTime(DateTime.UtcNow) >= b.DateArrival && DateTime.UtcNow.ToHotelTime() < b.DateDeparture.ToDateTime(new TimeOnly(11, 0)))
+                           || (br.StatusId == 4 && br.AdultsCount + br.ChildCount + br.BabyCount > br.Stays.Count)
+                    })
+                    .ToList(),
+                    AllowedGuestCount = b.BookingRooms.Sum(br => br.AdultsCount + br.ChildCount + br.BabyCount),
                     TotalAmount = b.TotalAmount,
                     PaidAmount = b.Payments.Sum(p => p.Amount),
                     RemainingAmount = b.TotalAmount - b.Payments.Sum(p => p.Amount),
@@ -131,7 +150,7 @@
                         IsDeleted = p.IsDeleted,
                         PaymentMethodName = p.PaymentMethod.Name
                     }).ToList(),
-                    Stays = b.Stays.Select(s => new StayManagementDetailsViewModel
+                    Stays = b.BookingRooms.SelectMany(br => br.Stays).Select(s => new StayManagementDetailsViewModel
                     {
                         Id = s.Id,
                         GuestFirstName = s.Guest.FirstName,
@@ -141,7 +160,9 @@
                         CheckoutOn = s.CheckoutOn.HasValue
                             ? s.CheckoutOn.Value.ToHotelTime()
                             : null,
-                        IsDeleted = s.IsDeleted
+                        IsDeleted = s.IsDeleted,
+                        BookingRoomId = s.BookingRoomId,
+                        RoomName = s.BookingRoom.Room.Name
                     }).ToList()
                 })
                 .SingleOrDefaultAsync();
@@ -155,14 +176,6 @@
                 else if (bookingDetails.Status == "Awaiting Payment")
                 {
                     bookingDetails.AllowedOperation = "AddPayment";
-                }
-                else if (bookingDetails.Status == "For Implementation" && DateOnly.FromDateTime(DateTime.UtcNow) >= bookingDetails.DateArrival)
-                {
-                    bookingDetails.AllowedOperation = "AddStay";
-                }
-                else if (bookingDetails.Status == "In Progress" && bookingDetails.AllowedGuestCount > bookingDetails.Stays.Count())
-                {
-                    bookingDetails.AllowedOperation = "AddStay";
                 }
                 else
                 {
@@ -180,8 +193,6 @@
             {
                 Booking? bookingToEdit = await this.bookingRepository
                     .GetAllAttached()
-                    .Include(b => b.Room)         
-                        .ThenInclude(r => r.Category)
                     .Include(b => b.Manager)
                         .ThenInclude(m => m.User)
                     .IgnoreQueryFilters()
@@ -192,14 +203,10 @@
                     formModel = new BookingManagementEditFormModel()
                     {
                         Id = bookingToEdit.Id.ToString(),
-                        AdultsCount = bookingToEdit.AdultsCount,
-                        ChildCount = bookingToEdit.ChildCount,
-                        BabyCount = bookingToEdit.BabyCount,
                         DateDeparture = bookingToEdit.DateDeparture,
                         ManagerEmail = bookingToEdit.Manager != null ?
                             bookingToEdit.Manager.User.Email ?? string.Empty : string.Empty,
-                        StatusId = bookingToEdit.StatusId,
-                        MaxGuests = bookingToEdit.Room.Category.Beds
+                        StatusId = bookingToEdit.StatusId
                     };
                 }
             }
@@ -227,16 +234,13 @@
                         bookingToEdit != null)
                     {
                         var allowedStatuses = await this.statusService
-                            .GetAllowedStatusesAsync(bookingToEdit.StatusId, bookingToEdit.DateDeparture, bookingToEdit.Id.ToString());
+                            .GetAllowedStatusesInBookingEditAsync(bookingToEdit.StatusId, bookingToEdit.DateDeparture, bookingToEdit.Id.ToString());
 
                         if (!allowedStatuses.Any(s => s.Id == inputModel.StatusId))
                         {
                             return false;
                         }
 
-                        bookingToEdit.AdultsCount = inputModel.AdultsCount;
-                        bookingToEdit.ChildCount = inputModel.ChildCount;
-                        bookingToEdit.BabyCount = inputModel.BabyCount;
                         bookingToEdit.Manager = manager;
                         bookingToEdit.StatusId = inputModel.StatusId;
 
@@ -391,6 +395,9 @@
                 .GetAllAttached()
                 .AsNoTracking()
                 .Include(b => b.Status)
+                .Include(b => b.BookingRooms)
+                    .ThenInclude(br => br.Room)
+                        .ThenInclude(r => r.Category)
                 .Where(b =>
                     b.StatusId != 1 &&
                     b.StatusId != 2 &&

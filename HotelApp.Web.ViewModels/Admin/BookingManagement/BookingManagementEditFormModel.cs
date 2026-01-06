@@ -8,17 +8,6 @@
     {
         public string Id { get; set; } = null!;
 
-        [Required(ErrorMessage = AdultRequiredMessage)]
-        [Range(1, 4, ErrorMessage = AdultsMinCountMessage)]
-        [Display(Name = "Number of Adults")]
-        public int AdultsCount { get; set; }
-
-        [Display(Name = "Number of Children (age 4–17)")]
-        public int ChildCount { get; set; }
-
-        [Display(Name = "Number of Babies (age 0–3)")]
-        public int BabyCount { get; set; }
-
         public IEnumerable<string>? AppManagerEmails { get; set; }
 
         public string? ManagerEmail { get; set; }
@@ -31,7 +20,5 @@
 
         public IEnumerable<AddBookingStatusDropDownModel> Statuses { get; set; } =
             new List<AddBookingStatusDropDownModel>();
-
-        public int MaxGuests { get; set; }
     }
 }

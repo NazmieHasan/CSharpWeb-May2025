@@ -6,7 +6,7 @@
 
     public interface IBookingService
     {
-        Task<bool> AddBookingAsync(string userId, AddBookingInputModel inputModel);
+        Task<bool> AddBookingWithRoomsAsync(string userId, AddBookingInputModel inputModel);
 
         Task<IEnumerable<MyBookingsViewModel>> GetBookingsByUserIdAsync(string userId, int pageNumber = 1, int pageSize = ApplicationConstants.MyBookingsPaginationPageSize);
 

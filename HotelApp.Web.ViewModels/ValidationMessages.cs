@@ -58,6 +58,12 @@
             public const string ServiceCreateExceptionError ="Unexpected error occurred while adding the booking! Please contact developer team!";
         }
 
+        public static class BookingRoom
+        {
+            public const string AdultRequiredMessage = "Adult is required.";
+            public const string AdultsMinCountMessage = "Adult min count is 1";
+        }
+
         public static class Status
         {
             // Error messages

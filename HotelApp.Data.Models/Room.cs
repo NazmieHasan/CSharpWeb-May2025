@@ -19,7 +19,7 @@
 
         public virtual Category Category { get; set; } = null!;
 
-        public virtual ICollection<Booking> Bookings { get; set; }
-            = new HashSet<Booking>();
+        public virtual ICollection<BookingRoom> BookingRooms { get; set; }
+            = new HashSet<BookingRoom>();
     }
 }

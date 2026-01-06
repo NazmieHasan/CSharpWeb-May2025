@@ -18,14 +18,17 @@
         private readonly IRoomRepository roomRepository;
         private readonly ICategoryRepository categoryRepository;
         private readonly IBookingRepository bookingRepository;
+        private readonly IBookingRoomRepository bookingRoomRepository;
 
         public RoomManagementService(IRoomRepository roomRepository, 
             ICategoryRepository categoryRepository,
-            IBookingRepository bookingRepository)
+            IBookingRepository bookingRepository,
+            IBookingRoomRepository bookingRoomRepository)
         {
             this.roomRepository = roomRepository;
             this.categoryRepository = categoryRepository;
             this.bookingRepository = bookingRepository;
+            this.bookingRoomRepository = bookingRoomRepository;
         }
 
         public async Task<bool> AddRoomManagementAsync(AddRoomManagementInputModel inputModel)
@@ -102,8 +105,9 @@
                     .GetAllAttached()
                     .IgnoreQueryFilters()
                     .Include(r => r.Category)
-                    .Include(r => r.Bookings)
-                        .ThenInclude(b => b.Status) 
+                    .Include(r => r.BookingRooms)
+                        .ThenInclude(br => br.Booking)
+                            .ThenInclude(b => b.Status)
                     .AsNoTracking()
                     .Where(r => r.Id == roomId)
                     .Select(r => new RoomManagementDetailsViewModel()
@@ -114,7 +118,8 @@
                         Category = r.Category.Name,
                         CategoryBeds = r.Category.Beds,
                         IsDeleted = r.IsDeleted,
-                        Bookings = r.Bookings
+                        Bookings = r.BookingRooms
+                            .Select(br => br.Booking)
                             .OrderByDescending(b => b.DateArrival)
                             .Select(b => new BookingInfoViewModel
                             {
@@ -190,10 +195,10 @@
                     throw new InvalidOperationException(ValidationMessages.Room.CategoryRequiredMessage);
                 }
 
-                bool hasConflictingBookings = await this.bookingRepository
+                bool hasConflictingBookings = await this.bookingRoomRepository
                     .GetAllAttached()
-                    .Where(b => b.RoomId == editableRoom.Id)
-                    .AnyAsync(b => (b.AdultsCount + b.ChildCount + b.BabyCount) > newCategory.Beds + 1);
+                    .Where(br => br.RoomId == editableRoom.Id)
+                    .AnyAsync(br => (br.AdultsCount + br.ChildCount + br.BabyCount) > newCategory.Beds + 1);
 
                 if (hasConflictingBookings)
                 {

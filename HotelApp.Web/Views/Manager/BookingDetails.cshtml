@@ -15,13 +15,9 @@
             <h6 class="card-title">@Model.Id</h6>
             <hr />
 
-            <p>Room: @Model.Room</p>
             <p>Created On: @Model.CreatedOn.ToString("yyyy-MM-dd HH:mm")</p>
             <p>Arrival Date: @Model.DateArrival.ToString("yyyy-MM-dd")</p>
             <p>Departure Date: @Model.DateDeparture.ToString("yyyy-MM-dd")</p>
-            <p>Adults: @Model.AdultsCount</p>
-            <p>Children: @Model.ChildCount</p>
-            <p>Babies: @Model.BabyCount</p>
 
             <div class="mt-4 d-flex gap-2">
                 <a asp-action="Index"

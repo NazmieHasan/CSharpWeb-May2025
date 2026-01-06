@@ -22,10 +22,8 @@
 
         public decimal RemainingAmount { get; set; }
 
-        public string CategoryId { get; set; } = null!;
-
-        public string Category { get; set; } = null!;
-
         public string Status { get; set; } = null!;
+
+        public IEnumerable<RoomInfoInMyBookingViewModel> Rooms { get; set; } = new List<RoomInfoInMyBookingViewModel>();
     }
 }

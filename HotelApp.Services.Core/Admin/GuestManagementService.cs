@@ -91,7 +91,8 @@
                     .Include(g => g.Stays)
                         .ThenInclude(s => s.Guest)
                     .Include(g => g.Stays)
-                        .ThenInclude(s => s.Booking)
+                        .ThenInclude(s => s.BookingRoom)
+                            .ThenInclude(br => br.Booking)
                     .Where(g => g.Id == guestId)
                     .Select(g => new GuestManagementDetailsViewModel()
                     {
@@ -113,7 +114,7 @@
                             ? s.CheckoutOn.Value.ToHotelTime()
                             : null,
                             IsDeleted = s.IsDeleted,
-                            BookingId = s.BookingId,
+                            BookingId = s.BookingRoom.Booking.Id,
                         })
                         .ToList()
                     })

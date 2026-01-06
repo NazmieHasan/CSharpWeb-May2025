@@ -80,7 +80,7 @@
 
             try
             {
-                bool success = await this.bookingService.AddBookingAsync(this.GetUserId()!, inputModel);
+                bool success = await this.bookingService.AddBookingWithRoomsAsync(this.GetUserId()!, inputModel);
 
                 if (!success)
                 {

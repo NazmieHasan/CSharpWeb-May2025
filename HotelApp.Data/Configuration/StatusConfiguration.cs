@@ -61,7 +61,7 @@
                 new Status()
                 {
                     Id = 5,
-                    Name = "Done"
+                    Name = "Done - On Time"
                 },
                 new Status()
                 {
@@ -77,7 +77,12 @@
                 {
                     Id = 8,
                     Name = "Done - Partial Attendance"
-                }
+                },
+                new Status()
+                {
+                    Id = 9,
+                    Name = "Done"
+                },
             };
 
             return statuses;
