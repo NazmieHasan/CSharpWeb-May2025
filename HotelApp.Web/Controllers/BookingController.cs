@@ -23,7 +23,7 @@
         }
 
         [HttpGet]
-        public async Task<IActionResult> Add(string roomId, DateOnly dateArrival, DateOnly dateDeparture)
+        public async Task<IActionResult> Add(string roomId, DateOnly dateArrival, DateOnly dateDeparture, int AdultsCount, int ChildCount, int BabyCount)
         {
             var roomDetails = await this.roomService.GetRoomDetailsByIdAsync(roomId);
 
@@ -41,7 +41,10 @@
                 DateDeparture = dateDeparture,
                 MaxGuests = roomDetails.CategoryBeds,
                 RoomCategoryName = roomDetails.CategoryName,
-                TotalPrice = roomDetails.CategoryPrice * daysCount
+                TotalPrice = roomDetails.CategoryPrice * daysCount,
+                AdultsCount = AdultsCount,
+                ChildCount = ChildCount,
+                BabyCount = BabyCount
             };
 
             return View(model);
@@ -56,7 +59,6 @@
                 return NotFound();
             }
 
-            inputModel.MaxGuests = roomDetails.CategoryBeds;
             var daysCount = (inputModel.DateDeparture.ToDateTime(TimeOnly.MinValue) - inputModel.DateArrival.ToDateTime(TimeOnly.MinValue)).Days;
             inputModel.RoomCategoryName = roomDetails.CategoryName;
             inputModel.TotalPrice = roomDetails.CategoryPrice * daysCount;

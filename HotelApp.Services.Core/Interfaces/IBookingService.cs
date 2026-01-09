@@ -17,7 +17,7 @@
         Task<IEnumerable<ManagerBookingsIndexViewModel>> GetBookingsByManagerIdAsync(string userId);
 
         /* Booking API */
-        Task<bool> AddBookingAsync(string userId, string arrival, string departure, int adultsCount, int childCount, int babyCount);
+        Task<bool> AddBookingAsync(string userId, string arrival, string departure);
 
         /* Booking API */
         Task<IEnumerable<string>> GetBookingsIdByUserIdAsync(string? userId);

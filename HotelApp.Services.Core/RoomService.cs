@@ -94,7 +94,8 @@
                     Name = r.Name,
                     CategoryId = r.CategoryId,
                     Category = r.Category.Name,
-                    ImageUrl = r.Category.ImageUrl
+                    ImageUrl = r.Category.ImageUrl,
+                    CategoryBeds = r.Category.Beds
                 })
                 .ToList();
 
@@ -138,7 +139,8 @@
                     Name = r.Name,
                     CategoryId = r.CategoryId,
                     Category = r.Category.Name,
-                    ImageUrl = r.Category.ImageUrl
+                    ImageUrl = r.Category.ImageUrl,
+                    CategoryBeds = r.Category.Beds
                 })
                 .FirstOrDefaultAsync();
 

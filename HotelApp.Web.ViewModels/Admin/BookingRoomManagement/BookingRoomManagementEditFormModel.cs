@@ -2,7 +2,6 @@
 {
     using System.ComponentModel.DataAnnotations;
 
-    using static HotelApp.Web.ViewModels.ValidationMessages.Booking;
     using static HotelApp.Web.ViewModels.ValidationMessages.BookingRoom;
 
     public class BookingRoomManagementEditFormModel

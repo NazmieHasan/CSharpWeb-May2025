@@ -62,6 +62,7 @@
         {
             public const string AdultRequiredMessage = "Adult is required.";
             public const string AdultsMinCountMessage = "Adult min count is 1";
+            public const string StatusRequiredMessage = "Please select a status.";
         }
 
         public static class Status

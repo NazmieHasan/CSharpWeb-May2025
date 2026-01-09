@@ -98,6 +98,7 @@
                 return RedirectToAction(nameof(Index));
             }
 
+            inputModel.MaxGuests = bookingRoom.MaxGuests;
             inputModel.Statuses = await this.statusService
                 .GetAllowedStatusesInBookingRoomEditAsync(bookingRoom.StatusId, bookingRoom.DateDeparture, bookingRoom.Id);
 

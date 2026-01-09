@@ -201,7 +201,7 @@
         }
 
         /* Booking API method */
-        public async Task<bool> AddBookingAsync(string userId, string arrival, string departure, int adultsCount, int childCount, int babyCount)
+        public async Task<bool> AddBookingAsync(string userId, string arrival, string departure)
         {
             bool opRes = false;
 

@@ -23,7 +23,7 @@
         {
             string? userId = this.GetUserId();
             bool result = await this.bookingService
-                .AddBookingAsync(userId, inputModel.DateArrival.ToString("yyyy-MM-dd"), inputModel.DateDeparture.ToString("yyyy-MM-dd"), inputModel.AdultsCount, inputModel.ChildCount, inputModel.BabyCount);
+                .AddBookingAsync(userId, inputModel.DateArrival.ToString("yyyy-MM-dd"), inputModel.DateDeparture.ToString("yyyy-MM-dd"));
             if (result == false)
             {
                 return this.BadRequest();

@@ -42,7 +42,7 @@
         {
             string? currentUserId = this.GetUserId();
             bool result = await this.bookingService
-                .AddBookingAsync(currentUserId, arrival, departure, adultsCount, childCount, babyCount);
+                .AddBookingAsync(currentUserId, arrival, departure);
             if (result == false)
             {
                 return this.BadRequest();

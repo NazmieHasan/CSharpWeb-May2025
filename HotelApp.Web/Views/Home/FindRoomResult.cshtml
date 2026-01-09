@@ -1,4 +1,4 @@
-﻿@using HotelApp.Web.ViewModels.Room 
+﻿@using HotelApp.Web.ViewModels.Room
 @model FindRoomResultViewModel
 
 @{
@@ -8,7 +8,7 @@
 <div class="container mt-5 mb-5 d-flex flex-column align-items-center">
     <div class="mb-5 text-center">
         <h1 class="mb-1">@ViewData["Title"]</h1>
-        <h5 class="mb-3">@Model.DateArrival – @Model.DateDeparture</h5>
+        <h5 class="mb-3">@Model.DateArrival.ToString("yyyy-MM-dd") @Model.DateDeparture.ToString("yyyy-MM-dd")</h5>
 
         @if (!string.IsNullOrEmpty(Model.CategoryName))
         {
@@ -32,20 +32,46 @@
         @foreach (var room in Model.Rooms)
         {
             <div class="row justify-content-center mb-4">
-                <div class="col-12 col-md-6">
+                <div class="col-12 col-md-10">
                     <div class="row">
                         <div class="col-12 col-md-6 d-flex align-items-center justify-content-center">
                             <img src="@room.ImageUrl" class="img-fluid" />
                         </div>
                         <div class="col-12 col-md-6 mt-3">
                             <h5>@room.Name</h5>
-                            <p>@room.Category</p>
+                            <h5>@room.Category</h5>
+
+                            <div class="mb-2">
+                                <label>Adults</label>
+                                <select class="form-control adults-select" id="AdultsCount-@room.Id" data-maxguests="@room.CategoryBeds">
+                                    <option value="" selected>Please Select</option>
+                                    @for (int i = 1; i <= room.CategoryBeds; i++)
+                                    {
+                                        <option value="@i">@i</option>
+                                    }
+                                </select>
+                                <span class="text-danger" id="adultsError-@room.Id"></span>
+                            </div>
+                            <div class="mb-2">
+                                <label>Children</label>
+                                <select class="form-control children-select" id="childCountSelect-@room.Id">
+                                    <option value="0" selected>Please Select</option>
+                                </select>
+                            </div>
+                            <div class="mb-2">
+                                <label>Babies</label>
+                                <select class="form-control babies-select" id="babyCountSelect-@room.Id">
+                                    <option value="0" selected>Please Select</option>
+                                </select>
+                            </div>
+
                             <a class="btn btn-danger"
                                asp-controller="Booking"
                                asp-action="Add"
                                asp-route-roomId="@room.Id"
                                asp-route-dateArrival="@Model.DateArrival.ToString("yyyy-MM-dd")"
-                               asp-route-dateDeparture="@Model.DateDeparture.ToString("yyyy-MM-dd")">
+                               asp-route-dateDeparture="@Model.DateDeparture.ToString("yyyy-MM-dd")"
+                               onclick="return appendGuestsToBooking('@room.Id')">
                                 Booking
                             </a>
                         </div>
@@ -55,3 +81,10 @@
         }
     }
 </div>
+
+@section Scripts {
+    <script src="~/js/booking.js"></script>
+    <script>
+        initBookingGuestSelectors();
+    </script>
+}
