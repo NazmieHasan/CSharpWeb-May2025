@@ -19,5 +19,7 @@
 
         public const int MyBookingsPaginationPageSize = 5;
         public const int AdminPaginationPageSize = 10;
+
+        public const int AllowedMaxCountRoomByCategoryForBooking = 3;
     }
 }

@@ -5,48 +5,17 @@
     </div>
 
     <div class="row justify-content-center mb-5 gx-3">
+ 
         <div class="col">
             <div class="card shadow-lg border-0 bg-dark text-white rounded-3 h-100">
                 <div class="card-body d-flex flex-column align-items-center text-center">
-                    <i class="bi bi-person-lines-fill text-warning display-3 mb-3"></i>
-                    <h5 class="card-title">USERS</h5>
-                    <p class="card-text text-muted">Add, edit, or remove users and assign roles.</p>
-                    <div class="mt-auto w-100">
-                        <a asp-area="Admin" asp-controller="UserManagement" asp-action="Index"
-                           class="btn btn-warning fw-bold shadow-sm w-100 py-2">
-                            <i class="bi bi-person-badge-fill"></i> Go to Users
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col">
-            <div class="card shadow-lg border-0 bg-dark text-white rounded-3 h-100">
-                <div class="card-body d-flex flex-column align-items-center text-center">
-                    <i class="bi bi-tags-fill text-primary display-3 mb-3"></i>
-                    <h5 class="card-title">CATEGORIES</h5>
-                    <p class="card-text text-muted">Add new category, edit details, or remove them.</p>
-                    <div class="mt-auto w-100">
-                        <a asp-area="Admin" asp-controller="CategoryManagement" asp-action="Index"
-                           class="btn btn-primary fw-bold shadow-sm w-100 py-2">
-                            <i class="bi bi-tags-fill"></i> Go to Categories
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col">
-            <div class="card shadow-lg border-0 bg-dark text-white rounded-3 h-100">
-                <div class="card-body d-flex flex-column align-items-center text-center">
-                    <i class="bi bi-house-door-fill text-danger display-3 mb-3"></i>
+                    <i class="bi bi-house-door-fill text-primary display-3 mb-3"></i>
                     <h5 class="card-title">ROOMS</h5>
-                    <p class="card-text text-muted">Add new room, edit details, or remove them.</p>
+                    <p class="card-text text-muted">Add new room, edit, details, or remove them.</p>
                     <div class="mt-auto w-100">
                         <a asp-area="Admin" asp-controller="RoomManagement" asp-action="Index"
-                           class="btn btn-light fw-bold shadow-sm w-100 py-2">
-                            <i class="bi bi-house-door-fill"></i> Go to Rooms
+                           class="btn btn-primary fw-bold shadow-sm w-100 py-2">
+                            <i class="bi bi-house-door-fill"></i> Rooms
                         </a>
                     </div>
                 </div>
@@ -56,13 +25,13 @@
         <div class="col">
             <div class="card shadow-lg border-0 bg-dark text-white rounded-3 h-100">
                 <div class="card-body d-flex flex-column align-items-center text-center">
-                    <i class="bi bi-journal-check text-success display-3 mb-3"></i>
+                    <i class="bi bi-journal-check text-info display-3 mb-3"></i>
                     <h5 class="card-title">BOOKINGS</h5>
-                    <p class="card-text text-muted">Edit details, or remove them.</p>
+                    <p class="card-text text-muted">Edit, details, or remove them. In details page add payment, add stay.</p>
                     <div class="mt-auto w-100">
                         <a asp-area="Admin" asp-controller="BookingManagement" asp-action="Index"
-                           class="btn btn-success fw-bold shadow-sm w-100 py-2">
-                            <i class="bi bi-journal-check"></i> Go to Bookings
+                           class="btn btn-info fw-bold shadow-sm w-100 py-2">
+                            <i class="bi bi-journal-check"></i> Bookings
                         </a>
                     </div>
                 </div>
@@ -72,31 +41,29 @@
         <div class="col">
             <div class="card shadow-lg border-0 bg-dark text-white rounded-3 h-100">
                 <div class="card-body d-flex flex-column align-items-center text-center">
-                    <i class="bi bi-people-fill text-info display-3 mb-3"></i>
-                    <h5 class="card-title">GUESTS</h5>
-                    <p class="card-text text-muted">Add new guest, edit details, or remove them.</p>
+                    <i class="bi-list-check text-success display-3 mb-3"></i>
+                    <h5 class="card-title">Booking Rooms</h5>
+                    <p class="card-text text-muted">Edit, details, or remove them.</p>
                     <div class="mt-auto w-100">
-                        <a asp-area="Admin" asp-controller="GuestManagement" asp-action="Index"
-                           class="btn btn-info fw-bold shadow-sm w-100 py-2">
-                            <i class="bi bi-people-fill"></i> Go to Guests
+                        <a asp-area="Admin" asp-controller="BookingRoomManagement" asp-action="Index"
+                           class="btn btn-success fw-bold shadow-sm w-100 py-2">
+                            <i class="bi-list-check"></i> Booking Rooms
                         </a>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="row justify-content-center mb-5 gx-3">
         <div class="col">
             <div class="card shadow-lg border-0 bg-dark text-white rounded-3 h-100">
                 <div class="card-body d-flex flex-column align-items-center text-center">
                     <i class="bi-cash-stack text-warning display-3 mb-3"></i>
                     <h5 class="card-title">PAYMENTS</h5>
-                    <p class="card-text text-muted">Add, edit, or remove payment.</p>
+                    <p class="card-text text-muted">Details, or remove them.</p>
                     <div class="mt-auto w-100">
                         <a asp-area="Admin" asp-controller="PaymentManagement" asp-action="Index"
                            class="btn btn-warning fw-bold shadow-sm w-100 py-2">
-                            <i class="bi-cash-stack"></i> Go to Payments
+                            <i class="bi-cash-stack"></i> Payments
                         </a>
                     </div>
                 </div>
@@ -108,11 +75,47 @@
                 <div class="card-body d-flex flex-column align-items-center text-center">
                     <i class="bi-building text-primary display-3 mb-3"></i>
                     <h5 class="card-title">STAYS</h5>
-                    <p class="card-text text-muted">Edit details, or remove them.</p>
+                    <p class="card-text text-muted">Details, or remove them.</p>
                     <div class="mt-auto w-100">
                         <a asp-area="Admin" asp-controller="StayManagement" asp-action="Index"
                            class="btn btn-primary fw-bold shadow-sm w-100 py-2">
-                            <i class="bi-building"></i> Go to Stays
+                            <i class="bi-building"></i> Stays
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row justify-content-center mb-5 gx-3">
+
+        <div class="col">
+            <div class="card shadow-lg border-0 bg-dark text-white rounded-3 h-100">
+                <div class="card-body d-flex flex-column align-items-center text-center">
+                    <i class="bi bi-person-lines-fill text-warning display-3 mb-3"></i>
+                    <h5 class="card-title">USERS</h5>
+                    <p class="card-text text-muted">Details, or assign roles.</p>
+                    <div class="mt-auto w-100">
+                        <a asp-area="Admin" asp-controller="UserManagement" asp-action="Index"
+                           class="btn btn-warning fw-bold shadow-sm w-100 py-2">
+                            <i class="bi bi-person-lines-fill"></i> Users
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col">
+            <div class="card shadow-lg border-0 bg-dark text-white rounded-3 h-100">
+                <div class="card-body d-flex flex-column align-items-center text-center">
+                    <i class="bi bi-people-fill text-info display-3 mb-3"></i>
+                    <h5 class="card-title">GUESTS</h5>
+                    <p class="card-text text-muted">Add new guest, edit, details, or remove them.</p>
+                    <div class="mt-auto w-100">
+                        <a asp-area="Admin" asp-controller="GuestManagement" asp-action="Index"
+                           class="btn btn-info fw-bold shadow-sm w-100 py-2">
+                            <i class="bi bi-people-fill"></i> Guests
                         </a>
                     </div>
                 </div>
@@ -122,45 +125,13 @@
         <div class="col">
             <div class="card shadow-lg border-0 bg-dark text-white rounded-3 h-100">
                 <div class="card-body d-flex flex-column align-items-center text-center">
-                    <i class="bi-person-badge text-danger display-3 mb-3"></i>
+                    <i class="bi-person-badge text-success display-3 mb-3"></i>
                     <h5 class="card-title">FRONT OFFICE MANAGERS</h5>
-                    <p class="card-text text-muted">Add new manager, edit details, or remove them.</p>
+                    <p class="card-text text-muted">Add new manager, edit, details, or remove them.</p>
                     <div class="mt-auto w-100">
                         <a asp-area="Admin" asp-controller="ManagerManagement" asp-action="Index"
-                           class="btn btn-light fw-bold shadow-sm w-100 py-2">
-                            <i class="bi-person-badge"></i> Go to Managers
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col">
-            <div class="card shadow-lg border-0 bg-dark text-white rounded-3 h-100">
-                <div class="card-body d-flex flex-column align-items-center text-center">
-                    <i class="bi-list-check text-success display-3 mb-3"></i>
-                    <h5 class="card-title">STATUSES</h5>
-                    <p class="card-text text-muted">Add new status, edit details, or remove them.</p>
-                    <div class="mt-auto w-100">
-                        <a asp-area="Admin" asp-controller="StatusManagement" asp-action="Index"
                            class="btn btn-success fw-bold shadow-sm w-100 py-2">
-                            <i class="bi-list-check"></i> Go to Statuses
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col">
-            <div class="card shadow-lg border-0 bg-dark text-white rounded-3 h-100">
-                <div class="card-body d-flex flex-column align-items-center text-center">
-                    <i class="bi-credit-card-2-front text-info display-3 mb-3"></i>
-                    <h5 class="card-title">PAYMENT METHODS</h5>
-                    <p class="card-text text-muted">Add new payment method, edit details, or remove them.</p>
-                    <div class="mt-auto w-100">
-                        <a asp-area="Admin" asp-controller="PaymentMethodManagement" asp-action="Index"
-                           class="btn btn-info fw-bold shadow-sm w-100 py-2">
-                            <i class="bi-credit-card-2-front"></i> Go to Payment Methods
+                            <i class="bi-person-badge"></i> Managers
                         </a>
                     </div>
                 </div>
@@ -173,18 +144,51 @@
         <div class="col">
             <div class="card shadow-lg border-0 bg-dark text-white rounded-3 h-100">
                 <div class="card-body d-flex flex-column align-items-center text-center">
-                    <i class="bi-list-check text-success display-3 mb-3"></i>
-                    <h5 class="card-title">Booking Rooms</h5>
-                    <p class="card-text text-muted">Edit, details, or remove them.</p>
+                    <i class="bi bi-tags-fill text-primary display-3 mb-3"></i>
+                    <h5 class="card-title">CATEGORIES</h5>
+                    <p class="card-text text-muted">Add new category, edit details, or remove them.</p>
                     <div class="mt-auto w-100">
-                        <a asp-area="Admin" asp-controller="BookingRoomManagement" asp-action="Index"
-                           class="btn btn-success fw-bold shadow-sm w-100 py-2">
-                            <i class="bi-list-check"></i> Go to Booking Rooms
+                        <a asp-area="Admin" asp-controller="CategoryManagement" asp-action="Index"
+                           class="btn btn-primary fw-bold shadow-sm w-100 py-2">
+                            <i class="bi bi-tags-fill"></i> Categories
                         </a>
                     </div>
                 </div>
             </div>
         </div>
+
+        <div class="col">
+            <div class="card shadow-lg border-0 bg-dark text-white rounded-3 h-100">
+                <div class="card-body d-flex flex-column align-items-center text-center">
+                    <i class="bi-list-check text-success display-3 mb-3"></i>
+                    <h5 class="card-title">STATUSES</h5>
+                    <p class="card-text text-muted">Add new status, or remove them.</p>
+                    <div class="mt-auto w-100">
+                        <a asp-area="Admin" asp-controller="StatusManagement" asp-action="Index"
+                           class="btn btn-success fw-bold shadow-sm w-100 py-2">
+                            <i class="bi-list-check"></i> Statuses
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card shadow-lg border-0 bg-dark text-white rounded-3 h-100">
+                <div class="card-body d-flex flex-column align-items-center text-center">
+                    <i class="bi-credit-card-2-front text-info display-3 mb-3"></i>
+                    <h5 class="card-title">PAYMENT METHODS</h5>
+                    <p class="card-text text-muted">Add new payment method, edit, details, or remove them.</p>
+                    <div class="mt-auto w-100">
+                        <a asp-area="Admin" asp-controller="PaymentMethodManagement" asp-action="Index"
+                           class="btn btn-info fw-bold shadow-sm w-100 py-2">
+                            <i class="bi-credit-card-2-front"></i> Payment Methods
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
     </div>
 
 </div>

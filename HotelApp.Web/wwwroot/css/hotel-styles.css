@@ -599,6 +599,20 @@ a:focus {
 /* footer end */
 
 /* admin panel */
+.card {
+    height: 100%; 
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; 
+}
+
+    .card-body .btn {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
 .btn-success, .btn-primary, .btn-secondary, .btn-warning {
     margin-top: 1rem;
     margin-bottom: 1rem;
