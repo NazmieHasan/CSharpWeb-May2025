@@ -60,16 +60,19 @@
 
             await this.bookingRepository.AddAsync(newBooking);
 
-            var bookingRoom = new BookingRoom
+            foreach (var room in inputModel.Rooms)
             {
-                BookingId = newBooking.Id,
-                RoomId = inputModel.RoomId,
-                AdultsCount = inputModel.AdultsCount,
-                ChildCount = inputModel.ChildCount,
-                BabyCount = inputModel.BabyCount
-            };
+                var bookingRoom = new BookingRoom
+                {
+                    BookingId = newBooking.Id,
+                    RoomId = room.RoomId,
+                    AdultsCount = room.AdultsCount,
+                    ChildCount = room.ChildCount,
+                    BabyCount = room.BabyCount
+                };
 
-            await this.bookingRoomRepository.AddAsync(bookingRoom);
+                await bookingRoomRepository.AddAsync(bookingRoom);
+            }
 
             return true;
         }

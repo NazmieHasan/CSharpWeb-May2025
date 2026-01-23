@@ -5,6 +5,8 @@
         public DateOnly DateArrival { get; set; }
         public DateOnly DateDeparture { get; set; }
 
+        public int DaysCount => (DateDeparture.ToDateTime(TimeOnly.MinValue) - DateArrival.ToDateTime(TimeOnly.MinValue)).Days;
+
         public string? CategoryName { get; set; }
 
         public List<AllRoomsIndexViewModel> Rooms { get; set; } = new();

@@ -13,5 +13,7 @@
         public string ImageUrl { get; set; } = null!;
 
         public int CategoryBeds { get; set; }
+
+        public decimal CategoryPrice { get; set; }
     }
 }

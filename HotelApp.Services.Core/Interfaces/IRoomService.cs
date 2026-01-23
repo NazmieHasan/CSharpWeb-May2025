@@ -9,6 +9,6 @@
 
         Task<IEnumerable<AllRoomsIndexViewModel>> FindRoomByDateArrivaleAndDateDepartureAsync(FindRoomInputModel inputModel);
 
-        Task<AllRoomsIndexViewModel?> FindRoomByDateArrivaleDateDepartureAndCategoryAsync(FindRoomInputModel inputModel);
+        Task<IEnumerable<AllRoomsIndexViewModel>> FindRoomByDateArrivaleDateDepartureAndCategoryAsync(FindRoomInputModel inputModel);
     }
 }

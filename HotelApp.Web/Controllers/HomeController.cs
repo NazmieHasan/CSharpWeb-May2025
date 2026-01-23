@@ -9,7 +9,7 @@ namespace HotelApp.Web.Controllers
     using Web.ViewModels;
     using Web.ViewModels.Room;
     using Web.ViewModels.Category;
-    
+
     using static GCommon.ApplicationConstants;
     using static Web.ViewModels.ValidationMessages;
 
@@ -41,6 +41,11 @@ namespace HotelApp.Web.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> FindRoom(FindRoomInputModel inputModel)
         {
+            if (Request.Query.ContainsKey("DateArrival") && Request.Query.ContainsKey("DateDeparture"))
+            {
+                HttpContext.Session.Remove("PendingRooms");
+            }
+
             if (!Request.Query.ContainsKey("DateArrival") || !Request.Query.ContainsKey("DateDeparture"))
             {
                 return View();
@@ -104,6 +109,11 @@ namespace HotelApp.Web.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> FindRoomByCategorySearch(FindRoomInputModel inputModel)
         {
+            if (Request.Query.ContainsKey("DateArrival") && Request.Query.ContainsKey("DateDeparture"))
+            {
+                HttpContext.Session.Remove("PendingRooms");
+            }
+
             if (inputModel.CategoryId == 0)
             {
                 return RedirectToAction("Index", "Home");
@@ -139,7 +149,7 @@ namespace HotelApp.Web.Controllers
                 return View("FindRoomByCategory", inputModel);
             }
 
-            var room = await this.roomService
+            var rooms = await this.roomService
                 .FindRoomByDateArrivaleDateDepartureAndCategoryAsync(inputModel);
 
             string categoryName = await this.categoryService
@@ -150,7 +160,7 @@ namespace HotelApp.Web.Controllers
                 DateArrival = inputModel.DateArrival,
                 DateDeparture = inputModel.DateDeparture,
                 CategoryName = categoryName,
-                Rooms = room != null ? new List<AllRoomsIndexViewModel> { room } : new List<AllRoomsIndexViewModel>()
+                Rooms = rooms.ToList()
             };
 
             return View("FindRoomResult", resultModel);

@@ -50,6 +50,14 @@ namespace HotelApp.Web
 
             builder.Services.AddControllersWithViews();
 
+            builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(15);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+
             WebApplication app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -72,6 +80,8 @@ namespace HotelApp.Web
             app.UseRouting();
 
             app.SeedDefaultIdentity();
+
+            app.UseSession();
 
             app.UseAuthentication();
             app.UseAuthorization();

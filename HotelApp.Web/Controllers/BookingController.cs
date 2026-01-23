@@ -9,6 +9,8 @@
     using static GCommon.ApplicationConstants;
     using HotelApp.Web.ViewModels;
     using HotelApp.GCommon;
+    using HotelApp.Web.Extensions;
+    using Microsoft.AspNetCore.Authorization;
 
     public class BookingController : BaseController
     {
@@ -22,29 +24,113 @@
             this.bookingService = bookingService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Add(string roomId, DateOnly dateArrival, DateOnly dateDeparture, int AdultsCount, int ChildCount, int BabyCount)
+        [HttpPost]
+        [AllowAnonymous]
+        [IgnoreAntiforgeryToken]
+        public async Task<IActionResult> SaveRoomToSession(string roomId, int adults, int children, int babies)
         {
-            var roomDetails = await this.roomService.GetRoomDetailsByIdAsync(roomId);
+            var rooms = HttpContext.Session.GetObject<List<PendingBookingRoomSessionModel>>("PendingRooms")
+                        ?? new List<PendingBookingRoomSessionModel>();
 
-            if (roomDetails == null)
+            if (rooms.Any(r => r.RoomId == roomId))
             {
-                return NotFound();
+                return Json(new { success = false, message = "This room is already selected." });
             }
 
-            var daysCount = (dateDeparture.ToDateTime(TimeOnly.MinValue) - dateArrival.ToDateTime(TimeOnly.MinValue)).Days;
+            var roomDetails = await roomService.GetRoomDetailsByIdAsync(roomId);
+            if (roomDetails == null)
+            {
+                return Json(new { success = false, message = "Room not found." });
+            }
+                
+            var pendingRoom = new PendingBookingRoomSessionModel
+            {
+                RoomId = roomId,
+                CategoryName = roomDetails.CategoryName,
+                CategoryPrice = roomDetails.CategoryPrice,
+                AdultsCount = adults,
+                ChildCount = children,
+                BabyCount = babies
+            };
+
+            rooms.Add(pendingRoom);
+            HttpContext.Session.SetObject("PendingRooms", rooms);
+
+            return Json(new { success = true, room = pendingRoom });
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [IgnoreAntiforgeryToken]
+        public IActionResult RemoveRoomFromSession(string roomId)
+        {
+            var rooms = HttpContext.Session.GetObject<List<PendingBookingRoomSessionModel>>("PendingRooms")
+                        ?? new List<PendingBookingRoomSessionModel>();
+
+            rooms.RemoveAll(r => r.RoomId == roomId); 
+            HttpContext.Session.SetObject("PendingRooms", rooms);
+
+            return Json(new { success = true });
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        [IgnoreAntiforgeryToken]
+        public IActionResult GetRoomsInSession()
+        {
+            try
+            {
+                var rooms = HttpContext.Session.GetObject<List<PendingBookingRoomSessionModel>>("PendingRooms")
+                            ?? new List<PendingBookingRoomSessionModel>();
+
+                return Json(rooms.Select(r => new
+                {
+                    roomId = r.RoomId,
+                    categoryName = r.CategoryName,
+                    categoryPrice = r.CategoryPrice,
+                    adultsCount = r.AdultsCount,
+                    childCount = r.ChildCount,
+                    babyCount = r.BabyCount
+                }));
+            }
+            catch (Exception ex)
+            {
+                return Json(new { error = ex.Message });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Add(string dateArrival, string dateDeparture)
+        {
+            var pendingRooms = HttpContext.Session.GetObject<List<PendingBookingRoomSessionModel>>("PendingRooms");
+
+            if (pendingRooms == null || !pendingRooms.Any())
+            {
+                Console.WriteLine("Session is empty!");
+                return RedirectToAction("Index", "Home");
+            }
+
+            if (!DateOnly.TryParse(dateArrival, out var arrivalDate) ||
+                !DateOnly.TryParse(dateDeparture, out var departureDate))
+            {
+                return BadRequest("Invalid dates.");
+            }
+
+            var daysCount = (departureDate.ToDateTime(TimeOnly.MinValue) - arrivalDate.ToDateTime(TimeOnly.MinValue)).Days;
+            var totalPrice = pendingRooms.Sum(r => r.CategoryPrice * daysCount);
 
             var model = new AddBookingInputModel
             {
-                RoomId = Guid.Parse(roomId),
-                DateArrival = dateArrival,
-                DateDeparture = dateDeparture,
-                MaxGuests = roomDetails.CategoryBeds,
-                RoomCategoryName = roomDetails.CategoryName,
-                TotalPrice = roomDetails.CategoryPrice * daysCount,
-                AdultsCount = AdultsCount,
-                ChildCount = ChildCount,
-                BabyCount = BabyCount
+                DateArrival = arrivalDate,
+                DateDeparture = departureDate,
+                TotalPrice = totalPrice,
+                Rooms = pendingRooms.Select(r => new AddBookingRoomInputModel
+                {
+                    RoomId = Guid.Parse(r.RoomId),
+                    AdultsCount = r.AdultsCount,
+                    ChildCount = r.ChildCount,
+                    BabyCount = r.BabyCount
+                }).ToList()
             };
 
             return View(model);
@@ -53,15 +139,15 @@
         [HttpPost]
         public async Task<IActionResult> Add(AddBookingInputModel inputModel)
         {
-            var roomDetails = await this.roomService.GetRoomDetailsByIdAsync(inputModel.RoomId.ToString());
-            if (roomDetails == null)
+            var pendingRooms = HttpContext.Session.GetObject<List<PendingBookingRoomSessionModel>>("PendingRooms");
+            
+            if (pendingRooms == null || !pendingRooms.Any())
             {
-                return NotFound();
+                TempData["ErrorMessage"] = "Please select at least one room.";
+                return RedirectToAction(nameof(Index), "Home");
             }
 
             var daysCount = (inputModel.DateDeparture.ToDateTime(TimeOnly.MinValue) - inputModel.DateArrival.ToDateTime(TimeOnly.MinValue)).Days;
-            inputModel.RoomCategoryName = roomDetails.CategoryName;
-            inputModel.TotalPrice = roomDetails.CategoryPrice * daysCount;
 
             if (inputModel.DateArrival < DateOnly.FromDateTime(DateTime.UtcNow))
             {
@@ -91,6 +177,7 @@
                 else
                 {
                     TempData[SuccessMessageKey] = "Booking created successfully!";
+                    HttpContext.Session.Remove("PendingRooms");
                 }
 
                 return this.RedirectToAction(nameof(My));
