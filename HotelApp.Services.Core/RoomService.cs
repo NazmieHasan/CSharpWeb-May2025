@@ -27,6 +27,7 @@
             this.bookingRepository = bookingRepository;
             this.stayRepository = stayRepository;
         }
+
         public async Task<RoomDetailsViewModel?> GetRoomDetailsByIdAsync(string? id)
         {
             RoomDetailsViewModel? roomDetails = null;
@@ -68,7 +69,7 @@
 
             // 2️⃣ Load all active bookings with BookingRooms
             var bookings = await bookingRepository.GetAllAttached()
-                .Where(b => !b.IsDeleted && b.StatusId != 2) // Cancelled
+                .Where(b => !b.IsDeleted && b.StatusId != 2) // Status Cancelled
                 .Include(b => b.BookingRooms)
                 .ToListAsync();
 
@@ -82,65 +83,64 @@
                 .Where(r =>
                 {
                     var roomBookings = bookings
-                        .Where(b => b.BookingRooms.Any(br => br.RoomId == r.Id))
+                        .Where(b =>
+                            b.BookingRooms.Any(br => br.RoomId == r.Id) &&
+                            !(b.DateDeparture <= checkin || b.DateArrival >= checkout))
                         .ToList();
 
-                    // If the room has never been booked → free
                     if (!roomBookings.Any())
                         return true;
 
-                    // Find the last occupancy date for the room
                     DateOnly? lastOccupiedDate = roomBookings
-                        .Select(b =>
-                        {
-                            // Get BookingRooms for the room
-                            var brDates = b.BookingRooms
-                                .Where(br => br.RoomId == r.Id)
-                                .Select(br =>
-                                {
-                                    // If Done - Early Check Out → take Max Checkout from stay
-                                    if (br.StatusId == 6)
-                                    {
-                                        var maxStay = stays
-                                            .Where(s => s.BookingRoomId == br.Id)
-                                            .Select(s => (DateOnly?)DateOnly.FromDateTime(s.CheckoutOn.Value))
-                                            .DefaultIfEmpty(null)
-                                            .Max();
-
-                                        return maxStay;
-                                    }
-
-                                    // Otherwise use the booking's DateDeparture
-                                    return b.DateDeparture;
-                                })
-                                .DefaultIfEmpty(null)
-                                .Max();
-
-                            return brDates;
-                        })
+                        .SelectMany(b => b.BookingRooms
+                            .Where(br => br.RoomId == r.Id)
+                            .Select(br =>
+                                br.StatusId == 6 // Status Done - Early Check Out
+                                    ? stays
+                                        .Where(s => s.BookingRoomId == br.Id)
+                                        .Select(s => (DateOnly?)DateOnly.FromDateTime(s.CheckoutOn.Value))
+                                        .DefaultIfEmpty(null)
+                                        .Max()
+                                    : b.DateDeparture
+                            ))
                         .DefaultIfEmpty(null)
                         .Max();
 
-                    // The room is free if checkin >= last occupancy
                     return !lastOccupiedDate.HasValue || checkin >= lastOccupiedDate;
                 })
                 .ToList();
 
-            // 5️⃣ Take a maximum of 3 rooms from each category
-            var rooms = freeRooms
+            // 5️⃣ Group by category, calculate FreeRoomCountByCategory
+            var groupedRooms = freeRooms
                 .GroupBy(r => r.CategoryId)
-                .SelectMany(g => g.OrderBy(r => r.Name).Take(ApplicationConstants.AllowedMaxCountRoomByCategoryForBooking))
-                .OrderBy(r => r.Name)
-                .Select(r => new AllRoomsIndexViewModel
+                .OrderBy(g => g.Key)
+                .Select(g => new
                 {
-                    Id = r.Id.ToString(),
-                    Name = r.Name,
-                    CategoryId = r.CategoryId,
-                    Category = r.Category.Name,
-                    ImageUrl = r.Category.ImageUrl,
-                    CategoryBeds = r.Category.Beds,
-                    CategoryPrice = r.Category.Price
+                    CategoryId = g.Key,
+                    Rooms = g.OrderBy(r => r.Name) 
+                             .Take(ApplicationConstants.AllowedMaxCountRoomByCategoryForBooking)
+                             .ToList(),
+                    FreeRoomCountByCategory = g.Count()
                 })
+                .ToList();
+
+            var rooms = groupedRooms
+                .SelectMany((g, catIndex) => g.Rooms
+                    .OrderBy(r => r.Name) 
+                    .Select((r, roomIndex) => new AllRoomsIndexViewModel
+                    {
+                        Id = r.Id.ToString(),
+                        Name = r.Name,
+                        CategoryId = r.CategoryId,
+                        Category = r.Category.Name,
+                        ImageUrl = r.Category.ImageUrl,
+                        CategoryBeds = r.Category.Beds,
+                        CategoryPrice = r.Category.Price,
+                        FreeRoomCountByCategory = g.FreeRoomCountByCategory,
+                        RoomIndex = roomIndex,
+                        CategoryIndex = catIndex
+                    })
+                )
                 .ToList();
 
             return rooms;
@@ -172,19 +172,18 @@
                 .ToListAsync();
 
             // 4️⃣ Filter available rooms based on bookings and stays
-            var availableRooms = roomsList
+            var freeRooms = roomsList
                 .Where(r =>
                 {
-                    // Get all bookings that include this room
                     var roomBookings = bookings
-                        .Where(b => b.BookingRooms.Any(br => br.RoomId == r.Id))
+                        .Where(b =>
+                            b.BookingRooms.Any(br => br.RoomId == r.Id) &&
+                            !(b.DateDeparture <= checkin || b.DateArrival >= checkout))
                         .ToList();
 
-                    // If the room has never been booked, it's available
                     if (!roomBookings.Any())
                         return true;
 
-                    // Determine the last occupancy date for the room
                     DateOnly? lastOccupiedDate = roomBookings
                         .SelectMany(b => b.BookingRooms
                             .Where(br => br.RoomId == r.Id)
@@ -196,17 +195,20 @@
                                         .DefaultIfEmpty(null)
                                         .Max()
                                     : b.DateDeparture
-                            )
-                        )
+                            ))
                         .DefaultIfEmpty(null)
                         .Max();
 
-                    // Room is available if the requested check-in date is after the last occupied date
                     return !lastOccupiedDate.HasValue || checkin >= lastOccupiedDate;
                 })
                 .OrderBy(r => r.Name)
                 .Take(ApplicationConstants.AllowedMaxCountRoomByCategoryForBooking)
-                .Select(r => new AllRoomsIndexViewModel
+                .ToList();
+
+            // 5️⃣ Flatten list and set FreeRoomCountByCategory
+            var rooms = freeRooms
+                .OrderBy(r => r.Name)   
+                .Select((r, index) => new AllRoomsIndexViewModel
                 {
                     Id = r.Id.ToString(),
                     Name = r.Name,
@@ -214,11 +216,14 @@
                     Category = r.Category.Name,
                     ImageUrl = r.Category.ImageUrl,
                     CategoryBeds = r.Category.Beds,
-                    CategoryPrice = r.Category.Price
+                    CategoryPrice = r.Category.Price,
+                    FreeRoomCountByCategory = freeRooms.Count, 
+                    RoomIndex = index,
+                    CategoryIndex = 0
                 })
                 .ToList();
 
-            return availableRooms;
+            return rooms;
         }
 
     }

@@ -169,6 +169,17 @@ a:focus {
     border-radius: 2px;
 }
 
+.add-category-in-booking, 
+.add-category-in-booking:hover,
+.add-category-in-booking:focus,
+.add-category-in-booking:active {
+    color: #dc3545;
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
 .custom-container-home {
     margin-top: 50px;
     margin-bottom: 60px;

@@ -172,3 +172,21 @@ function getRoomsInSession() {
 }
 
 getRoomsInSession();
+
+document.querySelectorAll('.show-next-room-btn').forEach(btn => {
+    btn.addEventListener('click', function () {
+        const categoryId = this.dataset.category;
+        let nextIndex = parseInt(this.dataset.nextIndex);
+
+        const nextRoom = document.querySelector(`.room-form-${categoryId}[data-room-index='${nextIndex}']`);
+        if (nextRoom) {
+            nextRoom.classList.remove('d-none');
+            nextIndex++;
+            this.dataset.nextIndex = nextIndex;
+
+            if (!document.querySelector(`.room-form-${categoryId}[data-room-index='${nextIndex}']`)) {
+                this.style.display = 'none';
+            }
+        }
+    });
+});

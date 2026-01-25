@@ -10,5 +10,7 @@
         public string? CategoryName { get; set; }
 
         public List<AllRoomsIndexViewModel> Rooms { get; set; } = new();
+
+        public int FreeCategoryCount => Rooms.Select(r => r.Category).Distinct().Count();
     }
 }

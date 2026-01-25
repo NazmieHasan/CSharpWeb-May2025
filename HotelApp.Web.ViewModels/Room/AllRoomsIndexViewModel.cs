@@ -15,5 +15,11 @@
         public int CategoryBeds { get; set; }
 
         public decimal CategoryPrice { get; set; }
+
+        public int FreeRoomCountByCategory { get; set; }
+        
+        public int CategoryIndex { get; set; } 
+
+        public int RoomIndex { get; set; }
     }
 }

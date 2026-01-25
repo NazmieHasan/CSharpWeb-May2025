@@ -35,48 +35,69 @@
             <div id="sessionRoomContainer" class="w-30">
             </div>
         </div>
-        
-        @foreach (var room in Model.Rooms)
+
+        @for (int categoryIndex = 0; categoryIndex < Model.FreeCategoryCount; categoryIndex++)
         {
-            <div class="row justify-content-center mb-4">
+            @* TODO: categoryIndex and roomIndex should not be used here for logic purposes. *@
+
+            var categoryRooms = Model.Rooms.Where(r => r.CategoryIndex == categoryIndex).ToList();
+            var categoryId = categoryRooms.First().Category.Replace(" ", "_");
+
+            <div class="row justify-content-center mb-5">
                 <div class="col-12 col-md-10">
                     <div class="row">
-                        <div class="col-12 col-md-6 d-flex align-items-center justify-content-center">
-                            <img src="@room.ImageUrl" class="img-fluid" />
+                        <div class="col-12 col-md-6">
+                            <img src="@categoryRooms.First().ImageUrl" class="img-fluid" />
                         </div>
-                        <div class="col-12 col-md-6 mt-3">
-                            <h5>@room.Name</h5>
-                            <h5>@room.Category</h5>
+                        <div class="col-12 col-md-6">
+                            @for (int roomIndex = 0; roomIndex < categoryRooms.Count; roomIndex++)
+                            {
+                                var room = categoryRooms[roomIndex];
+                                var hiddenClass = roomIndex == 0 ? "" : "d-none";
 
-                            <div class="mb-2">
-                                <label>Adults</label>
-                                <select class="form-control adults-select" id="AdultsCount-@room.Id" data-maxguests="@room.CategoryBeds">
-                                    <option value="" selected>Please Select</option>
-                                    @for (int i = 1; i <= room.CategoryBeds; i++)
-                                    {
-                                        <option value="@i">@i</option>
-                                    }
-                                </select>
-                                <span class="text-danger" id="adultsError-@room.Id"></span>
-                            </div>
-                            <div class="mb-2">
-                                <label>Children</label>
-                                <select class="form-control children-select" id="childCountSelect-@room.Id">
-                                    <option value="0" selected>Please Select</option>
-                                </select>
-                            </div>
-                            <div class="mb-2">
-                                <label>Babies</label>
-                                <select class="form-control babies-select" id="babyCountSelect-@room.Id">
-                                    <option value="0" selected>Please Select</option>
-                                </select>
-                            </div>
+                                <div class="border rounded p-3 mb-4 room-form-@categoryId @hiddenClass" data-room-index="@roomIndex">
+                                    <h5>@room.Category @room.Name</h5>
+                                    <div class="mb-2">
+                                        <label>Adults</label>
+                                        <select class="form-control adults-select"
+                                                id="AdultsCount-@room.Id"
+                                                data-maxguests="@room.CategoryBeds">
+                                            <option value="" selected>Please Select</option>
+                                            @for (int i = 1; i <= room.CategoryBeds; i++)
+                                            {
+                                                <option value="@i">@i</option>
+                                            }
+                                        </select>
+                                        <span class="text-danger" id="adultsError-@room.Id"></span>
+                                    </div>
+                                    <div class="mb-2">
+                                        <label>Children</label>
+                                        <select class="form-control children-select" id="childCountSelect-@room.Id">
+                                            <option value="0" selected>Please Select</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-2">
+                                        <label>Babies</label>
+                                        <select class="form-control babies-select" id="babyCountSelect-@room.Id">
+                                            <option value="0" selected>Please Select</option>
+                                        </select>
+                                    </div>
 
-                            <a class="btn btn-danger"
-                               id="btn-@room.Id"
-                               onclick="return saveRoomToSession('@room.Id')">
-                                Add to Booking
-                            </a>
+                                    <a class="btn btn-danger" id="btn-@room.Id" onclick="return saveRoomToSession('@room.Id')">
+                                        Add to Booking
+                                    </a>
+                                </div>
+                            }
+
+                            @if (categoryRooms.Count() > 1)
+                            {
+                                <button type="button"
+                                        class="btn btn-outline-danger add-category-in-booking mb-3 show-next-room-btn"
+                                        data-category="@categoryId"
+                                        data-next-index="1">
+                                    <span class="fw-bold fs-5">+</span> Add One More @categoryRooms.First().Category
+                                </button>
+                            }
                         </div>
                     </div>
                 </div>
