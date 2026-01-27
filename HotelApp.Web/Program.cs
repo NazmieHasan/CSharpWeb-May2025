@@ -48,7 +48,12 @@ namespace HotelApp.Web
             // TODO: Implement as extension method
             builder.Services.AddTransient<IIdentitySeeder, IdentitySeeder>();
 
-            builder.Services.AddControllersWithViews();
+            builder.Services
+                .AddControllersWithViews()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.WriteIndented = true; // pretty JSON
+                });
 
             builder.Services.AddDistributedMemoryCache();
             builder.Services.AddSession(options =>
@@ -89,6 +94,8 @@ namespace HotelApp.Web
 
             // This middleware redirects admins to the admin dashboard
             // app.UserAdminRedirection();
+
+            app.MapControllers();
 
             app.MapControllerRoute(
                 name: "areas",

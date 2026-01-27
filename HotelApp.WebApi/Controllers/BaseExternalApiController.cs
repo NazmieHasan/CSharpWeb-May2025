@@ -1,10 +1,11 @@
 ﻿namespace HotelApp.WebApi.Controllers
 {
     using System.Security.Claims;
-
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     [ApiController]
+    [Authorize]
     [Route("[controller]")]
     public abstract class BaseExternalApiController : ControllerBase
     {

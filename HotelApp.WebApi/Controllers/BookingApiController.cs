@@ -1,8 +1,6 @@
 ﻿namespace HotelApp.WebApi.Controllers
 {
-    using System.ComponentModel.DataAnnotations;
-
-    using Microsoft.AspNetCore.Authorization;
+    using HotelApp.Web.ViewModels.Booking;
     using Microsoft.AspNetCore.Mvc;
 
     using Services.Core.Interfaces;
@@ -16,40 +14,28 @@
             this.bookingService = bookingService;
         }
 
-        // TODO fix Status 401 Unauthorized
-
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [Route("BookingsByUser")]
-        [Authorize]
-        public async Task<ActionResult<IEnumerable<string>>> GetBookingsByUserId([Required] string userId)
+        public async Task<IActionResult> MyBookings()
         {
-            IEnumerable<string> bookingsId = await this.bookingService
-                .GetBookingsIdByUserIdAsync(userId);
+            string? userId = this.GetUserId();
 
-            return this.Ok(bookingsId);
-        }
-
-        [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [Route("Create")]
-        [Authorize]
-        public async Task<ActionResult> Create(string arrival, string departure, int adultsCount, int childCount, int babyCount)
-        {
-            string? currentUserId = this.GetUserId();
-            bool result = await this.bookingService
-                .AddBookingAsync(currentUserId, arrival, departure);
-            if (result == false)
+            if (string.IsNullOrEmpty(userId))
             {
-                return this.BadRequest();
+                return Unauthorized();
             }
 
-            return this.Ok();
+            IEnumerable<MyBookingsViewModel> bookings =
+                await this.bookingService.GetAllBookingsByUserIdAsync(userId);
+
+            return Ok(bookings);
         }
+
+
+        // TODO create booking
 
     }
 }

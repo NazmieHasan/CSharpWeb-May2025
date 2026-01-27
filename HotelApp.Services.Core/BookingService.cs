@@ -96,9 +96,9 @@
                     CreatedOn = b.CreatedOn.ToHotelTime(),
                     DateArrival = b.DateArrival,
                     DateDeparture = b.DateDeparture,
-                    AdultsCount = b.BookingRooms.Sum(br => br.AdultsCount),
-                    ChildCount = b.BookingRooms.Sum(br => br.ChildCount),
-                    BabyCount = b.BookingRooms.Sum(br => br.BabyCount),
+                    TotalAdultsCount = b.BookingRooms.Sum(br => br.AdultsCount),
+                    TotalChildCount = b.BookingRooms.Sum(br => br.ChildCount),
+                    TotalBabyCount = b.BookingRooms.Sum(br => br.BabyCount),
                     TotalAmount = b.TotalAmount,
                     PaidAmount = b.Payments.Sum(p => p.Amount),
                     RemainingAmount = b.TotalAmount - b.Payments.Sum(p => p.Amount),
@@ -187,44 +187,42 @@
         }
 
         /* Booking API method */
-        public async Task<IEnumerable<string>> GetBookingsIdByUserIdAsync(string? userId)
+        public async Task<IEnumerable<MyBookingsViewModel>> GetAllBookingsByUserIdAsync(string userId)
         {
-            IEnumerable<string> bookingIds = new List<string>();
-            if (!String.IsNullOrWhiteSpace(userId))
-            {
-                bookingIds = await this.bookingRepository
-                    .GetAllAttached()
-                    .Where(b => b.UserId.ToString().ToLower() == userId.ToLower())
-                    .OrderByDescending(b => b.CreatedOn)
-                    .Select(b => b.Id.ToString())
-                    .ToArrayAsync();
-            }
-
-            return bookingIds;
-        }
-
-        /* Booking API method */
-        public async Task<bool> AddBookingAsync(string userId, string arrival, string departure)
-        {
-            bool opRes = false;
-
-            IdentityUser? user = await this.userManager.FindByIdAsync(userId);
-
-            if (user != null)
-            {
-                Booking newBooking = new Booking()
+            return await this.bookingRepository
+                .GetAllAttached()
+                .Include(b => b.BookingRooms)
+                    .ThenInclude(br => br.Room)
+                        .ThenInclude(r => r.Category)
+                .Include(b => b.BookingRooms)
+                    .ThenInclude(br => br.Status)
+                .Include(b => b.Status)
+                .AsNoTracking()
+                .Where(b => b.UserId == userId)
+                .OrderByDescending(b => b.CreatedOn)
+                .Select(b => new MyBookingsViewModel
                 {
-                    DateArrival = DateOnly.Parse(arrival),
-                    DateDeparture = DateOnly.Parse(departure),
-                    UserId = userId
-                };
-
-                await this.bookingRepository.AddAsync(newBooking);
-
-                opRes = true;
-            }
-
-            return opRes;
+                    Id = b.Id.ToString(),
+                    CreatedOn = b.CreatedOn.ToHotelTime(),
+                    DateArrival = b.DateArrival,
+                    DateDeparture = b.DateDeparture,
+                    TotalAdultsCount = b.BookingRooms.Sum(br => br.AdultsCount),
+                    TotalChildCount = b.BookingRooms.Sum(br => br.ChildCount),
+                    TotalBabyCount = b.BookingRooms.Sum(br => br.BabyCount),
+                    TotalAmount = b.TotalAmount,
+                    PaidAmount = b.Payments.Sum(p => p.Amount),
+                    RemainingAmount = b.TotalAmount - b.Payments.Sum(p => p.Amount),
+                    Status = b.Status.Name,
+                    Rooms = b.BookingRooms.Select(br => new RoomInfoInMyBookingViewModel
+                    {
+                        RoomStatus = br.Status.Name,
+                        CategoryName = br.Room.Category.Name,
+                        AdultsCountPerRoom = br.AdultsCount,
+                        ChildCountPerRoom = br.ChildCount,
+                        BabyCountPerRoom = br.BabyCount
+                    }).ToList()
+                })
+                .ToListAsync();
         }
 
     }

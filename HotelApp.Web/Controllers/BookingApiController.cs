@@ -3,7 +3,6 @@
     using Microsoft.AspNetCore.Mvc;
 
     using Services.Core.Interfaces;
-    using ViewModels.Booking;
 
     public class BookingApiController : BaseInternalApiController
     {
@@ -14,22 +13,22 @@
             this.bookingService = bookingService;
         }
 
-        [HttpPost]
+        [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [Route("Create")]
-        public async Task<ActionResult> Create([FromBody] AddBookingInputModel inputModel)
+        [Route("My")]
+        public async Task<ActionResult> My()
         {
             string? userId = this.GetUserId();
-            bool result = await this.bookingService
-                .AddBookingAsync(userId, inputModel.DateArrival.ToString("yyyy-MM-dd"), inputModel.DateDeparture.ToString("yyyy-MM-dd"));
-            if (result == false)
+
+            if (string.IsNullOrWhiteSpace(userId))
             {
-                return this.BadRequest();
+                return Unauthorized();
             }
 
-            return this.Ok();
+            var bookings = await this.bookingService.GetAllBookingsByUserIdAsync(userId);
+
+            return Ok(bookings);
         }
     }
 }

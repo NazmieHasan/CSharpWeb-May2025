@@ -10,11 +10,11 @@
 
         public DateOnly DateDeparture { get; set; }
 
-        public int AdultsCount { get; set; }
+        public int TotalAdultsCount { get; set; }
 
-        public int ChildCount { get; set; }
+        public int TotalChildCount { get; set; }
 
-        public int BabyCount { get; set; }
+        public int TotalBabyCount { get; set; }
 
         public decimal TotalAmount { get; set; }
 

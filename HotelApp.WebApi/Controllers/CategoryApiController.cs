@@ -1,10 +1,12 @@
 ﻿namespace HotelApp.WebApi.Controllers
 {
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     using Services.Core.Interfaces;
     using Web.ViewModels.Category;
 
+    [AllowAnonymous]
     public class CategoryApiController : BaseExternalApiController
     {
         private readonly ICategoryService categoryService;
