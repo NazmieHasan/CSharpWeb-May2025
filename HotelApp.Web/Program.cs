@@ -3,6 +3,7 @@ namespace HotelApp.Web
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
+    using Rotativa.AspNetCore;
 
     using Data;
     using Data.Models;
@@ -64,6 +65,11 @@ namespace HotelApp.Web
             });
 
             WebApplication app = builder.Build();
+
+            RotativaConfiguration.Setup(
+                Path.Combine(app.Environment.WebRootPath, "Rotativa"),
+                wkhtmltopdfRelativePath: ""
+            );
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

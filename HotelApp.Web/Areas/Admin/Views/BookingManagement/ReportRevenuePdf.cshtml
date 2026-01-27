@@ -1,0 +1,51 @@
+﻿@using HotelApp.Web.ViewModels.Admin.BookingManagement.Report
+@model BookingManagementReportRevenueSearchViewModel
+@using System.Globalization
+
+@{
+    Layout = null;
+    ViewData["Title"] = "Booking Revenue Report";
+    var currentUserEmail = User.Identity!.Name;
+    var currentDateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+}
+
+<h1>Hotel & SPA</h1>
+<h2>@ViewData["Title"]</h2>
+<h2>
+    @CultureInfo.GetCultureInfo("en-US").DateTimeFormat.GetMonthName(Model.ReportSearch.Month) @Model.ReportSearch.Year
+</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Booking ID</th>
+            <th>Created On</th>
+            <th>Arrival Date</th>
+            <th>Departure Date</th>
+            <th>Status</th>
+            <th>Paid Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var b in Model.ReportResults)
+        {
+            <tr>
+                <td>@b.Id</td>
+                <td>@b.CreatedOn.ToString("yyyy-MM-dd")</td>
+                <td>@b.DateArrival.ToString("yyyy-MM-dd")</td>
+                <td>@b.DateDeparture.ToString("yyyy-MM-dd")</td>
+                <td>@b.Status</td>
+                <td>$@b.PaidAmount.ToString("0.00")</td>
+            </tr>
+        }
+        <tr>
+            <td colspan="5" class="total-label">
+                <span class="total-text">Total Revenue</span>
+            </td>
+            <td class="total-value">$@Model.TotalRevenue.ToString("0.00")</td>
+        </tr>
+    </tbody>
+</table>
+
+<p>Created by: @currentUserEmail</p>
+<p>@currentDateTime</p>

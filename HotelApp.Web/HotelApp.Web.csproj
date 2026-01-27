@@ -16,6 +16,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.16" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.16" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
+    <PackageReference Include="Rotativa.AspNetCore" Version="1.4.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,6 +29,15 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\images\upload\categories\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\css\pdf.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\Rotativa\wkhtmltopdf.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

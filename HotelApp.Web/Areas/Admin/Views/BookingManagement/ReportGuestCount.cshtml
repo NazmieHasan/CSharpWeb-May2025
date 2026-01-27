@@ -53,6 +53,16 @@
         <h4 class="mb-5 text-center">
             @CultureInfo.GetCultureInfo("en-US").DateTimeFormat.GetMonthName(Model.ReportSearch.Month) @Model.ReportSearch.Year
         </h4>
+
+        <div class="w-75 mx-auto mb-3 text-start">
+            <a asp-action="ReportGuestCountPdf"
+               asp-route-Year="@Model.ReportSearch.Year"
+               asp-route-Month="@Model.ReportSearch.Month"
+               class="btn btn-danger fw-bold">
+                <i class="bi bi-file-earmark-pdf"></i> Generate PDF
+            </a>
+        </div>
+
         <div class="table-responsive">
             <table class="table table-dark table-hover shadow-lg rounded-3 w-75 mx-auto">
                 <thead class="thead-dark">

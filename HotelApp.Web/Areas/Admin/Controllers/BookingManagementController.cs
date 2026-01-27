@@ -1,10 +1,11 @@
 ﻿namespace HotelApp.Web.Areas.Admin.Controllers
 {
+    using Rotativa.AspNetCore;
+
     using HotelApp.GCommon;
     using HotelApp.Web.ViewModels.Admin.BookingManagement;
     using HotelApp.Web.ViewModels.Admin.BookingManagement.Report;
     using HotelApp.Web.ViewModels.Admin.BookingManagement.Search;
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     using Services.Core.Admin.Interfaces;
@@ -16,14 +17,17 @@
         private readonly IBookingManagementService bookingService;
         private readonly IUserManagementService userService;
         private readonly IStatusManagementService statusService;
+        private readonly IWebHostEnvironment env;
 
-        public BookingManagementController(IBookingManagementService bookingService, 
+        public BookingManagementController(IBookingManagementService bookingService,
             IUserManagementService userService,
-            IStatusManagementService statusService)
+            IStatusManagementService statusService,
+            IWebHostEnvironment env)
         {
             this.bookingService = bookingService;
             this.userService = userService;
             this.statusService = statusService;
+            this.env = env;
         }
 
         [HttpGet]
@@ -243,6 +247,68 @@
             model.HasReportSearched = true;
 
             return View("ReportGuestCount", model);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> ReportRevenuePdf(int year, int month)
+        {
+            var reportSearchModel = new BookingManagementReportRevenueSearchViewModel
+            {
+                ReportSearch = new BookingManagementReportSearchInputModel
+                {
+                    Year = year,
+                    Month = month
+                }
+            };
+
+            var bookings = await bookingService.ReportBookingRevenueAsync(reportSearchModel.ReportSearch);
+            reportSearchModel.ReportResults = bookings.ToList();
+
+            reportSearchModel.TotalRevenue = bookings.Sum(b => b.Status == "Cancelled" ? b.PaidAmount / 2 : b.PaidAmount);
+            reportSearchModel.HasReportSearched = true;
+
+            return new ViewAsPdf("ReportRevenuePdf", reportSearchModel)
+            {
+                FileName = $"BookingRevenue_{year}-{month}_{DateTime.Now:yyyy-MM-dd_HH-mm-ss}.pdf",
+                PageSize = Rotativa.AspNetCore.Options.Size.A4,
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Landscape,
+                PageMargins = new Rotativa.AspNetCore.Options.Margins(10, 10, 10, 10),
+                CustomSwitches =
+                    "--no-pdf-compression " +
+                    "--disable-smart-shrinking " +
+                    "--print-media-type " +
+                    $"--user-style-sheet \"{Path.Combine(env.WebRootPath, "css", "pdf.css")}\""
+            };
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ReportGuestCountPdf(int year, int month)
+        {
+            var reportSearchModel = new BookingManagementReportGuestCountSearchViewModel
+            {
+                ReportSearch = new BookingManagementReportSearchInputModel
+                {
+                    Year = year,
+                    Month = month
+                }
+            };
+
+            reportSearchModel.ReportResults = (await bookingService.ReportBookingGuestCountAsync(reportSearchModel.ReportSearch)).ToList();
+            reportSearchModel.HasReportSearched = true;
+
+            return new ViewAsPdf("ReportGuestCountPdf", reportSearchModel)
+            {
+                FileName = $"BookingGuestCount_{year}-{month}_{DateTime.Now:yyyy-MM-dd_HH-mm-ss}.pdf",
+                PageSize = Rotativa.AspNetCore.Options.Size.A4,
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Portrait,
+                PageMargins = new Rotativa.AspNetCore.Options.Margins(10, 10, 10, 10),
+                CustomSwitches =
+                    "--no-pdf-compression " +
+                    "--disable-smart-shrinking " +
+                    "--print-media-type " +
+                    $"--user-style-sheet \"{Path.Combine(env.WebRootPath, "css", "pdf.css")}\""
+            };
         }
 
     }

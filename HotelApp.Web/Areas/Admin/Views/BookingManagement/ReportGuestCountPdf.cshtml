@@ -1,0 +1,74 @@
+﻿@using HotelApp.Web.ViewModels.Admin.BookingManagement.Report
+@model BookingManagementReportGuestCountSearchViewModel
+@using System.Globalization
+
+@{
+    Layout = null;
+    ViewData["Title"] = "Booking Guest Count Report";
+    var currentUserEmail = User.Identity!.Name;
+    var currentDateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+}
+
+<h1>Hotel & SPA</h1>
+<h2>@ViewData["Title"]</h2>
+<h2>
+    @CultureInfo.GetCultureInfo("en-US").DateTimeFormat.GetMonthName(Model.ReportSearch.Month) @Model.ReportSearch.Year
+</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Day</th>
+            <th>Meal</th>
+            <th>Adults</th>
+            <th>Children</th>
+            <th>Babies</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int d = 1; d <= DateTime.DaysInMonth(Model.ReportSearch.Year, Model.ReportSearch.Month); d++)
+        {
+            var dayDate = new DateOnly(Model.ReportSearch.Year, Model.ReportSearch.Month, d);
+            var dayReport = Model.ReportResults.FirstOrDefault(r => r.DayOfMonth == dayDate);
+
+            if (dayReport != null)
+            {
+                <tr class="meal-row">
+                    <td>@dayReport.DayOfMonth.ToString("yyyy-MM-dd")</td>
+                    <td>Breakfast</td>
+                    <td>@dayReport.BreakfastAdults</td>
+                    <td>@dayReport.BreakfastChildren</td>
+                    <td>@dayReport.BreakfastBabies</td>
+                    <td>@dayReport.BreakfastGuest</td>
+                </tr>
+                <tr class="meal-row">
+                    <td>@dayReport.DayOfMonth.ToString("yyyy-MM-dd")</td>
+                    <td>Lunch</td>
+                    <td>@dayReport.LunchAdults</td>
+                    <td>@dayReport.LunchChildren</td>
+                    <td>@dayReport.LunchBabies</td>
+                    <td>@dayReport.LunchGuest</td>
+                </tr>
+                <tr class="meal-row">
+                    <td>@dayReport.DayOfMonth.ToString("yyyy-MM-dd")</td>
+                    <td>Dinner</td>
+                    <td>@dayReport.DinnerAdults</td>
+                    <td>@dayReport.DinnerChildren</td>
+                    <td>@dayReport.DinnerBabies</td>
+                    <td>@dayReport.DinnerGuest</td>
+                </tr>
+            }
+            else
+            {
+                <tr>
+                    <td>@dayDate.ToString("yyyy-MM-dd")</td>
+                    <td colspan="5">No bookings found</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+<p>Created by: @currentUserEmail</p>
+<p>@currentDateTime</p>
