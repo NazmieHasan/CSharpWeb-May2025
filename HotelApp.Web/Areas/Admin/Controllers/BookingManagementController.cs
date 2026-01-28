@@ -257,8 +257,11 @@
                     Year = year,
                     Month = month
                 },
-                PdfOwnerUser = User.Identity!.Name,
-                PdfGeneratedOn = DateTime.Now.ToString(AppDateTimeFormat)
+                Pdf =
+				{
+					PdfOwnerUser = User.Identity!.Name,
+					PdfGeneratedOn = DateTime.Now.ToString(AppDateTimeFormat)
+				}
             };
 
             var bookings = await bookingService.ReportBookingRevenueAsync(reportSearchModel.ReportSearch);
@@ -293,8 +296,11 @@
                     Year = year,
                     Month = month
                 },
-                PdfOwnerUser = User.Identity!.Name,
-                PdfGeneratedOn = DateTime.Now.ToString(AppDateTimeFormat)
+                Pdf =
+				{
+					PdfOwnerUser = User.Identity!.Name,
+					PdfGeneratedOn = DateTime.Now.ToString(AppDateTimeFormat)
+				}
             };
 
             reportSearchModel.ReportResults = (await bookingService.ReportBookingGuestCountAsync(reportSearchModel.ReportSearch)).ToList();

@@ -16,7 +16,7 @@
 </head>
 <body>
 
-    <h1>@Model.PdfTitle</h1>
+    <h1>@Model.Pdf.PdfTitle</h1>
     <h2>@ViewData["Title"]</h2>
     <h2>
         @CultureInfo.GetCultureInfo("en-US").DateTimeFormat.GetMonthName(Model.ReportSearch.Month) @Model.ReportSearch.Year
@@ -77,8 +77,8 @@
         </tbody>
     </table>
 
-    <p>Created by: @Model.PdfOwnerUser</p>
-    <p>@Model.PdfGeneratedOn</p>
+    <p>Created by: @Model.Pdf.PdfOwnerUser</p>
+    <p>@Model.Pdf.PdfGeneratedOn</p>
 
 </body>
 </html>

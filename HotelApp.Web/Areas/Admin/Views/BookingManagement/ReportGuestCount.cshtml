@@ -123,7 +123,8 @@
     else if (Model.HasReportSearched)
     {
         <div class="mt-4 text-center">
-            Sorry, no bookings found.
+            <p>Sorry, no results with expected guests.</p>
+            <p>It’s possible that there are no bookings for @Model.ReportSearch.MonthYear or that they have not been paid.</p>
         </div>
     }
 </div>

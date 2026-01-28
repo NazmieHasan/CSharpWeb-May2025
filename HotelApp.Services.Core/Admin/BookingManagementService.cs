@@ -13,6 +13,7 @@
     using Web.ViewModels.Admin.StayManagement;
 
     using HotelApp.Services.Common.Extensions;
+    using static HotelApp.GCommon.ApplicationConstants;
 
     public class BookingManagementService : IBookingManagementService
     {
@@ -367,17 +368,20 @@
                 .Include(b => b.Status)
                 .Include(b => b.Payments)
                 .Where(b =>
-                    b.CreatedOn.Year == inputModel.Year &&
-                    b.CreatedOn.Month == inputModel.Month &&
                     b.StatusId != 1 &&
-                    b.Payments.Any(p => p.Amount > 0))
+                    b.Payments.Any(p => 
+                        p.Amount > 0 &&
+                        p.CreatedOn.Year == inputModel.Year &&
+                        p.CreatedOn.Month == inputModel.Month
+                    )
+                )
                 .OrderBy(b => b.CreatedOn)
                 .Select(b => new BookingManagementReportRevenueSearchResultViewModel
                 {
                     Id = b.Id.ToString(),
-                    CreatedOn = b.CreatedOn,
-                    DateArrival = b.DateArrival,
-                    DateDeparture = b.DateDeparture,
+                    CreatedOn = b.CreatedOn.ToString(AppDateFormat),
+					DateArrival = b.DateArrival.ToString(AppDateFormat),
+					DateDeparture = b.DateDeparture.ToString(AppDateFormat),
                     Status = b.Status.Name,
                     PaidAmount = b.Payments.Sum(p => p.Amount)
                 })
