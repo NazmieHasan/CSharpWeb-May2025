@@ -2,8 +2,13 @@
 {
     public class ApplicationConstants
     {
+        public const string AppName = "Hotel & SPA";
         public const string AppDateFormat = "yyyy-MM-dd";
+        public const string AppDateTimeFormat = "yyyy-MM-dd HH:mm:ss";
+        public const string AppCurrency = "$";
+
         public const string IsDeletedPropertyName = "IsDeleted";
+
         public const string AccessDeniedPath = "/Home/AccessDenied";
         public const string ManagerAuthCookie = "ManagerAuth";
         public const string AllowAllDomainsPolicy = "AllowAllDomainsDebug";

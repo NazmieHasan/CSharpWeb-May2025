@@ -250,13 +250,15 @@
         [HttpGet]
         public async Task<IActionResult> ReportRevenuePdf(int year, int month)
         {
-            var reportSearchModel = new BookingManagementReportRevenueSearchViewModel
+            var reportSearchModel = new BookingManagementReportRevenuePdf
             {
                 ReportSearch = new BookingManagementReportSearchInputModel
                 {
                     Year = year,
                     Month = month
-                }
+                },
+                PdfOwnerUser = User.Identity!.Name,
+                PdfGeneratedOn = DateTime.Now.ToString(AppDateTimeFormat)
             };
 
             var bookings = await bookingService.ReportBookingRevenueAsync(reportSearchModel.ReportSearch);
@@ -284,13 +286,15 @@
         [HttpGet]
         public async Task<IActionResult> ReportGuestCountPdf(int year, int month)
         {
-            var reportSearchModel = new BookingManagementReportGuestCountSearchViewModel
+            var reportSearchModel = new BookingManagementReportGuestCountPdf
             {
                 ReportSearch = new BookingManagementReportSearchInputModel
                 {
                     Year = year,
                     Month = month
-                }
+                },
+                PdfOwnerUser = User.Identity!.Name,
+                PdfGeneratedOn = DateTime.Now.ToString(AppDateTimeFormat)
             };
 
             reportSearchModel.ReportResults = (await bookingService.ReportBookingGuestCountAsync(reportSearchModel.ReportSearch)).ToList();

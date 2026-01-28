@@ -1,12 +1,10 @@
 ﻿@using HotelApp.Web.ViewModels.Admin.BookingManagement.Report
-@model BookingManagementReportGuestCountSearchViewModel
+@model BookingManagementReportGuestCountPdf
 @using System.Globalization
 
 @{
     Layout = null;
     ViewData["Title"] = "Booking Guest Count Report";
-    var currentUserEmail = User.Identity!.Name;
-    var currentDateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 }
 
 <!DOCTYPE html>
@@ -18,7 +16,7 @@
 </head>
 <body>
 
-    <h1>Hotel & SPA</h1>
+    <h1>@Model.PdfTitle</h1>
     <h2>@ViewData["Title"]</h2>
     <h2>
         @CultureInfo.GetCultureInfo("en-US").DateTimeFormat.GetMonthName(Model.ReportSearch.Month) @Model.ReportSearch.Year
@@ -79,8 +77,8 @@
         </tbody>
     </table>
 
-    <p>Created by: @currentUserEmail</p>
-    <p>@currentDateTime</p>
+    <p>Created by: @Model.PdfOwnerUser</p>
+    <p>@Model.PdfGeneratedOn</p>
 
 </body>
 </html>
