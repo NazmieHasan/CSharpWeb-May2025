@@ -17,17 +17,14 @@
         private readonly IBookingManagementService bookingService;
         private readonly IUserManagementService userService;
         private readonly IStatusManagementService statusService;
-        private readonly IWebHostEnvironment env;
 
         public BookingManagementController(IBookingManagementService bookingService,
             IUserManagementService userService,
-            IStatusManagementService statusService,
-            IWebHostEnvironment env)
+            IStatusManagementService statusService)
         {
             this.bookingService = bookingService;
             this.userService = userService;
             this.statusService = statusService;
-            this.env = env;
         }
 
         [HttpGet]
@@ -278,7 +275,9 @@
                     "--no-pdf-compression " +
                     "--disable-smart-shrinking " +
                     "--print-media-type " +
-                    $"--user-style-sheet \"{Path.Combine(env.WebRootPath, "css", "pdf.css")}\""
+                    "--footer-center \"Page [page] of [topage]\" " +
+                    "--footer-font-size 8 " +
+                    "--footer-spacing 4 "
             };
         }
 
@@ -307,7 +306,9 @@
                     "--no-pdf-compression " +
                     "--disable-smart-shrinking " +
                     "--print-media-type " +
-                    $"--user-style-sheet \"{Path.Combine(env.WebRootPath, "css", "pdf.css")}\""
+                    "--footer-center \"Page [page] of [topage]\" " +
+                    "--footer-font-size 8 " +
+                    "--footer-spacing 4 "
             };
         }
 

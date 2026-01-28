@@ -5,6 +5,10 @@
     font-size: 12px;
 }
 
+h1, h2 {
+    text-align: center;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
@@ -17,10 +21,6 @@ th, td {
 
 th {
     background-color: #f2f2f2;
-}
-
-h1, h2 {
-    text-align: center;
 }
 
 .total-label {
