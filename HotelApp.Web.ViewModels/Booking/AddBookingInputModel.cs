@@ -17,6 +17,7 @@
         public decimal TotalPrice { get; set; }
 
         [Required(ErrorMessage = OwnerRequiredMessage)]
+        [StringLength(30, MinimumLength = 5, ErrorMessage = OwnerNameAndFamilyLengthMessage)]
         [Display(Name = "Owner Name and Family")]
         public string Owner { get; set; } = null!;
 

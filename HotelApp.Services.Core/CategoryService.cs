@@ -34,6 +34,17 @@
                 .FirstOrDefaultAsync();
         }
 
+        public async Task<int?> GetCategoryIdByNameAsync(string categoryName)
+        {
+            if (string.IsNullOrWhiteSpace(categoryName))
+                return null;
+
+            var category = await this.categoryRepository
+                .GetAllAttached() 
+                .FirstOrDefaultAsync(c => c.Name.ToLower() == categoryName.Trim().ToLower());
+
+            return category?.Id;
+        }
 
         public async Task<IEnumerable<AllCategoriesIndexViewModel>> GetAllCategoriesAsync()
         {

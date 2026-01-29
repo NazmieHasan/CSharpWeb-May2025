@@ -1,6 +1,33 @@
-@HotelApp.WebApi_HostAddress = http://localhost:5036
+// @HotelApp.WebApi_HostAddress = http://localhost:5036
+@HotelApp.WebApi_HostAddress = https://localhost:7295
+@token = ENTER_YOUR_JWT_TOKEN
 
-GET {{HotelApp.WebApi_HostAddress}}/weatherforecast/
+
+POST {{HotelApp.WebApi_HostAddress}}/BookingApi/CreateBooking
+Accept: application/json
+Authorization: Bearer {{token}}
+
+###
+
+GET {{HotelApp.WebApi_HostAddress}}/BookingApi/MyBookings
+Accept: application/json
+Authorization: Bearer {{token}}
+
+###
+
+GET {{HotelApp.WebApi_HostAddress}}/CategoryApi/AllCategories
+Accept: application/json
+
+###
+
+
+GET {{HotelApp.WebApi_HostAddress}}/RoomApi/FindFreeRooms?dateArrival={{dateArrival}}&dateDeparture={{dateDeparture}}
+Accept: application/json
+
+###
+
+
+GET {{HotelApp.WebApi_HostAddress}}/RoomApi/FindFreeRoomsByCategory/FindFreeRoomsByCategory?dateArrival={{dateArrival}}&dateDeparture={{dateDeparture}}&categoryId={{categoryId}}
 Accept: application/json
 
 ###

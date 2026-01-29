@@ -44,8 +44,11 @@
         public static class Booking
         {
             // Error messages
-            public const string OwnerRequiredMessage = "Owner name is required.";
+            public const string OwnerRequiredMessage = "Owner is required.";
+            public const string OwnerNameAndFamilyLengthMessage = "Owner name and family must be between 5 and 30 characters.";
+
             public const string AllowedMaxDaysCount = "Allowed max days for booking are 100 days.";
+
             public const string AdultRequiredMessage = "Adult is required.";
             public const string AdultsMinCountMessage = "Adult min count is 1";
 
@@ -55,7 +58,7 @@
             public const string StatusRequiredMessage = "Please select a status.";
 
             public const string ServiceCreateError = "Error occurred while adding the booking! Please, send valid data!";
-            public const string ServiceCreateExceptionError ="Unexpected error occurred while adding the booking! Please contact developer team!";
+            public const string ServiceCreateExceptionError = "Unexpected error occurred while adding the booking! Please contact developer team!";
         }
 
         public static class BookingRoom

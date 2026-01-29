@@ -8,5 +8,7 @@
         Task<IEnumerable<AllCategoriesIndexViewModel>> GetAllCategoriesAsync();
 
         Task<string?> FindCategoryNameByCategoryId(int? id);
+
+        Task<int?> GetCategoryIdByNameAsync(string categoryName);
     }
 }
