@@ -26,5 +26,6 @@
         public const int AdminPaginationPageSize = 10;
 
         public const int AllowedMaxCountRoomByCategoryForBooking = 3;
+        public const int AllowedMaxBookingDays = 100;
     }
 }

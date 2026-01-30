@@ -57,22 +57,9 @@ namespace HotelApp.Web.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            if (inputModel.DateArrival < DateOnly.FromDateTime(DateTime.UtcNow))
+            if (!IsBookingDatesValid(inputModel.DateArrival, inputModel.DateDeparture, out var error))
             {
-                TempData["ErrorMessage"] = $"Arrival date {inputModel.DateArrival} cannot be in the past!";
-                return RedirectToAction(nameof(Index));
-            }
-
-            if (inputModel.DateDeparture <= inputModel.DateArrival)
-            {
-                TempData["ErrorMessage"] = $"Departure date {inputModel.DateArrival} must be after arrival date!";
-                return RedirectToAction(nameof(Index));
-            }
-
-            var daysBooked = (inputModel.DateDeparture.DayNumber - inputModel.DateArrival.DayNumber);
-            if (daysBooked > 100)
-            {
-                TempData["ErrorMessage"] = Booking.AllowedMaxDaysCount;
+                TempData["ErrorMessage"] = error;
                 return RedirectToAction(nameof(Index));
             }
 
@@ -109,14 +96,14 @@ namespace HotelApp.Web.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> FindRoomByCategorySearch(FindRoomInputModel inputModel)
         {
-            if (Request.Query.ContainsKey("DateArrival") && Request.Query.ContainsKey("DateDeparture"))
-            {
-                HttpContext.Session.Remove("PendingRooms");
-            }
-
             if (inputModel.CategoryId == 0)
             {
                 return RedirectToAction("Index", "Home");
+            }
+
+            if (Request.Query.ContainsKey("DateArrival") && Request.Query.ContainsKey("DateDeparture"))
+            {
+                HttpContext.Session.Remove("PendingRooms");
             }
 
             if (!Request.Query.ContainsKey("DateArrival") || !Request.Query.ContainsKey("DateDeparture"))
@@ -130,23 +117,10 @@ namespace HotelApp.Web.Controllers
                 return View("FindRoomByCategory", inputModel);
             }
 
-            if (inputModel.DateArrival < DateOnly.FromDateTime(DateTime.UtcNow))
+            if (!IsBookingDatesValid(inputModel.DateArrival, inputModel.DateDeparture, out var error))
             {
-                TempData["ErrorMessage"] = $"Arrival date cannot be in the past!";
-                return View("FindRoomByCategory", inputModel);
-            }
-
-            if (inputModel.DateDeparture <= inputModel.DateArrival)
-            {
-                TempData["ErrorMessage"] = $"Departure date must be after arrival date!";
-                return View("FindRoomByCategory", inputModel);
-            }
-
-            var daysBooked = (inputModel.DateDeparture.DayNumber - inputModel.DateArrival.DayNumber);
-            if (daysBooked > 100)
-            {
-                TempData["ErrorMessage"] = Booking.AllowedMaxDaysCount;
-                return View("FindRoomByCategory", inputModel);
+                TempData["ErrorMessage"] = error;
+                return RedirectToAction(nameof(Index));
             }
 
             var rooms = await this.roomService
@@ -185,5 +159,44 @@ namespace HotelApp.Web.Controllers
                     return this.View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
             }
         }
+
+        private bool IsBookingDatesValid(DateOnly arrivalDate, DateOnly departureDate, out string error)
+        {
+            var today = DateOnly.FromDateTime(DateTime.UtcNow);
+            var maxArrivalDate = today.AddYears(1);
+
+            // Arrival date cannot be in the past
+            if (arrivalDate < today)
+            {
+                error = "Arrival date cannot be in the past!";
+                return false;
+            }
+
+            // Arrival date cannot be later than today + 1 year
+            if (arrivalDate > maxArrivalDate)
+            {
+                error = "Arrival date cannot be later than today + 1 year!";
+                return false;
+            }
+
+            // Departure date must be after arrival date
+            if (departureDate <= arrivalDate)
+            {
+                error = "Departure date must be after arrival date!";
+                return false;
+            }
+
+            // Max booking duration
+            var daysBooked = departureDate.DayNumber - arrivalDate.DayNumber;
+            if (daysBooked > GCommon.ApplicationConstants.AllowedMaxBookingDays)
+            {
+                error = Booking.AllowedMaxDaysCountMessage;
+                return false;
+            }
+
+            error = string.Empty;
+            return true;
+        }
+
     }
 }

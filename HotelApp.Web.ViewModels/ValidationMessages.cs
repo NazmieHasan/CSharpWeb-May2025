@@ -1,6 +1,7 @@
 ﻿namespace HotelApp.Web.ViewModels
 {
     using HotelApp.Data.Common;
+    using HotelApp.GCommon;
 
     public static class ValidationMessages
     {
@@ -47,7 +48,7 @@
             public const string OwnerRequiredMessage = "Owner is required.";
             public const string OwnerNameAndFamilyLengthMessage = "Owner name and family must be between 5 and 30 characters.";
 
-            public const string AllowedMaxDaysCount = "Allowed max days for booking are 100 days.";
+            public static readonly string AllowedMaxDaysCountMessage = $"Allowed max days for booking are {ApplicationConstants.AllowedMaxBookingDays} days.";
 
             public const string AdultRequiredMessage = "Adult is required.";
             public const string AdultsMinCountMessage = "Adult min count is 1";
