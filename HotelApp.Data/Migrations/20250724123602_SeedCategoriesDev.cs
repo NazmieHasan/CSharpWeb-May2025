@@ -14,7 +14,7 @@ namespace HotelApp.Data.Migrations
         {
             migrationBuilder.InsertData(
                 table: "Categories",
-                columns: new[] { "Id", "Beds", "Description", "ImageUrl", "Name", "Price" },
+                columns: new[] { "Id", "Beds", "Description", "ImageUrl", "IsDeleted", "Name", "Price" },
                 values: new object[,]
                 {
                     { 1, 2, "Modern and stylish design", "/images/upload/categories/7fb46e46-d4d6-41b8-8b54-9c81096462f1.jpg", false, "Double Room", 300.00m },

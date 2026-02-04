@@ -70,14 +70,23 @@ Welcome to **HotelApp**, a web application designed to demonstrate core web deve
 
 
 8. Open your browser and navigate to:
-   ```
-   http://localhost:{localPort}
-   ```
+   - **Web UI:** `http://localhost:{port1}`
+   - **Swagger API Docs:** `http://localhost:{port2}/swagger`
+
+---
+
+## 🚧 Roadmap (Work in Progress)
+- [ ] **Web API**: Implementation of all endpoints
+- [ ] **Unit Tests**: Full coverage of service logic
+
+---
+
+## 🌐 Live Demo
+You can explore the live version of the application here:  
+👉 [**HotelApp on Azure**](https://hotelappweb.azurewebsites.net/)
 
 ---
 
 ## 📜 License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
----
